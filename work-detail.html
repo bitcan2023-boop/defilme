@@ -116,53 +116,57 @@
     /* ── メディアグリッド ── */
     .detail-media {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
     }
 
     /* 1枚: フル幅 */
-    .detail-media .media-item:only-child { grid-column: span 12; }
+    .detail-media .media-item:only-child { grid-column: span 4; }
 
-    /* 2枚: 均等 */
-    .detail-media.count-2 .media-item { grid-column: span 6; }
+    /* 2枚: 均等2列 */
+    .detail-media.count-2 .media-item { grid-column: span 2; }
 
-    /* 3枚: 最初フル、残り2枚均等 */
-    .detail-media.count-3 .media-item:nth-child(1) { grid-column: span 12; }
+    /* 3枚: 全部均等 */
+    .detail-media.count-3 .media-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
     .detail-media.count-3 .media-item:nth-child(2),
-    .detail-media.count-3 .media-item:nth-child(3) { grid-column: span 6; }
+    .detail-media.count-3 .media-item:nth-child(3) { grid-column: span 2; }
 
     /* 4枚: 2×2 */
-    .detail-media.count-4 .media-item { grid-column: span 6; }
+    .detail-media.count-4 .media-item { grid-column: span 2; }
 
-    /* 5枚: 上3枚均等、下2枚均等 */
-    .detail-media.count-5 .media-item:nth-child(-n+3) { grid-column: span 4; }
-    .detail-media.count-5 .media-item:nth-child(n+4) { grid-column: span 6; }
+    /* 5枚: 最初1枚大きめ、残り4枚 */
+    .detail-media.count-5 .media-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .detail-media.count-5 .media-item:nth-child(n+2) { grid-column: span 2; }
 
-    /* 6枚以上: 3列 */
-    .detail-media.count-many .media-item { grid-column: span 4; }
+    /* 6枚以上: 4列均等 */
+    .detail-media.count-many .media-item { grid-column: span 1; }
 
     /* 動画・YouTube: 常にフル幅 */
     .detail-media .media-item.type-video,
-    .detail-media .media-item.type-youtube { grid-column: span 12 !important; }
+    .detail-media .media-item.type-youtube { grid-column: span 4 !important; grid-row: span 1 !important; }
 
     .media-item {
       position: relative;
       overflow: hidden;
-      border-radius: 2px;
+      border-radius: 1px;
       background: #111;
+      aspect-ratio: 3/2;
     }
+
+    /* 動画・YouTubeはaspect-ratio固定しない */
+    .media-item.type-video,
+    .media-item.type-youtube { aspect-ratio: unset; }
 
     .media-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.5s ease, opacity 0.3s;
+      transition: transform 0.4s ease, opacity 0.3s;
       cursor: zoom-in;
-      min-height: 200px;
     }
 
-    .media-item:hover img { transform: scale(1.03); opacity: 0.92; }
+    .media-item:hover img { transform: scale(1.05); opacity: 0.85; }
 
     .media-item video {
       width: 100%;
@@ -178,7 +182,6 @@
       width: 100%;
       padding-top: 56.25%;
       background: #000;
-      cursor: pointer;
     }
 
     .media-item .yt-wrap iframe {
@@ -190,12 +193,7 @@
     }
 
     .media-caption {
-      font-family: var(--font-noto);
-      font-size: 0.7rem;
-      font-weight: 300;
-      color: var(--text-dim);
-      padding: 8px 4px 0;
-      letter-spacing: 0.06em;
+      display: none;
     }
 
     /* ── ライトボックス ── */
