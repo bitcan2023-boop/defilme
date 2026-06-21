@@ -16,7 +16,6 @@ const WORKS_DATA = [
     media: [
       { type: "youtube", id: "hKkhIVI3VkI" }
     ],
-    draft: undefined,
   },
 
   {
