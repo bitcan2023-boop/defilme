@@ -19,6 +19,7 @@ const WORKS_DATA = [
             "id": "hKkhIVI3VkI"
         }
     ],
+    draft: undefined,
   },
 
   {
