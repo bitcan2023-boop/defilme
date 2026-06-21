@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja" style="background-color:#1e1e1e;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work — DeFilMe</title>
+  <meta name="color-scheme" content="dark">
+  <script>document.documentElement.className += ' js-fade';</script>
+  <style>
+    /* htmlの黒背景は常に表示したまま、body(中身)だけフェードイン */
+    html { background-color: #1e1e1e; }
+    html.js-fade body { opacity: 0; }
+    html.js-fade.page-ready body {
+      opacity: 1;
+      transition: opacity 0.4s cubic-bezier(0.4,0.4,0,1);
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.add('page-ready');
+      // backdrop-filterはアニメ開始後(1s)に付与してレイヤー確保チラつきを防ぐ
+      setTimeout(function() {
+        var h = document.querySelector('header');
+        if (h) h.classList.add('blur-ready');
+      }, 1000);
+    });
+  </script>
+  <link rel="stylesheet" href="style.css?v=20260613">
+  <link rel="icon" type="image/svg+xml" href="f3-dark.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="f3-dark-180.png">
+  <style>
+    .detail-wrap {
+      padding: 100px 80px 120px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 戻るボタン */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 56px;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover { color: var(--white); }
+
+    .back-btn svg { transition: transform 0.2s; }
+    .back-btn:hover svg { transform: translateX(-4px); }
+
+    /* ヘッダー */
+    .detail-header {
+      margin-bottom: 64px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .detail-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .detail-cat {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .detail-date {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    .detail-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .detail-client {
+      font-family: var(--font-noto);
+      font-size: 0.82rem;
+      color: var(--text-mid);
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .detail-desc {
+      font-family: var(--font-noto);
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 2;
+      font-weight: 300;
+      max-width: 640px;
+    }
+
+    /* メディアグリッド */
+    .detail-media {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .media-item {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .media-item:hover img {
+      transform: scale(1.02);
+    }
+
+    /* 動画 */
+    .media-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+      outline: none;
+      background: #000;
+    }
+
+    /* YouTube埋め込み */
+    .media-item .yt-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: #000;
+    }
+
+    .media-item .yt-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* キャプション */
+    .media-caption {
+      font-family: var(--font-noto);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      padding: 10px 0 20px;
+      letter-spacing: 0.06em;
+    }
+
+    /* 横並びレイアウト（画像2枚以上の場合） */
+    .media-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    /* ローディング */
+    .detail-loading {
+      padding: 120px 0;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+    }
+
+    /* Not found */
+    .detail-notfound {
+      padding: 120px 0;
+      text-align: center;
+    }
+
+    .detail-notfound p {
+      font-family: var(--font-noto);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .detail-wrap { padding: 90px 24px 80px; }
+      .media-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+    <header>
+    <a href="index.html" class="header-logo">
+      <svg width="114" height="41" viewBox="0 0 162.56 58" xmlns="http://www.w3.org/2000/svg" style="display:block;" aria-label="DeFilMe"><path d="M27.72 29.96Q27.72 34.08 25.9 37.28Q24.080000000000002 40.48 20.740000000000002 42.239999999999995Q17.400000000000002 44.0 13.0 44.0H2.48V15.919999999999998H13.0Q17.44 15.919999999999998 20.76 17.68Q24.080000000000002 19.439999999999998 25.9 22.619999999999997Q27.72 25.8 27.72 29.96ZM20.76 29.96Q20.76 26.08 18.6 23.919999999999998Q16.44 21.759999999999998 12.56 21.759999999999998H9.32V38.08H12.56Q16.44 38.08 18.6 35.96Q20.76 33.84 20.76 29.96Z M52.480000000000004 34.480000000000004H37.0Q37.160000000000004 36.56 38.34 37.66Q39.52 38.76 41.24 38.76Q43.800000000000004 38.76 44.800000000000004 36.6H52.08Q51.52 38.8 50.06 40.56Q48.6 42.32 46.400000000000006 43.32Q44.2 44.32 41.480000000000004 44.32Q38.2 44.32 35.64 42.92Q33.08 41.52 31.64 38.92Q30.200000000000003 36.32 30.200000000000003 32.84Q30.200000000000003 29.36 31.62 26.759999999999998Q33.04 24.16 35.6 22.759999999999998Q38.160000000000004 21.36 41.480000000000004 21.36Q44.72 21.36 47.24 22.72Q49.760000000000005 24.08 51.18000000000001 26.599999999999998Q52.6 29.119999999999997 52.6 32.480000000000004Q52.6 33.44 52.480000000000004 34.480000000000004ZM45.6 30.68Q45.6 28.92 44.400000000000006 27.880000000000003Q43.2 26.84 41.400000000000006 26.84Q39.68 26.84 38.5 27.84Q37.32 28.84 37.04 30.68Z M74.48 15.919999999999998V21.4H63.04V27.32H71.6V32.64H63.04V44.0H56.199999999999996V15.919999999999998Z M77.44 15.68Q77.44 14.079999999999998 78.58 13.02Q79.72 11.96 81.52 11.96Q83.28 11.96 84.42 13.02Q85.56 14.079999999999998 85.56 15.68Q85.56 17.24 84.42 18.299999999999997Q83.28 19.36 81.52 19.36Q79.72 19.36 78.58 18.299999999999997Q77.44 17.24 77.44 15.68ZM84.91999999999999 21.68V44.0H78.08V21.68Z M96.72 14.399999999999999V44.0H89.88V14.399999999999999Z M133.48 15.919999999999998V44.0H126.63999999999999V27.16L120.35999999999999 44.0H114.83999999999999L108.51999999999998 27.12V44.0H101.67999999999999V15.919999999999998H109.75999999999999L117.63999999999999 35.36L125.44 15.919999999999998Z M159.32 34.480000000000004H143.83999999999997Q144.0 36.56 145.18 37.66Q146.35999999999999 38.76 148.07999999999998 38.76Q150.64 38.76 151.64 36.6H158.92Q158.35999999999999 38.8 156.89999999999998 40.56Q155.44 42.32 153.24 43.32Q151.04 44.32 148.32 44.32Q145.04 44.32 142.48 42.92Q139.92 41.52 138.48 38.92Q137.04 36.32 137.04 32.84Q137.04 29.36 138.45999999999998 26.759999999999998Q139.88 24.16 142.44 22.759999999999998Q145.0 21.36 148.32 21.36Q151.56 21.36 154.07999999999998 22.72Q156.6 24.08 158.01999999999998 26.599999999999998Q159.44 29.119999999999997 159.44 32.480000000000004Q159.44 33.44 159.32 34.480000000000004ZM152.44 30.68Q152.44 28.92 151.24 27.880000000000003Q150.04 26.84 148.23999999999998 26.84Q146.51999999999998 26.84 145.33999999999997 27.84Q144.16 28.84 143.88 30.68Z" fill="#f0f0f0"/><circle cx="86.5" cy="12" r="4.5" fill="#e8820a"/></svg>
+    </a>
+    <div class="nav-right">
+      <a href="works.html" class="active">Works</a>
+      <a href="services.html">Services</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+      <div class="sns-icons">
+        <a href="https://instagram.com/bitcan_teto" aria-label="Instagram" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" aria-label="YouTube" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://twitter.com/bitcan47" aria-label="X" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+    <a href="works.html">Works</a>
+    <a href="services.html">Services</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+
+  <!-- Footer -->
+      <footer class="reveal">
+    <a href="index.html" class="footer-s6-link" aria-label="TOPへ戻る">
+    <svg class="footer-s6" width="180" height="120" viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(68,8)">
+          <circle cx="22" cy="22" r="21" fill="none" stroke="#e8820a" stroke-width="2.2"/>
+          <g stroke="#f0f0f0" stroke-width="2.4" stroke-linecap="round">
+            <line x1="13" y1="18" x2="13" y2="26"/>
+            <line x1="18" y1="13" x2="18" y2="31"/>
+            <line x1="28" y1="15" x2="28" y2="29"/>
+            <line x1="33" y1="19" x2="33" y2="25"/>
+          </g>
+          <line x1="23" y1="9" x2="23" y2="35" stroke="#e8820a" stroke-width="2.4" stroke-linecap="round"/>
+        </g>
+        <text x="90" y="86" text-anchor="middle" font-family="'Poppins', sans-serif" font-weight="700" font-size="26" fill="#f0f0f0">DeFilMe</text>
+        <circle cx="94" cy="65" r="3.9" fill="#0d0d0d"/>
+        <circle cx="94" cy="65" r="3" fill="#e8820a"/>
+        <text x="90" y="103" text-anchor="middle" font-family="'Poppins', sans-serif" font-weight="400" font-size="7" letter-spacing="0.42em" fill="#888">VISUAL WORKS</text>
+      </svg>
+    </a>
+    <div class="footer-s6-divider"></div>
+    <p class="footer-name footer-name-reveal">HIBIKI TAKAI</p>
+    <div class="footer-divider"></div>
+    <div class="footer-sns">
+      <a href="https://instagram.com/bitcan_teto" aria-label="Instagram" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" aria-label="YouTube" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/bitcan47" aria-label="X" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+    <nav class="footer-nav">
+      <a href="works.html">Works</a>
+      <a href="services.html">Services</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p class="footer-copy">© DeFilMe</p>
+  </footer>
+
+  <script src="works-data.js"></script>
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () =>
+      document.getElementById('mobileNav').classList.add('open'));
+    document.getElementById('mobileNavClose').addEventListener('click', () =>
+      document.getElementById('mobileNav').classList.remove('open'));
+
+    // URLパラメータからIDを取得
+    const params = new URLSearchParams(window.location.search);
+    const workId = params.get('id');
+    const wrap = document.getElementById('detailWrap');
+
+    function subLabel(cat, sub) {
+      const map = {
+        'music-video': 'Music Video',
+        'live-shoot': 'Live Shoot',
+        'documentary': 'Documentary',
+        'snap': 'Snap',
+        'portrait': 'Portrait',
+      };
+      return map[sub] || sub;
+    }
+
+    function renderMedia(mediaList) {
+      if (!mediaList || mediaList.length === 0) return '';
+
+      // 画像が連続する場合は2カラムグリッドに
+      let html = '';
+      let i = 0;
+      while (i < mediaList.length) {
+        const item = mediaList[i];
+        const next = mediaList[i + 1];
+
+        if (item.type === 'image' && next && next.type === 'image') {
+          // 2枚横並び
+          html += `<div class="media-row">`;
+          html += mediaItemHTML(item);
+          html += mediaItemHTML(next);
+          html += `</div>`;
+          i += 2;
+        } else {
+          html += mediaItemHTML(item);
+          i++;
+        }
+      }
+      return html;
+    }
+
+    function mediaItemHTML(item) {
+      let inner = '';
+      if (item.type === 'image') {
+        inner = `<img src="${item.src}" alt="${item.caption || ''}">`;
+      } else if (item.type === 'video') {
+        inner = `<video controls playsinline preload="metadata"><source src="${item.src}"></video>`;
+      } else if (item.type === 'youtube') {
+        inner = `<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe></div>`;
+      }
+      const caption = item.caption ? `<p class="media-caption">${item.caption}</p>` : '';
+      return `<div class="media-item">${inner}${caption}</div>`;
+    }
+
+    if (!workId) {
+      wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
+    } else {
+      const work = WORKS_DATA.find(w => w.id === workId);
+      if (!work) {
+        wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
+      } else {
+        // タイトルを更新
+        document.title = `${work.title} — DeFilMe`;
+
+        wrap.innerHTML = `
+          <a href="works.html" class="back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Works
+          </a>
+
+          <div class="detail-header">
+            <div class="detail-meta">
+              <span class="detail-cat">${subLabel(work.category, work.sub)}</span>
+              ${work.date ? `<span class="detail-date">${work.date.replace('-','.')}</span>` : ''}
+            </div>
+            <h1 class="detail-title">${work.title}</h1>
+            ${work.client ? `<p class="detail-client">Client: ${work.client}</p>` : ''}
+            ${work.description ? `<p class="detail-desc">${work.description}</p>` : ''}
+          </div>
+
+          <div class="detail-media">
+            ${renderMedia(work.media)}
+          </div>
+        `;
+      }
+    }
+
+    // Reveal on scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+          revealObserver.unobserve(el.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Footer HIBIKI TAKAI: スクロールで入ったときにブラーreveal
+    const footerNameEl = document.querySelector('.footer-name-reveal');
+    if (footerNameEl) {
+      const footerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(el => {
+          if (el.isIntersecting) {
+            el.target.classList.add('in-view');
+            footerObserver.unobserve(el.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      footerObserver.observe(footerNameEl);
+    }
+  </script>
+</body>
+</html>

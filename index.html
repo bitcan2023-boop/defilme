@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ja" style="background-color:#1e1e1e;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeFilMe | HIBIKI TAKAI</title>
+  <meta name="description" content="関東を拠点に活動するビデオグラファー/フォトグラファー HIBIKI TAKAI のポートフォリオサイト。">
+  <meta name="color-scheme" content="dark">
+  <script>document.documentElement.className += ' js-fade';</script>
+  <style>
+    /* htmlの黒背景は常に表示したまま、body(中身)だけフェードイン */
+    html { background-color: #1e1e1e; }
+    html.js-fade body { opacity: 0; }
+    html.js-fade.page-ready body {
+      opacity: 1;
+      transition: opacity 0.4s cubic-bezier(0.4,0.4,0,1);
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.classList.add('page-ready');
+      // backdrop-filterはアニメ開始後(1s)に付与してレイヤー確保チラつきを防ぐ
+      setTimeout(function() {
+        var h = document.querySelector('header');
+        if (h) h.classList.add('blur-ready');
+      }, 1000);
+    });
+  </script>
+  <link rel="stylesheet" href="style.css?v=20260613">
+<link rel="icon" type="image/png" href="f3-dark-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="f3-dark-180.png">
+  <style>
+    /* =====================
+       HERO — 左右2枚並び
+       ===================== */
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh; /* 画面全体を覆う */
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* 左右の写真パネル */
+    .hero-panel {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 初期状態: scale1.08で静止 + 素のスタイル自体を不可視に（FOUC対策） */
+    .hero-panel img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(1.08);
+      will-change: transform;
+      animation: heroImgReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+    }
+
+    /* 出現完了後: JSでscale-downを付与し、ゆっくりスケールアウト(1.08→1.0) */
+    /* 出現アニメはopacity/filterのみなのでtransformのtransitionと競合しない */
+    .hero-panel img.scale-down {
+      transform: scale(1.0);
+      transition: transform 36s cubic-bezier(0.25,0.1,0.25,1);
+    }
+
+    /* 中央の細い区切り線 */
+    .hero-divider {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: rgba(255,255,255,0.10);
+      z-index: 3;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 1.0s forwards;
+    }
+
+    /* Heroオーバーレイ: 上下のグラデーション */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom,
+          rgba(8,8,8,0.55) 0%,
+          rgba(8,8,8,0.18) 28%,
+          rgba(8,8,8,0.18) 60%,
+          rgba(8,8,8,0.82) 100%
+        );
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-label {
+      font-family: var(--font-zen);
+      font-size: 0.55rem;
+      letter-spacing: 0.65em;
+      text-transform: uppercase;
+      color: rgba(240,240,240,0.62);
+      margin-bottom: 10px;
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      line-height: 0.92;
+      letter-spacing: 0.07em;
+      color: var(--white);
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 0;
+      margin-top: 28px;
+      opacity: 0;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      width: min(320px, 55vw);
+      justify-content: space-between;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.58rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 10px 0;
+      width: 48%;
+      border: 1px solid rgba(240,240,240,0.55);
+      color: var(--white);
+      background: transparent;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-accent:hover {
+      background: transparent;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Scroll indicator */
+    .hero-scroll {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 1.5s ease 0.8s both;
+    }
+
+    .hero-scroll span {
+      font-family: var(--font-display);
+      font-size: 0.52rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(240,240,240,0.4);
+    }
+
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(240,240,240,0.4), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    /* =====================
+       ABOUT
+       ===================== */
+    .about-section {
+      padding: 100px 80px;
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 72px;
+      align-items: start;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .about-heading {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+    }
+
+    .about-image-wrap {
+      overflow: hidden;
+      padding-top: 78px;
+    }
+
+    .about-image-wrap img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 6/5;
+      object-fit: cover;
+      object-position: center 15%;
+      display: block;
+      transition: transform 0.7s ease;
+    }
+
+    .about-image-wrap:hover img {
+      transform: scale(1.02);
+    }
+
+    .about-text { padding-right: 32px; padding-top: 0; }
+
+    .about-name-ja {
+      font-family: var(--font-noto);
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--text-mid);
+      letter-spacing: 0.18em;
+      margin-bottom: 6px;
+    }
+
+    .about-name-en {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      letter-spacing: 0.08em;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .about-role {
+      font-family: var(--font-display);
+      font-size: 0.66rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .about-sns {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .about-sns a {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .about-sns a:hover {
+      color: var(--white);
+      border-color: var(--white);
+    }
+
+    .about-body {
+      font-family: var(--font-noto);
+      font-size: 0.85rem;
+      line-height: 2;
+      color: var(--text-light);
+      font-weight: 300;
+    }
+
+    .about-body p + p { margin-top: 14px; }
+
+    /* =====================
+       MESSAGE
+       ===================== */
+    .message-section {
+      padding: 120px 80px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message-main {
+      font-family: var(--font-zen);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 1.8;
+      color: var(--white);
+      max-width: 860px;
+      margin-bottom: 64px;
+    }
+
+    .message-sub {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      padding-top: 48px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .message-sub-text {
+      font-family: var(--font-noto);
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .message-sub-text a {
+      color: var(--accent);
+      border-bottom: 1px solid var(--accent);
+    }
+
+    .message-quote {
+      border-left: 2px solid var(--accent);
+      padding-left: 24px;
+    }
+
+    .message-quote p {
+      font-family: var(--font-zen);
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 2.1;
+    }
+
+    .message-quote cite {
+      display: block;
+      margin-top: 16px;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      font-style: normal;
+    }
+
+    /* =====================
+       NAV BOXES
+       ===================== */
+    .nav-boxes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-box {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-box:last-child { border-right: none; }
+
+    .nav-box img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease, filter 0.4s;
+      filter: brightness(0.5);
+    }
+
+    .nav-box:hover img {
+      transform: scale(1.06);
+      filter: brightness(0.7);
+    }
+
+    .nav-box-content {
+      position: absolute;
+      bottom: 32px; left: 32px;
+      z-index: 1;
+    }
+
+    .nav-box-label {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(240,240,240,0.55);
+      margin-bottom: 6px;
+    }
+
+    .nav-box-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    /* =====================
+       NEWS SECTION (TOP)
+       ===================== */
+    .news-section {
+      padding: 100px 80px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .news-section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+
+    .news-section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+
+    .news-more {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .news-more:hover {
+      color: var(--white);
+      border-color: var(--white);
+    }
+
+    .news-list {
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .news-item {
+      display: grid;
+      grid-template-columns: 120px 80px 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.2s;
+    }
+
+    .news-item:hover { background: rgba(255,255,255,0.02); }
+
+    .news-date {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    .news-cat {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .news-title-text {
+      font-family: var(--font-noto);
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-light);
+    }
+
+    .news-empty {
+      font-family: var(--font-noto);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      padding: 40px 0;
+    }
+
+    /* =====================
+       Animations
+       ===================== */
+    /* Hero画像ブラーアニメーション */
+    @keyframes heroPanelReveal {
+      from { opacity: 0; filter: blur(32px); transform: scale(1.06); }
+      60%  { opacity: 1; filter: blur(6px); }
+      to   { opacity: 1; filter: blur(0px); transform: scale(1); }
+    }
+
+    /* Hero画像出現: opacity+blurのみ。transformは触らない（静止したまま出現） */
+    @keyframes heroImgReveal {
+      0%   { opacity: 0; filter: blur(20px); }
+      100% { opacity: 1; filter: blur(0px); }
+    }
+
+    /* Heroテキスト3段共通: STUDIO設定そのまま
+       opacity0→1, blur20px→0, scale1.2→1.0, S字イージング */
+    @keyframes heroTextReveal {
+      0%   { opacity: 0; filter: blur(20px); transform: scale(1.2); }
+      100% { opacity: 1; filter: blur(0px);  transform: scale(1.0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+    }
+
+    /* =====================
+       Responsive
+       ===================== */
+    @media (max-width: 1024px) {
+      .about-section {
+        grid-template-columns: 1fr;
+        padding: 80px 40px;
+        gap: 48px;
+      }
+      .about-text { padding-right: 0; }
+      .about-image-wrap img { height: 420px; }
+      .message-section { padding: 80px 40px; }
+      .message-sub { grid-template-columns: 1fr; }
+      .nav-boxes { grid-template-columns: 1fr; }
+      .nav-box { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .news-section { padding: 80px 40px; }
+      .news-item { grid-template-columns: 100px 70px 1fr; gap: 16px; }
+    }
+
+    @media (max-width: 768px) {
+      .about-section { padding: 80px 24px; }
+      .message-section { padding: 80px 24px; }
+      .news-section { padding: 80px 24px; }
+      .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
+    }
+  </style>
+</head>
+<body>
+
+    <header>
+    <a href="index.html" class="header-logo">
+      <svg width="114" height="41" viewBox="0 0 162.56 58" xmlns="http://www.w3.org/2000/svg" style="display:block;" aria-label="DeFilMe"><path d="M27.72 29.96Q27.72 34.08 25.9 37.28Q24.080000000000002 40.48 20.740000000000002 42.239999999999995Q17.400000000000002 44.0 13.0 44.0H2.48V15.919999999999998H13.0Q17.44 15.919999999999998 20.76 17.68Q24.080000000000002 19.439999999999998 25.9 22.619999999999997Q27.72 25.8 27.72 29.96ZM20.76 29.96Q20.76 26.08 18.6 23.919999999999998Q16.44 21.759999999999998 12.56 21.759999999999998H9.32V38.08H12.56Q16.44 38.08 18.6 35.96Q20.76 33.84 20.76 29.96Z M52.480000000000004 34.480000000000004H37.0Q37.160000000000004 36.56 38.34 37.66Q39.52 38.76 41.24 38.76Q43.800000000000004 38.76 44.800000000000004 36.6H52.08Q51.52 38.8 50.06 40.56Q48.6 42.32 46.400000000000006 43.32Q44.2 44.32 41.480000000000004 44.32Q38.2 44.32 35.64 42.92Q33.08 41.52 31.64 38.92Q30.200000000000003 36.32 30.200000000000003 32.84Q30.200000000000003 29.36 31.62 26.759999999999998Q33.04 24.16 35.6 22.759999999999998Q38.160000000000004 21.36 41.480000000000004 21.36Q44.72 21.36 47.24 22.72Q49.760000000000005 24.08 51.18000000000001 26.599999999999998Q52.6 29.119999999999997 52.6 32.480000000000004Q52.6 33.44 52.480000000000004 34.480000000000004ZM45.6 30.68Q45.6 28.92 44.400000000000006 27.880000000000003Q43.2 26.84 41.400000000000006 26.84Q39.68 26.84 38.5 27.84Q37.32 28.84 37.04 30.68Z M74.48 15.919999999999998V21.4H63.04V27.32H71.6V32.64H63.04V44.0H56.199999999999996V15.919999999999998Z M77.44 15.68Q77.44 14.079999999999998 78.58 13.02Q79.72 11.96 81.52 11.96Q83.28 11.96 84.42 13.02Q85.56 14.079999999999998 85.56 15.68Q85.56 17.24 84.42 18.299999999999997Q83.28 19.36 81.52 19.36Q79.72 19.36 78.58 18.299999999999997Q77.44 17.24 77.44 15.68ZM84.91999999999999 21.68V44.0H78.08V21.68Z M96.72 14.399999999999999V44.0H89.88V14.399999999999999Z M133.48 15.919999999999998V44.0H126.63999999999999V27.16L120.35999999999999 44.0H114.83999999999999L108.51999999999998 27.12V44.0H101.67999999999999V15.919999999999998H109.75999999999999L117.63999999999999 35.36L125.44 15.919999999999998Z M159.32 34.480000000000004H143.83999999999997Q144.0 36.56 145.18 37.66Q146.35999999999999 38.76 148.07999999999998 38.76Q150.64 38.76 151.64 36.6H158.92Q158.35999999999999 38.8 156.89999999999998 40.56Q155.44 42.32 153.24 43.32Q151.04 44.32 148.32 44.32Q145.04 44.32 142.48 42.92Q139.92 41.52 138.48 38.92Q137.04 36.32 137.04 32.84Q137.04 29.36 138.45999999999998 26.759999999999998Q139.88 24.16 142.44 22.759999999999998Q145.0 21.36 148.32 21.36Q151.56 21.36 154.07999999999998 22.72Q156.6 24.08 158.01999999999998 26.599999999999998Q159.44 29.119999999999997 159.44 32.480000000000004Q159.44 33.44 159.32 34.480000000000004ZM152.44 30.68Q152.44 28.92 151.24 27.880000000000003Q150.04 26.84 148.23999999999998 26.84Q146.51999999999998 26.84 145.33999999999997 27.84Q144.16 28.84 143.88 30.68Z" fill="#f0f0f0"/><circle cx="86.5" cy="12" r="4.5" fill="#e8820a"/></svg>
+    </a>
+    <div class="nav-right">
+      <a href="works.html">Works</a>
+      <a href="services.html">Services</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+      <div class="sns-icons">
+        <a href="https://instagram.com/bitcan_teto" aria-label="Instagram" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" aria-label="YouTube" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://twitter.com/bitcan47" aria-label="X" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+    <a href="works.html">Works</a>
+    <a href="services.html">Services</a>
+    <a href="news.html">News</a>
+    <a href="contact.html">Contact</a>
+  </div>
+
+
+  <!-- Hero: 左右2枚並び -->
+  <section class="hero">
+    <!-- 左: 横浜みなとみらい -->
+    <div class="hero-panel">
+      <img src="hero2.jpg" alt="Yokohama">
+    </div>
+    <!-- 右: RESTAURANT -->
+    <div class="hero-panel">
+      <img src="bg.jpg" alt="Restaurant">
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-label">Videographer / Photographer</p>
+      <h1 class="hero-name">HIBIKI<br>TAKAI</h1>
+      <div class="hero-buttons">
+        <a href="works.html" class="btn btn-accent">Works</a>
+        <a href="services.html" class="btn">Services</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about-section reveal" id="about">
+    <div class="about-image-wrap reveal reveal-d1">
+      <img src="profile.jpg" alt="HIBIKI TAKAI">
+    </div>
+    <div class="about-text reveal reveal-d2">
+      <p class="about-heading">About</p>
+      <p class="about-name-ja">高井 響</p>
+      <h2 class="about-name-en">HIBIKI TAKAI</h2>
+      <p class="about-role">Videographer / Photographer</p>
+      <div class="about-sns">
+        <a href="https://twitter.com/bitcan47" target="_blank" rel="noopener">X</a>
+        <a href="https://instagram.com/bitcan_teto" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" target="_blank" rel="noopener">YouTube</a>
+      </div>
+      <div class="about-body">
+        <p>関東を拠点に活動するビデオグラファー/フォトグラファー。<br>1975年東京生まれの京都育ち。横浜在住。</p>
+        <p>音楽を起点とした映像を得意とする映像制作者。10代からロックに目覚めギターとドラムを始める。以降、様々なバンドでCDリリース、全国ツアーを行う。</p>
+        <p>Webデザインを学び始めたことをきっかけに独学で始めた写真・動画制作にハマる。バンドのMusic Video制作をきっかけに様々な映像・写真の制作に取り組み始める。現在ドラマーとして活動しながら、CDのジャケットやWebサイト制作も並行して行う。</p>
+        <p>被写体の肉体性（リズム）をファインダーに捉え、そこに内在する表現と発露する情景を一体にする作品作りを信条としている。クライアントワークでは自治体・企業等のプロモーション動画からイベント等の記録動画、また記念日等の個人向けの制作まで幅広く対応。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Message -->
+  <section class="message-section reveal">
+    <div class="section-label reveal">Philosophy</div>
+    <div class="message-main reveal reveal-d1">
+      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
+    </div>
+    <div class="message-sub reveal reveal-d2">
+      <div class="message-sub-text">
+        Music Video、企業VP、商品プロモーション、家族の記念日撮影等、様々なご要望にお応えします。<br>
+        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
+      </div>
+      <div class="message-quote">
+        <p>行き交う幾つもの視線。<br>レンズ越しに見たその交わりは<br>レンズを通した視点がその交わりを唯一無二のワンシーンに</p>
+        <cite>— HIBIKI TAKAI</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nav Boxes -->
+  <div class="nav-boxes reveal">
+    <a href="works.html" class="nav-box">
+      <img src="kanjo-wonderland.png" alt="Works">
+      <div class="nav-box-content">
+        <p class="nav-box-label">For Clients</p>
+        <p class="nav-box-title">WORKS</p>
+      </div>
+    </a>
+    <a href="services.html" class="nav-box">
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80" alt="Services">
+      <div class="nav-box-content">
+        <p class="nav-box-label">What I Do</p>
+        <p class="nav-box-title">SERVICES</p>
+      </div>
+    </a>
+    <a href="contact.html" class="nav-box">
+      <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80" alt="Contact">
+      <div class="nav-box-content">
+        <p class="nav-box-label">Get in Touch</p>
+        <p class="nav-box-title">CONTACT</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- News (TOP 最新3件) -->
+  <section class="news-section reveal">
+    <div class="news-section-header">
+      <div>
+        <div class="section-label" style="margin-bottom:12px;">Heads Up</div>
+        <h2 class="news-section-title">NEWS</h2>
+      </div>
+      <a href="news.html" class="news-more">View All →</a>
+    </div>
+    <div class="news-list" id="newsListTop"></div>
+  </section>
+
+  <!-- Footer -->
+      <footer class="reveal">
+    <a href="index.html" class="footer-s6-link" aria-label="TOPへ戻る">
+    <svg class="footer-s6" width="180" height="120" viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(68,8)">
+          <circle cx="22" cy="22" r="21" fill="none" stroke="#e8820a" stroke-width="2.2"/>
+          <g stroke="#f0f0f0" stroke-width="2.4" stroke-linecap="round">
+            <line x1="13" y1="18" x2="13" y2="26"/>
+            <line x1="18" y1="13" x2="18" y2="31"/>
+            <line x1="28" y1="15" x2="28" y2="29"/>
+            <line x1="33" y1="19" x2="33" y2="25"/>
+          </g>
+          <line x1="23" y1="9" x2="23" y2="35" stroke="#e8820a" stroke-width="2.4" stroke-linecap="round"/>
+        </g>
+        <text x="90" y="86" text-anchor="middle" font-family="'Poppins', sans-serif" font-weight="700" font-size="26" fill="#f0f0f0">DeFilMe</text>
+        <circle cx="94" cy="65" r="3.9" fill="#0d0d0d"/>
+        <circle cx="94" cy="65" r="3" fill="#e8820a"/>
+        <text x="90" y="103" text-anchor="middle" font-family="'Poppins', sans-serif" font-weight="400" font-size="7" letter-spacing="0.42em" fill="#888">VISUAL WORKS</text>
+      </svg>
+    </a>
+    <div class="footer-s6-divider"></div>
+    <p class="footer-name footer-name-reveal">HIBIKI TAKAI</p>
+    <div class="footer-divider"></div>
+    <div class="footer-sns">
+      <a href="https://instagram.com/bitcan_teto" aria-label="Instagram" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" aria-label="YouTube" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/bitcan47" aria-label="X" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+    <nav class="footer-nav">
+      <a href="works.html">Works</a>
+      <a href="services.html">Services</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p class="footer-copy">© DeFilMe</p>
+  </footer>
+
+  <script>
+    // Hero画像: CSSアニメ heroImgReveal で出現（opacity+blurのみ・画像は動かない）。
+    // 出現の終盤(1.8s)からscale 1.08→1.0 のゆっくりスケールアウト開始。
+    const heroPanelImgs = document.querySelectorAll('.hero-panel img');
+    setTimeout(() => {
+      heroPanelImgs.forEach(img => img.classList.add('scale-down'));
+    }, 1800);
+
+    // Hamburger
+    document.getElementById('hamburger').addEventListener('click', () =>
+      document.getElementById('mobileNav').classList.add('open'));
+    document.getElementById('mobileNavClose').addEventListener('click', () =>
+      document.getElementById('mobileNav').classList.remove('open'));
+
+
+
+    // Load news from JSON (最新3件)
+    fetch('news.json')
+      .then(r => r.json())
+      .then(data => {
+        const container = document.getElementById('newsListTop');
+        const items = [...data].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,3);
+        if (items.length === 0) {
+          container.innerHTML = '<p class="news-empty">投稿はありません</p>';
+          return;
+        }
+        container.innerHTML = items.map(item => `
+          <div class="news-item">
+            <span class="news-date">${item.date.replace(/-/g,'.')}</span>
+            <span class="news-cat">${item.category}</span>
+            <span class="news-title-text">${item.title}</span>
+          </div>
+        `).join('');
+      })
+      .catch(() => {
+        document.getElementById('newsListTop').innerHTML = '<p class="news-empty">投稿はありません</p>';
+      });
+
+    // Reveal on scroll (全ページ共通)
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+          revealObserver.unobserve(el.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Footer HIBIKI TAKAI: スクロールで入ったときにブラーreveal
+    const footerNameEl = document.querySelector('.footer-name-reveal');
+    if (footerNameEl) {
+      const footerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(el => {
+          if (el.isIntersecting) {
+            el.target.classList.add('in-view');
+            footerObserver.unobserve(el.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      footerObserver.observe(footerNameEl);
+    }
+  </script>
+</body>
+</html>

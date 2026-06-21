@@ -1,0 +1,426 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Zen+Antique&family=Noto+Sans+JP:wght@300;400&display=swap');
+
+/* =====================
+   CSS Variables
+   ===================== */
+:root {
+  --black: #0a0a0a;
+  --dark: #111111;
+  --dark-mid: #1a1a1a;
+  --mid: #2a2a2a;
+  --border: rgba(255,255,255,0.08);
+  --text-dim: #666;
+  --text-mid: #999;
+  --text-light: #ccc;
+  --white: #f0f0f0;
+  --accent: #e8820a;
+  --font-display: 'Poppins', sans-serif;
+  --font-zen: 'Zen Antique', serif;
+  --font-noto: 'Noto Sans JP', sans-serif;
+}
+
+/* =====================
+   Reset & Base
+   ===================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #1e1e1e;
+  background-image: url('site-bg.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 「Created in /S」非表示 */
+[class*="studio"], [id*="studio"],
+a[href*="studio.site"]:not(.header-logo),
+div[style*="studio"], iframe[src*="studio"] {
+  display: none !important;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* =====================
+   グローバルアニメーション
+   ===================== */
+
+/* ブラー付き出現アニメーション（Hero以外の全要素） */
+@keyframes revealBlur {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+}
+
+/* スクロール連動 — 初期状態 */
+.reveal {
+  opacity: 0;
+  filter: blur(16px);
+  transform: translateY(12px);
+  transition:
+    opacity 1.0s cubic-bezier(0.37,0,0.63,1),
+    filter 1.0s cubic-bezier(0.37,0,0.63,1),
+    transform 1.0s cubic-bezier(0.37,0,0.63,1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateY(0);
+}
+
+/* 遅延バリエーション */
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.reveal-d4 { transition-delay: 0.4s; }
+
+/* =====================
+   Header
+   ===================== */
+
+/* ヘッダーテキスト: 先に上から降りてくる */
+@keyframes headerTextSlideDown {
+  from { transform: translateY(-80px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* ヘッダー背景: テキスト後にじわりとブラーで出現 */
+@keyframes headerBgReveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+}
+
+/* 背景をbefore疑似要素で管理してテキストと分離 */
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,10,0.35);
+  /* backdrop-filterはJSで付与（初期レイヤー確保によるチラつきを防ぐ） */
+  z-index: -1;
+  opacity: 0;
+  animation: headerBgReveal 2.5s ease 1.0s forwards;
+}
+
+/* JSがbackdrop-filterを有効化した後 */
+header.blur-ready::before {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* テキスト類（ロゴ・ナビ）は先に降りてくる — 全ページ共通 */
+/* 素のスタイル自体を不可視にしてFOUC（最初の1フレームのチラつき）を防止 */
+header .header-logo,
+header .nav-right,
+header .hamburger {
+  opacity: 0;
+  transform: translateY(-80px);
+  animation: headerTextSlideDown 0.6s cubic-bezier(0.37,0,0.63,1) 0.05s both;
+}
+
+.header-logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--white);
+}
+
+/* 左ナビ */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+/* 右ナビ（Contact） */
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+nav a,
+.nav-right a:not(.header-logo) {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: color 0.2s;
+  position: relative;
+}
+
+nav a::after,
+.nav-right a:not(.header-logo)::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+nav a:hover, .nav-right a:not(.header-logo):hover { color: var(--white); }
+nav a:hover::after, .nav-right a:not(.header-logo):hover::after { width: 100%; }
+nav a.active, .nav-right a.active { color: var(--white); }
+nav a.active::after, .nav-right a.active::after { width: 100%; }
+
+.sns-icons {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-left: 8px;
+  padding-left: 24px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.sns-icons a {
+  display: flex;
+  align-items: center;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.sns-icons a:hover { color: var(--white); }
+.sns-icons a::after { display: none !important; }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--white);
+  transition: all 0.3s;
+}
+
+/* Mobile nav */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,10,0.97);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.mobile-nav.open { display: flex; }
+
+.mobile-nav a {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-mid);
+  transition: color 0.2s;
+}
+
+.mobile-nav a:hover { color: var(--white); }
+
+.mobile-nav-close {
+  position: absolute;
+  top: 24px; right: 32px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-mid);
+  background: none;
+  border: none;
+  line-height: 1;
+}
+
+/* =====================
+   Section Labels
+   ===================== */
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+/* =====================
+   Footer — スクショと同じ配置
+   ===================== */
+footer {
+  background: transparent;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 52px 0 40px;
+  text-align: center;
+}
+
+.footer-name {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+/* スクロールで入ったときのreveal */
+.footer-name-reveal {
+  opacity: 0;
+  filter: blur(20px);
+  transform: scale(1.2);
+  transition:
+    opacity 1.2s cubic-bezier(0.45, 0, 0.55, 1),
+    filter  1.2s cubic-bezier(0.45, 0, 0.55, 1),
+    transform 1.2s cubic-bezier(0.45, 0, 0.55, 1);
+}
+.footer-name-reveal.in-view {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+}
+
+.footer-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+  margin: 0 auto 32px;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 16px;
+}
+
+.footer-nav a {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover { color: var(--white); }
+
+.footer-copy {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  font-family: var(--font-display);
+}
+/* Footer S6リンク */
+.footer-s6-link {
+  display: block;
+  cursor: pointer;
+  opacity: 0.88;
+  transition: opacity 0.3s;
+}
+.footer-s6-link:hover { opacity: 1; }
+
+/* Footer S6シンボル */
+.footer-s6 {
+  display: block;
+  margin: 0 auto 16px;
+}
+
+.footer-s6-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.12);
+  margin: 0 auto 20px;
+}
+
+
+/* フッターSNSアイコン */
+.footer-sns {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.footer-sns a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.footer-sns a:hover {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* =====================
+   Utility
+   ===================== */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+/* =====================
+   Responsive
+   ===================== */
+@media (max-width: 768px) {
+  header { padding: 0 24px; }
+  .nav-links, .sns-icons { display: none !important; }
+  .hamburger { display: flex; }
+  footer { padding: 60px 24px 40px; }
+  .container { padding: 0 24px; }
+}
