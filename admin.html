@@ -803,14 +803,15 @@ async function doLogin() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> 確認中...';
 
+  // Set STATE before API call so ghHeaders() can use the token
+  STATE.token = token;
+  STATE.owner = owner;
+  STATE.repo  = repo;
+
   try {
     // Test GitHub API
     const res = await ghGet(`repos/${owner}/${repo}`);
     if (!res.ok) throw new Error('リポジトリへのアクセスに失敗しました');
-
-    STATE.token = token;
-    STATE.owner = owner;
-    STATE.repo  = repo;
 
     sessionStorage.setItem('cms_token', token);
     sessionStorage.setItem('cms_owner', owner);
