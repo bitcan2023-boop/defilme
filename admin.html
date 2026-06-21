@@ -1255,6 +1255,10 @@ async function deleteWork(i) {
 }
 
 async function commitWorks() {
+  // Always refresh SHA before committing to avoid 409
+  const latest = await ghGetFile('works-data.js');
+  if (latest) STATE.worksSHA = latest.sha;
+
   const entries = STATE.worksData.map(w => {
     const lines = [];
     lines.push('  {');
@@ -1399,6 +1403,10 @@ async function deleteNews(i) {
 }
 
 async function commitNews() {
+  // Always refresh SHA before committing to avoid 409
+  const latest = await ghGetFile('news.json');
+  if (latest) STATE.newsSHA = latest.sha;
+
   const content = JSON.stringify(STATE.newsData, null, 2);
   const res = await ghPutFile('news.json', content, STATE.newsSHA,
     `CMS: update news.json (${new Date().toISOString().slice(0,10)})`);
