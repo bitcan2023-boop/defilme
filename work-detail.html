@@ -116,41 +116,47 @@
     /* ── メディアグリッド ── */
     .detail-media {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 3px;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px;
+      margin-top: 8px;
     }
 
+    /* デフォルト: 全部3列 */
+    .detail-media .media-item { grid-column: span 2; }
+
     /* 1枚: フル幅 */
-    .detail-media .media-item:only-child { grid-column: span 4; }
+    .detail-media .media-item:only-child { grid-column: span 6; }
 
-    /* 2枚: 均等2列 */
-    .detail-media.count-2 .media-item { grid-column: span 2; }
+    /* 2枚: 均等3列ずつ */
+    .detail-media.count-2 .media-item { grid-column: span 3; }
 
-    /* 3枚: 全部均等 */
-    .detail-media.count-3 .media-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    .detail-media.count-3 .media-item:nth-child(2),
-    .detail-media.count-3 .media-item:nth-child(3) { grid-column: span 2; }
+    /* 3枚: 均等2列ずつ */
+    .detail-media.count-3 .media-item { grid-column: span 2; }
 
-    /* 4枚: 2×2 */
+    /* 4枚: 3列 → 3+1配置 */
     .detail-media.count-4 .media-item { grid-column: span 2; }
+    .detail-media.count-4 .media-item:nth-child(4) { grid-column: span 6; }
 
-    /* 5枚: 最初1枚大きめ、残り4枚 */
-    .detail-media.count-5 .media-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
-    .detail-media.count-5 .media-item:nth-child(n+2) { grid-column: span 2; }
+    /* 5枚: 3+2 */
+    .detail-media.count-5 .media-item { grid-column: span 2; }
+    .detail-media.count-5 .media-item:nth-child(4),
+    .detail-media.count-5 .media-item:nth-child(5) { grid-column: span 3; }
 
-    /* 6枚以上: 4列均等 */
-    .detail-media.count-many .media-item { grid-column: span 1; }
+    /* 6枚以上: 3列均等 */
+    .detail-media.count-many .media-item { grid-column: span 2; }
 
     /* 動画・YouTube: 常にフル幅 */
     .detail-media .media-item.type-video,
-    .detail-media .media-item.type-youtube { grid-column: span 4 !important; grid-row: span 1 !important; }
+    .detail-media .media-item.type-youtube {
+      grid-column: span 6 !important;
+      grid-row: span 1 !important;
+    }
 
     .media-item {
       position: relative;
       overflow: hidden;
-      border-radius: 1px;
-      background: #111;
-      aspect-ratio: 3/2;
+      background: #0d0d0d;
+      aspect-ratio: 1/1;
     }
 
     /* 動画・YouTubeはaspect-ratio固定しない */
@@ -162,11 +168,14 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease, opacity 0.3s;
+      transition: transform 0.4s ease, opacity 0.25s;
       cursor: zoom-in;
     }
 
-    .media-item:hover img { transform: scale(1.05); opacity: 0.85; }
+    .media-item:hover img {
+      transform: scale(1.06);
+      opacity: 0.8;
+    }
 
     .media-item video {
       width: 100%;
@@ -192,8 +201,18 @@
       border: none;
     }
 
-    .media-caption {
-      display: none;
+    .media-caption { display: none; }
+
+    @media (max-width: 768px) {
+      .detail-media { grid-template-columns: repeat(3, 1fr); gap: 2px; }
+      .detail-media .media-item,
+      .detail-media.count-2 .media-item,
+      .detail-media.count-3 .media-item,
+      .detail-media.count-4 .media-item,
+      .detail-media.count-5 .media-item,
+      .detail-media.count-many .media-item { grid-column: span 1; }
+      .detail-media .media-item.type-video,
+      .detail-media .media-item.type-youtube { grid-column: span 3 !important; }
     }
 
     /* ── ライトボックス ── */
