@@ -1211,7 +1211,6 @@ async function saveWork(isDraft = false) {
     thumb,
     displayTitle: document.getElementById('work-displayTitle').value.trim(),
     media,
-    draft: isDraft ? true : undefined,
   };
 
   // Remove empty optional fields
@@ -1219,6 +1218,7 @@ async function saveWork(isDraft = false) {
   if (!work.description) delete work.description;
   if (!work.displayTitle) delete work.displayTitle;
   if (!work.date) delete work.date;
+  if (isDraft) work.draft = true;
 
   if (isEdit) {
     STATE.worksData[parseInt(editIdx)] = work;
