@@ -303,17 +303,34 @@
     <div id="lightbox-counter"></div>
   </div>
 
-  <script src="works-data.js"></script>
+
   <script>
     document.getElementById('hamburger').addEventListener('click', () =>
       document.getElementById('mobileNav').classList.add('open'));
     document.getElementById('mobileNavClose').addEventListener('click', () =>
       document.getElementById('mobileNav').classList.remove('open'));
 
-    // URLパラメータからIDを取得
+    // works-data.js を fetch して安全にパース
     const params = new URLSearchParams(window.location.search);
     const workId = params.get('id');
     const wrap = document.getElementById('detailWrap');
+
+    async function loadWorksData() {
+      try {
+        const res = await fetch('works-data.js?t=' + Date.now());
+        let text = await res.text();
+        // draft: undefined など undefined値を null に変換して安全にeval
+        text = text.replace(/:\s*undefined/g, ': null');
+        // WORKS_DATA配列を抽出
+        const match = text.match(/const WORKS_DATA\s*=\s*(\[[\s\S]*?\]);/);
+        if (match) {
+          return eval(match[1]);
+        }
+      } catch(e) {
+        console.error('works-data load error:', e);
+      }
+      return [];
+    }
 
     function subLabel(cat, sub) {
       const map = {
@@ -396,9 +413,12 @@
       return `<div class="media-item ${typeClass}">${inner}</div>`;
     }
 
+    (async () => {
     if (!workId) {
       wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
     } else {
+      wrap.innerHTML = '<div class="detail-loading">Loading...</div>';
+      const WORKS_DATA = await loadWorksData();
       const work = WORKS_DATA.find(w => w.id === workId);
       if (!work) {
         wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
@@ -426,6 +446,8 @@
         `;
       }
     }
+
+    })();
 
     // Reveal on scroll
     const revealObserver = new IntersectionObserver((entries) => {
