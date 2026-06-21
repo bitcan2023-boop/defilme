@@ -854,9 +854,8 @@ window.addEventListener('load', () => {
 // ── GITHUB API ──
 function ghHeaders() {
   return {
-    'Authorization': `Bearer ${STATE.token}`,
+    'Authorization': `token ${STATE.token}`,
     'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28',
   };
 }
 
