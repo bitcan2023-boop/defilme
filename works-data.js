@@ -12,10 +12,14 @@ const WORKS_DATA = [
     client: "UIMUI",
     description: "UIMUI New Single「感情ワンダーランド」Music Video。",
     thumb: "kanjo-wonderland.png",
-    displayTitle: 'UIMUI - MV "感情ワンダーランド"',
+    displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
     media: [
-      { type: "youtube", id: "hKkhIVI3VkI" }
+        {
+            "type": "youtube",
+            "id": "hKkhIVI3VkI"
+        }
     ],
+    draft: undefined,
   },
 
   {
@@ -29,9 +33,18 @@ const WORKS_DATA = [
     thumb: "FIJタイトル_4.jpg",
     displayTitle: "china town silhouette",
     media: [
-      { type: "image", src: "DSC01346.jpg" },
-      { type: "image", src: "FIJタイトル_4.jpg" },
-      { type: "image", src: "DSC01314.jpg" }
+        {
+            "type": "image",
+            "src": "DSC01346.jpg"
+        },
+        {
+            "type": "image",
+            "src": "FIJタイトル_4.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01314.jpg"
+        }
     ],
   }
 ];
