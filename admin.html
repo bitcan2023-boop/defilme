@@ -1065,10 +1065,10 @@ function addMediaRow(m) {
       <option value="video" ${m && m.type==='video' ? 'selected' : ''}>Video</option>
       <option value="youtube" ${m && m.type==='youtube' ? 'selected' : ''}>YouTube</option>
     </select>
-    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパスまたは画像をドロップ'}"
+    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパスまたはドロップ'}"
       value="${m ? (m.src || m.id || '') : ''}">
-    <button class="btn btn-ghost btn-sm" onclick="triggerMediaUpload(this)" title="画像をアップロード">📁</button>
-    <input type="file" accept="image/*" style="display:none" onchange="handleMediaFile(this)">
+    <button class="btn btn-ghost btn-sm" onclick="triggerMediaUpload(this)" title="ファイルをアップロード">📁</button>
+    <input type="file" accept="image/*,video/*" style="display:none" onchange="handleMediaFile(this)">
     <button class="btn btn-danger" onclick="this.closest('.media-item-row').remove()">✕</button>
   `;
   document.getElementById('media-rows').appendChild(div);
@@ -1128,6 +1128,19 @@ async function handleMediaFile(input) {
   if (!file) return;
   const row = input.closest('.media-item-row');
   const srcInput = row.querySelector('.media-row-src');
+  const typeSelect = row.querySelector('.media-row-type');
+
+  // Auto-select type based on file
+  if (file.type.startsWith('video/')) {
+    typeSelect.value = 'video';
+  } else if (file.type.startsWith('image/')) {
+    typeSelect.value = 'image';
+  }
+
+  // Show uploading state
+  srcInput.placeholder = 'アップロード中...';
+  srcInput.disabled = true;
+
   const reader = new FileReader();
   reader.onload = async e => {
     const base64 = e.target.result.split(',')[1];
@@ -1137,11 +1150,17 @@ async function handleMediaFile(input) {
       const res = await ghPutImage(file.name, base64, sha, `CMS: upload media ${file.name}`);
       if (res.ok) {
         srcInput.value = file.name;
-        toast(`画像アップロード完了: ${file.name} ✓`, 'success');
+        srcInput.placeholder = 'ファイルパスまたはドロップ';
+        srcInput.disabled = false;
+        toast(`アップロード完了: ${file.name} ✓`, 'success');
       } else {
+        srcInput.placeholder = 'アップロード失敗';
+        srcInput.disabled = false;
         toast('アップロード失敗', 'error');
       }
     } catch(e) {
+      srcInput.placeholder = 'エラーが発生しました';
+      srcInput.disabled = false;
       toast('アップロードエラー', 'error');
     }
   };
@@ -1152,7 +1171,14 @@ function handleMediaDrop(e, row) {
   e.preventDefault();
   row.style.borderColor = '';
   const file = e.dataTransfer.files[0];
-  if (!file || !file.type.startsWith('image/')) return;
+  if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) return;
+  const fakeInput = row.querySelector('input[type="file"]');
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  fakeInput.files = dt.files;
+  handleMediaFile(fakeInput);
+  return;
+  // Legacy fallback below (unused)
   const fakeInput = { files: [file], closest: () => row };
   // Simulate file input
   const reader = new FileReader();

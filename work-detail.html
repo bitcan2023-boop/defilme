@@ -228,6 +228,8 @@
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </header>
 
+  <div class="detail-wrap" id="detailWrap"></div>
+
   <div class="mobile-nav" id="mobileNav">
     <button class="mobile-nav-close" id="mobileNavClose">✕</button>
     <a href="works.html">Works</a>
@@ -338,7 +340,7 @@
     if (!workId) {
       wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
     } else {
-      const work = WORKS_DATA.find(w => w.id === workId && !w.draft);
+      const work = WORKS_DATA.find(w => w.id === workId);
       if (!work) {
         wrap.innerHTML = `<div class="detail-notfound"><p>作品が見つかりませんでした。</p><a href="works.html" class="back-btn">← Works一覧へ</a></div>`;
       } else {
