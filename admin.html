@@ -525,6 +525,36 @@
   #media-rows .media-row-type { width: 110px; flex-shrink: 0; }
   #media-rows .media-row-src { flex: 1; }
 
+  /* ── IMAGE UPLOAD ── */
+  .img-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-top: 8px;
+  }
+  .img-upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .img-upload-area.has-image { border-style: solid; border-color: var(--accent); }
+  .img-upload-preview {
+    width: 100%; max-height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: none;
+  }
+  .img-upload-label { font-size: 12px; color: var(--text-muted); }
+  .img-upload-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .img-uploading {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
   .img-preview-small {
     width: 48px; height: 32px;
     object-fit: cover;
@@ -710,9 +740,19 @@
         <textarea id="work-description" placeholder="作品の説明文"></textarea>
       </div>
       <div class="field-group span2">
-        <label class="field-label">サムネイル画像パス <span style="color:var(--danger)">*</span></label>
-        <input type="text" id="work-thumb" placeholder="kanjo-wonderland.png">
-        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">先にファイルを GitHub にアップロードしてから、そのファイル名を入力してください。</div>
+        <label class="field-label">サムネイル画像 <span style="color:var(--danger)">*</span></label>
+        <div class="img-upload-area" id="thumb-upload-area" onclick="document.getElementById('thumb-file-input').click()"
+          ondragover="event.preventDefault();this.classList.add('has-image')"
+          ondragleave="this.classList.remove('has-image')"
+          ondrop="handleThumbDrop(event)">
+          <img id="thumb-preview-img" class="img-upload-preview" alt="">
+          <div class="img-upload-label" id="thumb-upload-label">📁 クリックまたはドラッグ＆ドロップ</div>
+          <div class="img-upload-sub">JPG / PNG / WebP</div>
+        </div>
+        <input type="file" id="thumb-file-input" accept="image/*" style="display:none" onchange="handleThumbFile(this.files[0])">
+        <div class="img-uploading" id="thumb-uploading"><span class="spinner"></span> アップロード中...</div>
+        <input type="text" id="work-thumb" placeholder="kanjo-wonderland.png" style="margin-top:8px" readonly>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">または上のエリアから画像をアップロード（保存時に自動アップロード）</div>
       </div>
     </div>
 
@@ -981,6 +1021,16 @@ function editWork(i) {
 
 function closeWorkModal() {
   document.getElementById('work-modal').classList.remove('open');
+  // Reset thumb upload state
+  thumbFileBase64 = null;
+  thumbFileToUpload = null;
+  thumbFileName = null;
+  const preview = document.getElementById('thumb-preview-img');
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const label = document.getElementById('thumb-upload-label');
+  if (label) label.textContent = '📁 クリックまたはドラッグ＆ドロップ';
+  const area = document.getElementById('thumb-upload-area');
+  if (area) area.classList.remove('has-image');
 }
 
 function updateSubOptions() {
@@ -1010,6 +1060,8 @@ function addMediaRow(m) {
     </select>
     <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパス'}"
       value="${m ? (m.src || m.id || '') : ''}">
+    <button class="btn btn-ghost btn-sm" onclick="triggerMediaUpload(this)" title="画像をアップロード">📁</button>
+    <input type="file" accept="image/*" style="display:none" onchange="handleMediaFile(this)">
     <button class="btn btn-danger" onclick="this.closest('.media-item-row').remove()">✕</button>
   `;
   document.getElementById('media-rows').appendChild(div);
@@ -1018,6 +1070,75 @@ function addMediaRow(m) {
 function updateMediaRow(sel) {
   const input = sel.nextElementSibling;
   input.placeholder = sel.value === 'youtube' ? 'YouTube ID（例: dQw4w9WgXcQ）' : 'ファイルパス';
+}
+
+// ── IMAGE UPLOAD HELPERS ──
+let thumbFileToUpload = null;
+let thumbFileBase64 = null;
+let thumbFileName = null;
+
+function handleThumbFile(file) {
+  if (!file) return;
+  thumbFileToUpload = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    thumbFileBase64 = e.target.result.split(',')[1];
+    thumbFileName = file.name;
+    const preview = document.getElementById('thumb-preview-img');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('thumb-upload-label').textContent = '✓ ' + file.name;
+    document.getElementById('thumb-upload-area').classList.add('has-image');
+    document.getElementById('work-thumb').value = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleThumbDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleThumbFile(file);
+}
+
+async function uploadThumbIfNeeded() {
+  if (!thumbFileBase64 || !thumbFileName) return;
+  const existing = await ghGetFile(thumbFileName);
+  const sha = existing ? existing.sha : null;
+  const res = await ghPutImage(thumbFileName, thumbFileBase64, sha,
+    `CMS: upload image ${thumbFileName}`);
+  if (!res.ok) throw new Error('画像のアップロードに失敗しました');
+  thumbFileBase64 = null;
+  thumbFileToUpload = null;
+}
+
+function triggerMediaUpload(btn) {
+  const fileInput = btn.nextElementSibling;
+  fileInput.click();
+}
+
+async function handleMediaFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const row = input.closest('.media-item-row');
+  const srcInput = row.querySelector('.media-row-src');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const base64 = e.target.result.split(',')[1];
+    const existing = await ghGetFile(file.name);
+    const sha = existing ? existing.sha : null;
+    try {
+      const res = await ghPutImage(file.name, base64, sha, `CMS: upload media ${file.name}`);
+      if (res.ok) {
+        srcInput.value = file.name;
+        toast(`画像アップロード完了: ${file.name} ✓`, 'success');
+      } else {
+        toast('アップロード失敗', 'error');
+      }
+    } catch(e) {
+      toast('アップロードエラー', 'error');
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 async function saveWork() {
@@ -1068,6 +1189,10 @@ async function saveWork() {
 
   setSaving('work', true);
   try {
+    // Upload thumb image if selected
+    document.getElementById('thumb-uploading').style.display = 'flex';
+    await uploadThumbIfNeeded();
+    document.getElementById('thumb-uploading').style.display = 'none';
     await commitWorks();
     toast('保存して公開しました ✓', 'success');
     closeWorkModal();
