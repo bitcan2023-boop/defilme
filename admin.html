@@ -1172,34 +1172,11 @@ function handleMediaDrop(e, row) {
   row.style.borderColor = '';
   const file = e.dataTransfer.files[0];
   if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) return;
-  const fakeInput = row.querySelector('input[type="file"]');
+  const fileInput = row.querySelector('input[type="file"]');
   const dt = new DataTransfer();
   dt.items.add(file);
-  fakeInput.files = dt.files;
-  handleMediaFile(fakeInput);
-  return;
-  // Legacy fallback below (unused)
-  const fakeInput = { files: [file], closest: () => row };
-  // Simulate file input
-  const reader = new FileReader();
-  reader.onload = async ev => {
-    const base64 = ev.target.result.split(',')[1];
-    const srcInput = row.querySelector('.media-row-src');
-    try {
-      const existing = await ghGetFile(file.name);
-      const sha = existing ? existing.sha : null;
-      const res = await ghPutImage(file.name, base64, sha, `CMS: upload media ${file.name}`);
-      if (res.ok) {
-        srcInput.value = file.name;
-        toast(`画像アップロード完了: ${file.name} ✓`, 'success');
-      } else {
-        toast('アップロード失敗', 'error');
-      }
-    } catch(e) {
-      toast('アップロードエラー', 'error');
-    }
-  };
-  reader.readAsDataURL(file);
+  fileInput.files = dt.files;
+  handleMediaFile(fileInput);
 }
 
 async function saveWork(isDraft = false) {
