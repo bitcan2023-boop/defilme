@@ -331,6 +331,7 @@
 
   .badge.video { border-color: #4a7ee8; color: #4a7ee8; }
   .badge.photo { border-color: #9a4ae8; color: #9a4ae8; }
+  .badge.draft { border-color: #e8a00a; color: #e8a00a; }
 
   .work-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
@@ -767,7 +768,10 @@
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeWorkModal()">キャンセル</button>
-      <button class="btn btn-accent" id="work-save-btn" onclick="saveWork()">
+      <button class="btn btn-ghost" id="work-draft-btn" onclick="saveWork(true)" style="border-color:var(--accent);color:var(--accent)">
+        <span id="work-draft-label">下書き保存</span>
+      </button>
+      <button class="btn btn-accent" id="work-save-btn" onclick="saveWork(false)">
         <span id="work-save-label">保存して公開</span>
       </button>
     </div>
@@ -963,10 +967,10 @@ function renderWorks(data) {
     return;
   }
   el.innerHTML = data.map((w, i) => `
-    <div class="work-item">
+    <div class="work-item" style="${w.draft ? 'opacity:0.6' : ''}">
       <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
       <div class="work-info">
-        <div class="work-title">${w.title || w.id}</div>
+        <div class="work-title">${w.title || w.id} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
         <div class="work-meta">
           <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${w.category}</span>
           <span>${w.sub || ''}</span>
@@ -1052,13 +1056,16 @@ function updateSubOptions() {
 function addMediaRow(m) {
   const div = document.createElement('div');
   div.className = 'media-item-row';
+  div.setAttribute('ondragover', "event.preventDefault();this.style.borderColor='var(--accent)'");
+  div.setAttribute('ondragleave', "this.style.borderColor=''");
+  div.setAttribute('ondrop', "handleMediaDrop(event,this)");
   div.innerHTML = `
     <select class="media-row-type" onchange="updateMediaRow(this)">
       <option value="image" ${m && m.type==='image' ? 'selected' : ''}>Image</option>
       <option value="video" ${m && m.type==='video' ? 'selected' : ''}>Video</option>
       <option value="youtube" ${m && m.type==='youtube' ? 'selected' : ''}>YouTube</option>
     </select>
-    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパス'}"
+    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパスまたは画像をドロップ'}"
       value="${m ? (m.src || m.id || '') : ''}">
     <button class="btn btn-ghost btn-sm" onclick="triggerMediaUpload(this)" title="画像をアップロード">📁</button>
     <input type="file" accept="image/*" style="display:none" onchange="handleMediaFile(this)">
@@ -1141,7 +1148,35 @@ async function handleMediaFile(input) {
   reader.readAsDataURL(file);
 }
 
-async function saveWork() {
+function handleMediaDrop(e, row) {
+  e.preventDefault();
+  row.style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const fakeInput = { files: [file], closest: () => row };
+  // Simulate file input
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const base64 = ev.target.result.split(',')[1];
+    const srcInput = row.querySelector('.media-row-src');
+    try {
+      const existing = await ghGetFile(file.name);
+      const sha = existing ? existing.sha : null;
+      const res = await ghPutImage(file.name, base64, sha, `CMS: upload media ${file.name}`);
+      if (res.ok) {
+        srcInput.value = file.name;
+        toast(`画像アップロード完了: ${file.name} ✓`, 'success');
+      } else {
+        toast('アップロード失敗', 'error');
+      }
+    } catch(e) {
+      toast('アップロードエラー', 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveWork(isDraft = false) {
   const editIdx = document.getElementById('work-edit-index').value;
   const isEdit = editIdx !== '';
 
@@ -1173,6 +1208,7 @@ async function saveWork() {
     thumb,
     displayTitle: document.getElementById('work-displayTitle').value.trim(),
     media,
+    draft: isDraft ? true : undefined,
   };
 
   // Remove empty optional fields
@@ -1194,7 +1230,7 @@ async function saveWork() {
     await uploadThumbIfNeeded();
     document.getElementById('thumb-uploading').style.display = 'none';
     await commitWorks();
-    toast('保存して公開しました ✓', 'success');
+    toast(isDraft ? '下書きとして保存しました ✓' : '保存して公開しました ✓', 'success');
     closeWorkModal();
     renderWorks(STATE.worksData);
   } catch(e) {
@@ -1441,7 +1477,9 @@ function showSection(name) {
 function setSaving(type, saving) {
   const btn = document.getElementById(`${type}-save-btn`);
   const label = document.getElementById(`${type}-save-label`);
+  const draftBtn = document.getElementById(`${type}-draft-btn`);
   btn.disabled = saving;
+  if (draftBtn) draftBtn.disabled = saving;
   label.innerHTML = saving ? '<span class="spinner"></span> 保存中...' : '保存して公開';
 }
 
