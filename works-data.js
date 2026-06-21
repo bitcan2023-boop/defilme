@@ -15,11 +15,11 @@ const WORKS_DATA = [
     displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
     media: [
         {
-            "type": "image",
-            "src": "kanjo-wonderland.png",
-            "caption": "感情ワンダーランド — UIMUI"
+            "type": "video",
+            "src": "kanjo-wonderland.png"
         }
     ],
+    draft: undefined,
   },
 
   {
