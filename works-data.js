@@ -30,7 +30,7 @@ const WORKS_DATA = [
     date: "2026-06",
     client: "DeFilMe",
     description: "夜の中華街に浮かび上がるネオンシルエット",
-    thumb: "DSC01346.jpg",
+    thumb: "FIJタイトル_4.jpg",
     displayTitle: "china town silhouette",
     media: [
         {
@@ -40,6 +40,10 @@ const WORKS_DATA = [
         {
             "type": "image",
             "src": "FIJタイトル_4.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01314.jpg"
         }
     ],
   }
