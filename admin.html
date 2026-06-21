@@ -838,17 +838,12 @@ function doLogout() {
   location.reload();
 }
 
-// Auto-restore session
+// Restore owner/repo only (token must be entered manually each time)
 window.addEventListener('load', () => {
-  const token = sessionStorage.getItem('cms_token');
   const owner = sessionStorage.getItem('cms_owner');
   const repo  = sessionStorage.getItem('cms_repo');
-  if (token && owner && repo) {
-    document.getElementById('token-input').value = token;
-    document.getElementById('owner-input').value = owner;
-    document.getElementById('repo-input').value  = repo;
-    doLogin();
-  }
+  if (owner) document.getElementById('owner-input').value = owner;
+  if (repo)  document.getElementById('repo-input').value  = repo;
 });
 
 // ── GITHUB API ──
