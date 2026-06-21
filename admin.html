@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeFilMe CMS</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #e8820a;
+    --accent-dim: rgba(232,130,10,0.12);
+    --text: #e8e8e8;
+    --text-muted: #666;
+    --text-dim: #999;
+    --danger: #e84a4a;
+    --success: #4ae89a;
+    --font: 'Poppins', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── FONTS ── */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+  /* ── LOGIN ── */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-logo {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .login-logo span { color: var(--accent); }
+
+  .login-sub {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 40px;
+    letter-spacing: 0.05em;
+  }
+
+  .field-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .field-group { margin-bottom: 20px; }
+
+  input[type="text"], input[type="password"], input[type="date"],
+  input[type="month"], textarea, select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .btn-danger:hover { border-color: var(--danger); }
+
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-accent:hover:not(:disabled) { opacity: 0.88; }
+
+  /* ── APP SHELL ── */
+  #app { display: none; }
+
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+  }
+
+  .topbar-logo {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text);
+  }
+
+  .topbar-logo span { color: var(--accent); }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    display: inline-block;
+  }
+
+  .status-dot.ok { background: var(--success); }
+
+  .sidebar {
+    position: fixed;
+    top: 52px; left: 0; bottom: 0;
+    width: 200px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 8px 20px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+    user-select: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+
+  .main {
+    margin-left: 200px;
+    margin-top: 52px;
+    padding: 32px;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  /* ── WORKS LIST ── */
+  .works-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .work-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .work-thumb {
+    width: 64px; height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .work-info { flex: 1; min-width: 0; }
+
+  .work-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .work-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .badge.video { border-color: #4a7ee8; color: #4a7ee8; }
+  .badge.photo { border-color: #9a4ae8; color: #9a4ae8; }
+
+  .work-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  /* ── NEWS LIST ── */
+  .news-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .news-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .news-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .news-info { flex: 1; min-width: 0; }
+
+  .news-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .news-body {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── FORM ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-grid .span2 { grid-column: span 2; }
+
+  /* ── HERO ── */
+  .hero-preview {
+    width: 100%;
+    aspect-ratio: 16/7;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--surface2);
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-dim); }
+  .upload-zone-icon { font-size: 32px; margin-bottom: 12px; }
+  .upload-zone-text { color: var(--text-dim); font-size: 13px; }
+  .upload-zone-sub { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .modal-title { font-size: 16px; font-weight: 600; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 13px;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 320px;
+  }
+
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { border-color: var(--success); }
+  #toast.error { border-color: var(--danger); }
+
+  /* ── MISC ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state-text { font-size: 13px; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .media-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .media-item-row select, .media-item-row input { margin: 0; }
+
+  .media-item-row .btn-danger { margin-left: auto; flex-shrink: 0; }
+
+  #media-rows .media-row-type { width: 110px; flex-shrink: 0; }
+  #media-rows .media-row-src { flex: 1; }
+
+  .img-preview-small {
+    width: 48px; height: 32px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="login-sub">Content Management System</div>
+
+    <div class="field-group">
+      <label class="field-label">GitHub Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    </div>
+    <div class="field-group">
+      <label class="field-label">GitHub ユーザー名</label>
+      <input type="text" id="owner-input" value="bitcan2023-boop">
+    </div>
+    <div class="field-group">
+      <label class="field-label">リポジトリ名</label>
+      <input type="text" id="repo-input" value="defilme">
+    </div>
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">ログイン</button>
+    <div id="login-error" style="color:var(--danger);font-size:12px;margin-top:12px;display:none;"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="topbar-right">
+      <span class="status-dot ok" id="status-dot"></span>
+      <span style="font-size:12px;color:var(--text-muted)" id="status-text">接続済み</span>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">ログアウト</button>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-label">コンテンツ</div>
+    <div class="nav-item active" onclick="showSection('works')">
+      <span class="nav-icon">🎬</span> Works
+    </div>
+    <div class="nav-item" onclick="showSection('news')">
+      <span class="nav-icon">📰</span> News
+    </div>
+    <div class="nav-label" style="margin-top:8px">設定</div>
+    <div class="nav-item" onclick="showSection('hero')">
+      <span class="nav-icon">🖼️</span> Hero 画像
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- WORKS -->
+    <div class="section active" id="section-works">
+      <div class="section-header">
+        <div class="section-title">Works</div>
+        <button class="btn btn-accent" onclick="openWorkModal()">＋ 作品を追加</button>
+      </div>
+      <div class="works-list" id="works-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <div class="empty-state-text">読み込み中...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="section" id="section-news">
+      <div class="section-header">
+        <div class="section-title">News</div>
+        <button class="btn btn-accent" onclick="openNewsModal()">＋ 記事を追加</button>
+      </div>
+      <div class="news-list" id="news-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <div class="empty-state-text">読み込み中...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="section" id="section-hero">
+      <div class="section-header">
+        <div class="section-title">Hero 画像</div>
+      </div>
+      <div class="card">
+        <div class="card-title">現在の Hero 画像</div>
+        <img id="hero-preview" class="hero-preview" src="" alt="Hero プレビュー" onerror="this.style.display='none'">
+        <div class="upload-zone" id="hero-drop-zone" onclick="document.getElementById('hero-file-input').click()"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroDrop(event)">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップで画像をアップロード</div>
+          <div class="upload-zone-sub">JPG / PNG / WebP 推奨サイズ: 1920×800px</div>
+        </div>
+        <input type="file" id="hero-file-input" accept="image/*" style="display:none" onchange="handleHeroFile(this.files[0])">
+        <div id="hero-upload-info" style="display:none;margin-top:16px;">
+          <div class="divider"></div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-new-preview" style="width:120px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
+            <div>
+              <div id="hero-file-name" style="font-size:13px;font-weight:500;margin-bottom:4px;"></div>
+              <div id="hero-file-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" style="margin-left:auto" onclick="uploadHeroImage()">アップロード</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Hero 画像について</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">
+          アップロードした画像は GitHub の <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code> として保存されます。<br>
+          index.html の hero src を <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code> に変更することで表示されます。
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WORK MODAL -->
+<div class="modal-overlay" id="work-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="work-modal-title">作品を追加</div>
+      <button class="modal-close" onclick="closeWorkModal()">×</button>
+    </div>
+
+    <input type="hidden" id="work-edit-index">
+
+    <div class="form-grid">
+      <div class="field-group span2">
+        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="work-title" placeholder="感情ワンダーランド">
+      </div>
+      <div class="field-group">
+        <label class="field-label">ID（URL用）<span style="color:var(--danger)">*</span></label>
+        <input type="text" id="work-id" placeholder="kanjo-wonderland">
+      </div>
+      <div class="field-group">
+        <label class="field-label">表示タイトル</label>
+        <input type="text" id="work-displayTitle" placeholder='UIMUI - MV "感情ワンダーランド"'>
+      </div>
+      <div class="field-group">
+        <label class="field-label">カテゴリ <span style="color:var(--danger)">*</span></label>
+        <select id="work-category" onchange="updateSubOptions()">
+          <option value="videography">Videography</option>
+          <option value="photography">Photography</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">サブカテゴリ <span style="color:var(--danger)">*</span></label>
+        <select id="work-sub">
+          <option value="music-video">Music Video</option>
+          <option value="live-shoot">Live Shoot</option>
+          <option value="documentary">Documentary</option>
+          <option value="snap">Snap</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">年月</label>
+        <input type="month" id="work-date" placeholder="2025-12">
+      </div>
+      <div class="field-group">
+        <label class="field-label">クライアント</label>
+        <input type="text" id="work-client" placeholder="UIMUI">
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">説明文</label>
+        <textarea id="work-description" placeholder="作品の説明文"></textarea>
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">サムネイル画像パス <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="work-thumb" placeholder="kanjo-wonderland.png">
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">先にファイルを GitHub にアップロードしてから、そのファイル名を入力してください。</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">メディア</div>
+      <button class="btn btn-ghost btn-sm" onclick="addMediaRow()">＋ 追加</button>
+    </div>
+
+    <div id="media-rows"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeWorkModal()">キャンセル</button>
+      <button class="btn btn-accent" id="work-save-btn" onclick="saveWork()">
+        <span id="work-save-label">保存して公開</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS MODAL -->
+<div class="modal-overlay" id="news-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="news-modal-title">記事を追加</div>
+      <button class="modal-close" onclick="closeNewsModal()">×</button>
+    </div>
+
+    <input type="hidden" id="news-edit-index">
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label class="field-label">日付 <span style="color:var(--danger)">*</span></label>
+        <input type="date" id="news-date">
+      </div>
+      <div class="field-group">
+        <label class="field-label">カテゴリ</label>
+        <select id="news-category">
+          <option value="Works">Works</option>
+          <option value="News">News</option>
+          <option value="Info">Info</option>
+        </select>
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="news-title" placeholder="記事タイトル">
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">本文</label>
+        <textarea id="news-body" style="min-height:120px" placeholder="記事の本文"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeNewsModal()">キャンセル</button>
+      <button class="btn btn-accent" id="news-save-btn" onclick="saveNews()">
+        <span id="news-save-label">保存して公開</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── STATE ──
+let STATE = {
+  token: '',
+  owner: '',
+  repo: '',
+  worksData: [],
+  newsData: [],
+  worksSHA: '',
+  newsSHA: '',
+};
+
+// ── LOGIN ──
+async function doLogin() {
+  const token = document.getElementById('token-input').value.trim();
+  const owner = document.getElementById('owner-input').value.trim();
+  const repo  = document.getElementById('repo-input').value.trim();
+
+  if (!token || !owner || !repo) return showError('すべての項目を入力してください');
+
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 確認中...';
+
+  try {
+    // Test GitHub API
+    const res = await ghGet(`repos/${owner}/${repo}`);
+    if (!res.ok) throw new Error('リポジトリへのアクセスに失敗しました');
+
+    STATE.token = token;
+    STATE.owner = owner;
+    STATE.repo  = repo;
+
+    sessionStorage.setItem('cms_token', token);
+    sessionStorage.setItem('cms_owner', owner);
+    sessionStorage.setItem('cms_repo',  repo);
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+    await loadAll();
+  } catch(e) {
+    showError(e.message || 'ログインに失敗しました');
+    btn.disabled = false;
+    btn.innerHTML = 'ログイン';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function doLogout() {
+  sessionStorage.clear();
+  location.reload();
+}
+
+// Auto-restore session
+window.addEventListener('load', () => {
+  const token = sessionStorage.getItem('cms_token');
+  const owner = sessionStorage.getItem('cms_owner');
+  const repo  = sessionStorage.getItem('cms_repo');
+  if (token && owner && repo) {
+    document.getElementById('token-input').value = token;
+    document.getElementById('owner-input').value = owner;
+    document.getElementById('repo-input').value  = repo;
+    doLogin();
+  }
+});
+
+// ── GITHUB API ──
+function ghHeaders() {
+  return {
+    'Authorization': `Bearer ${STATE.token}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+}
+
+async function ghGet(path) {
+  return fetch(`https://api.github.com/${path}`, { headers: ghHeaders() });
+}
+
+async function ghGetFile(filePath) {
+  const res = await ghGet(`repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`);
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function ghPutFile(filePath, content, sha, message) {
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+  };
+  if (sha) body.sha = sha;
+
+  const res = await fetch(`https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res;
+}
+
+async function ghPutImage(filePath, base64Data, sha, message) {
+  const body = { message, content: base64Data };
+  if (sha) body.sha = sha;
+  const res = await fetch(`https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res;
+}
+
+// ── LOAD ALL ──
+async function loadAll() {
+  await Promise.all([loadWorks(), loadNews(), loadHeroPreview()]);
+}
+
+// ── WORKS ──
+async function loadWorks() {
+  const file = await ghGetFile('works-data.js');
+  if (!file) { renderWorks([]); return; }
+
+  STATE.worksSHA = file.sha;
+  const content = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+
+  // Parse WORKS_DATA array from JS
+  try {
+    const match = content.match(/const WORKS_DATA\s*=\s*(\[[\s\S]*?\]);/);
+    if (match) {
+      STATE.worksData = eval(match[1]);
+    }
+  } catch(e) {
+    STATE.worksData = [];
+  }
+  renderWorks(STATE.worksData);
+}
+
+function renderWorks(data) {
+  const el = document.getElementById('works-list');
+  if (!data.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎬</div><div class="empty-state-text">作品がまだありません</div></div>`;
+    return;
+  }
+  el.innerHTML = data.map((w, i) => `
+    <div class="work-item">
+      <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
+      <div class="work-info">
+        <div class="work-title">${w.title || w.id}</div>
+        <div class="work-meta">
+          <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${w.category}</span>
+          <span>${w.sub || ''}</span>
+          <span>${w.date || ''}</span>
+        </div>
+      </div>
+      <div class="work-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editWork(${i})">編集</button>
+        <button class="btn btn-danger" onclick="deleteWork(${i})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openWorkModal(editIndex) {
+  document.getElementById('work-edit-index').value = '';
+  document.getElementById('work-modal-title').textContent = '作品を追加';
+  document.getElementById('work-title').value = '';
+  document.getElementById('work-id').value = '';
+  document.getElementById('work-displayTitle').value = '';
+  document.getElementById('work-category').value = 'videography';
+  document.getElementById('work-date').value = '';
+  document.getElementById('work-client').value = '';
+  document.getElementById('work-description').value = '';
+  document.getElementById('work-thumb').value = '';
+  document.getElementById('media-rows').innerHTML = '';
+  updateSubOptions();
+  document.getElementById('work-modal').classList.add('open');
+}
+
+function editWork(i) {
+  const w = STATE.worksData[i];
+  document.getElementById('work-edit-index').value = i;
+  document.getElementById('work-modal-title').textContent = '作品を編集';
+  document.getElementById('work-title').value = w.title || '';
+  document.getElementById('work-id').value = w.id || '';
+  document.getElementById('work-displayTitle').value = w.displayTitle || '';
+  document.getElementById('work-category').value = w.category || 'videography';
+  updateSubOptions();
+  document.getElementById('work-sub').value = w.sub || '';
+  document.getElementById('work-date').value = w.date || '';
+  document.getElementById('work-client').value = w.client || '';
+  document.getElementById('work-description').value = w.description || '';
+  document.getElementById('work-thumb').value = w.thumb || '';
+
+  // Media rows
+  document.getElementById('media-rows').innerHTML = '';
+  (w.media || []).forEach(m => addMediaRow(m));
+
+  document.getElementById('work-modal').classList.add('open');
+}
+
+function closeWorkModal() {
+  document.getElementById('work-modal').classList.remove('open');
+}
+
+function updateSubOptions() {
+  const cat = document.getElementById('work-category').value;
+  const sub = document.getElementById('work-sub');
+  if (cat === 'videography') {
+    sub.innerHTML = `
+      <option value="music-video">Music Video</option>
+      <option value="live-shoot">Live Shoot</option>
+      <option value="documentary">Documentary</option>
+      <option value="snap">Snap</option>`;
+  } else {
+    sub.innerHTML = `
+      <option value="portrait">Portrait</option>
+      <option value="snap">Snap</option>`;
+  }
+}
+
+function addMediaRow(m) {
+  const div = document.createElement('div');
+  div.className = 'media-item-row';
+  div.innerHTML = `
+    <select class="media-row-type" onchange="updateMediaRow(this)">
+      <option value="image" ${m && m.type==='image' ? 'selected' : ''}>Image</option>
+      <option value="video" ${m && m.type==='video' ? 'selected' : ''}>Video</option>
+      <option value="youtube" ${m && m.type==='youtube' ? 'selected' : ''}>YouTube</option>
+    </select>
+    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパス'}"
+      value="${m ? (m.src || m.id || '') : ''}">
+    <button class="btn btn-danger" onclick="this.closest('.media-item-row').remove()">✕</button>
+  `;
+  document.getElementById('media-rows').appendChild(div);
+}
+
+function updateMediaRow(sel) {
+  const input = sel.nextElementSibling;
+  input.placeholder = sel.value === 'youtube' ? 'YouTube ID（例: dQw4w9WgXcQ）' : 'ファイルパス';
+}
+
+async function saveWork() {
+  const editIdx = document.getElementById('work-edit-index').value;
+  const isEdit = editIdx !== '';
+
+  const id = document.getElementById('work-id').value.trim();
+  const title = document.getElementById('work-title').value.trim();
+  const thumb = document.getElementById('work-thumb').value.trim();
+
+  if (!id || !title || !thumb) { toast('ID・タイトル・サムネイルは必須です', 'error'); return; }
+
+  // Collect media
+  const mediaRows = document.querySelectorAll('#media-rows .media-item-row');
+  const media = [];
+  mediaRows.forEach(row => {
+    const type = row.querySelector('.media-row-type').value;
+    const src  = row.querySelector('.media-row-src').value.trim();
+    if (!src) return;
+    if (type === 'youtube') media.push({ type, id: src });
+    else media.push({ type, src });
+  });
+
+  const work = {
+    id,
+    category: document.getElementById('work-category').value,
+    sub: document.getElementById('work-sub').value,
+    title,
+    date: document.getElementById('work-date').value,
+    client: document.getElementById('work-client').value.trim(),
+    description: document.getElementById('work-description').value.trim(),
+    thumb,
+    displayTitle: document.getElementById('work-displayTitle').value.trim(),
+    media,
+  };
+
+  // Remove empty optional fields
+  if (!work.client) delete work.client;
+  if (!work.description) delete work.description;
+  if (!work.displayTitle) delete work.displayTitle;
+  if (!work.date) delete work.date;
+
+  if (isEdit) {
+    STATE.worksData[parseInt(editIdx)] = work;
+  } else {
+    STATE.worksData.push(work);
+  }
+
+  setSaving('work', true);
+  try {
+    await commitWorks();
+    toast('保存して公開しました ✓', 'success');
+    closeWorkModal();
+    renderWorks(STATE.worksData);
+  } catch(e) {
+    toast('保存に失敗しました: ' + e.message, 'error');
+  }
+  setSaving('work', false);
+}
+
+async function deleteWork(i) {
+  if (!confirm(`「${STATE.worksData[i].title}」を削除しますか？`)) return;
+  STATE.worksData.splice(i, 1);
+  try {
+    await commitWorks();
+    toast('削除しました', 'success');
+    renderWorks(STATE.worksData);
+  } catch(e) {
+    toast('削除に失敗しました', 'error');
+  }
+}
+
+async function commitWorks() {
+  const entries = STATE.worksData.map(w => {
+    const lines = [];
+    lines.push('  {');
+    Object.entries(w).forEach(([k, v]) => {
+      if (k === 'media') {
+        const mediaStr = JSON.stringify(v, null, 4).split('\n').map((l,i) => i===0 ? l : '    '+l).join('\n');
+        lines.push(`    media: ${mediaStr},`);
+      } else if (typeof v === 'string') {
+        lines.push(`    ${k}: ${JSON.stringify(v)},`);
+      } else {
+        lines.push(`    ${k}: ${JSON.stringify(v)},`);
+      }
+    });
+    lines.push('  }');
+    return lines.join('\n');
+  }).join(',\n\n');
+
+  const content = `/**
+ * works-data.js — 作品データ管理（DeFilMe CMS で生成）
+ */
+
+const WORKS_DATA = [
+${entries}
+];
+`;
+
+  const res = await ghPutFile('works-data.js', content, STATE.worksSHA,
+    `CMS: update works-data.js (${new Date().toISOString().slice(0,10)})`);
+  if (!res.ok) throw new Error(await res.text());
+
+  const json = await res.json();
+  STATE.worksSHA = json.content.sha;
+}
+
+// ── NEWS ──
+async function loadNews() {
+  const file = await ghGetFile('news.json');
+  if (!file) { renderNews([]); return; }
+
+  STATE.newsSHA = file.sha;
+  const content = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+  try {
+    STATE.newsData = JSON.parse(content);
+  } catch(e) {
+    STATE.newsData = [];
+  }
+  renderNews(STATE.newsData);
+}
+
+function renderNews(data) {
+  const el = document.getElementById('news-list');
+  if (!data.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📰</div><div class="empty-state-text">記事がまだありません</div></div>`;
+    return;
+  }
+  const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
+  el.innerHTML = sorted.map((n, i) => `
+    <div class="news-item">
+      <div class="news-date">${n.date}</div>
+      <div class="news-info">
+        <div class="news-title">${n.title}</div>
+        <div class="news-body">${n.body || ''}</div>
+      </div>
+      <div class="work-actions">
+        <span class="badge">${n.category || ''}</span>
+        <button class="btn btn-ghost btn-sm" onclick="editNews(${data.indexOf(n)})">編集</button>
+        <button class="btn btn-danger" onclick="deleteNews(${data.indexOf(n)})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewsModal() {
+  document.getElementById('news-edit-index').value = '';
+  document.getElementById('news-modal-title').textContent = '記事を追加';
+  document.getElementById('news-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('news-category').value = 'News';
+  document.getElementById('news-title').value = '';
+  document.getElementById('news-body').value = '';
+  document.getElementById('news-modal').classList.add('open');
+}
+
+function editNews(i) {
+  const n = STATE.newsData[i];
+  document.getElementById('news-edit-index').value = i;
+  document.getElementById('news-modal-title').textContent = '記事を編集';
+  document.getElementById('news-date').value = n.date || '';
+  document.getElementById('news-category').value = n.category || 'News';
+  document.getElementById('news-title').value = n.title || '';
+  document.getElementById('news-body').value = n.body || '';
+  document.getElementById('news-modal').classList.add('open');
+}
+
+function closeNewsModal() {
+  document.getElementById('news-modal').classList.remove('open');
+}
+
+async function saveNews() {
+  const editIdx = document.getElementById('news-edit-index').value;
+  const isEdit = editIdx !== '';
+
+  const date  = document.getElementById('news-date').value;
+  const title = document.getElementById('news-title').value.trim();
+  if (!date || !title) { toast('日付とタイトルは必須です', 'error'); return; }
+
+  const item = {
+    id: isEdit ? STATE.newsData[parseInt(editIdx)].id : Date.now(),
+    date,
+    category: document.getElementById('news-category').value,
+    title,
+    body: document.getElementById('news-body').value.trim(),
+  };
+
+  if (isEdit) {
+    STATE.newsData[parseInt(editIdx)] = item;
+  } else {
+    STATE.newsData.push(item);
+  }
+
+  setSaving('news', true);
+  try {
+    await commitNews();
+    toast('保存して公開しました ✓', 'success');
+    closeNewsModal();
+    renderNews(STATE.newsData);
+  } catch(e) {
+    toast('保存に失敗しました: ' + e.message, 'error');
+  }
+  setSaving('news', false);
+}
+
+async function deleteNews(i) {
+  if (!confirm(`この記事を削除しますか？`)) return;
+  STATE.newsData.splice(i, 1);
+  try {
+    await commitNews();
+    toast('削除しました', 'success');
+    renderNews(STATE.newsData);
+  } catch(e) {
+    toast('削除に失敗しました', 'error');
+  }
+}
+
+async function commitNews() {
+  const content = JSON.stringify(STATE.newsData, null, 2);
+  const res = await ghPutFile('news.json', content, STATE.newsSHA,
+    `CMS: update news.json (${new Date().toISOString().slice(0,10)})`);
+  if (!res.ok) throw new Error(await res.text());
+  const json = await res.json();
+  STATE.newsSHA = json.content.sha;
+}
+
+// ── HERO ──
+async function loadHeroPreview() {
+  // Try to find hero image in repo
+  const candidates = ['hero.jpg', 'hero2.jpg', 'bg.jpg'];
+  for (const c of candidates) {
+    const f = await ghGetFile(c);
+    if (f) {
+      document.getElementById('hero-preview').src =
+        `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/${c}`;
+      document.getElementById('hero-preview').style.display = 'block';
+      break;
+    }
+  }
+}
+
+let heroFileData = null;
+let heroFileBase64 = null;
+
+function handleHeroFile(file) {
+  if (!file) return;
+  heroFileData = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    heroFileBase64 = e.target.result.split(',')[1];
+    document.getElementById('hero-new-preview').src = e.target.result;
+    document.getElementById('hero-file-name').textContent = file.name;
+    document.getElementById('hero-file-size').textContent = (file.size / 1024).toFixed(0) + ' KB';
+    document.getElementById('hero-upload-info').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleHeroDrop(e) {
+  e.preventDefault();
+  document.getElementById('hero-drop-zone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleHeroFile(file);
+}
+
+async function uploadHeroImage() {
+  if (!heroFileBase64) return;
+  const ext = heroFileData.name.split('.').pop().toLowerCase();
+  const filename = `hero.${ext}`;
+
+  const existingFile = await ghGetFile(filename);
+  const sha = existingFile ? existingFile.sha : null;
+
+  try {
+    const res = await ghPutImage(filename, heroFileBase64, sha,
+      `CMS: update hero image (${new Date().toISOString().slice(0,10)})`);
+    if (!res.ok) throw new Error();
+    toast(`Hero 画像をアップロードしました: ${filename} ✓`, 'success');
+    setTimeout(() => {
+      document.getElementById('hero-preview').src =
+        `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/${filename}?t=${Date.now()}`;
+      document.getElementById('hero-upload-info').style.display = 'none';
+    }, 1500);
+  } catch(e) {
+    toast('アップロードに失敗しました', 'error');
+  }
+}
+
+// ── UI ──
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`section-${name}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function setSaving(type, saving) {
+  const btn = document.getElementById(`${type}-save-btn`);
+  const label = document.getElementById(`${type}-save-label`);
+  btn.disabled = saving;
+  label.innerHTML = saving ? '<span class="spinner"></span> 保存中...' : '保存して公開';
+}
+
+let toastTimer;
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 3500);
+}
+
+// Auto-generate ID from title
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('work-title')?.addEventListener('input', e => {
+    if (!document.getElementById('work-edit-index').value) {
+      document.getElementById('work-id').value = e.target.value
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]/g, '')
+        .slice(0, 40);
+    }
+  });
+});
+</script>
+</body>
+</html>
