@@ -3,533 +3,1961 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inquiries | DeFilMe Admin</title>
+<title>DeFilMe CMS</title>
+<link rel="icon" type="image/svg+xml" href="https://defilme.com/f3-dark.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://defilme.com/f3-dark-180.png">
 <style>
-:root {
-  --bg: #0f0f0f;
-  --panel: #181818;
-  --border: rgba(255,255,255,0.08);
-  --accent: #e8820a;
-  --white: #f0f0f0;
-  --mid: #999;
-  --dim: #555;
-  --pending: #e8820a;
-  --wip: #4a9eff;
-  --done: #4caf82;
-  --font: 'Poppins', sans-serif;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--white); font-family: var(--font), sans-serif; font-size: 13px; min-height: 100vh; }
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* Layout */
-.layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
-.sidebar { background: var(--panel); border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-.main { padding: 32px; overflow-y: auto; }
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #2a2a2a;
+    --accent: #e8820a;
+    --accent-dim: rgba(232,130,10,0.12);
+    --text: #e8e8e8;
+    --text-muted: #666;
+    --text-dim: #999;
+    --danger: #e84a4a;
+    --success: #4ae89a;
+    --font: 'Poppins', sans-serif;
+  }
 
-/* Sidebar */
-.sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-.sidebar-logo span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); }
-.sidebar-logo strong { display: block; font-size: 14px; font-weight: 600; color: var(--white); }
-.sidebar-nav a {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 20px; font-size: 12px; font-weight: 400;
-  letter-spacing: 0.05em; color: var(--mid);
-  text-decoration: none; transition: all 0.15s;
-  border-left: 2px solid transparent;
-}
-.sidebar-nav a:hover { color: var(--white); background: rgba(255,255,255,0.04); }
-.sidebar-nav a.active { color: var(--white); border-left-color: var(--accent); background: rgba(232,130,10,0.06); }
-.sidebar-section { padding: 20px 20px 8px; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--dim); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Header */
-.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.page-header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.04em; }
-.page-header .badge { background: var(--accent); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 10px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    min-height: 100vh;
+  }
 
-/* Auth */
-.auth-box { max-width: 400px; margin: 80px auto; background: var(--panel); border: 1px solid var(--border); padding: 36px; border-radius: 4px; }
-.auth-box h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 24px; }
-.field { margin-bottom: 16px; }
-.field label { display: block; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
-.field input, .field select, .field textarea {
-  width: 100%; padding: 10px 12px;
-  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-  color: var(--white); font-family: var(--font), sans-serif; font-size: 13px;
-  border-radius: 3px; outline: none; transition: border-color 0.2s;
-}
-.field input:focus, .field textarea:focus { border-color: rgba(255,255,255,0.2); }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 20px; font-family: var(--font), sans-serif;
-  font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
-  text-transform: uppercase; cursor: pointer;
-  border-radius: 3px; border: none; transition: all 0.2s;
-}
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: #d0720a; }
-.btn-ghost { background: rgba(255,255,255,0.06); color: var(--mid); border: 1px solid var(--border); }
-.btn-ghost:hover { color: var(--white); background: rgba(255,255,255,0.1); }
-.btn-sm { padding: 5px 12px; font-size: 10px; }
+  /* ── FONTS ── */
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/* Stats */
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
-.stat-card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px; }
-.stat-card .num { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-.stat-card .label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mid); }
-.stat-pending .num { color: var(--pending); }
-.stat-wip .num { color: var(--wip); }
-.stat-done .num { color: var(--done); }
+  /* ── LOGIN ── */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
 
-/* Filter tabs */
-.filter-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
-.filter-tab {
-  padding: 10px 20px; font-size: 11px; font-weight: 400;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--mid); background: none; border: none;
-  cursor: pointer; position: relative; transition: color 0.2s;
-  border-bottom: 2px solid transparent; margin-bottom: -1px;
-}
-.filter-tab:hover { color: var(--white); }
-.filter-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+  }
 
-/* Inquiry list */
-.inquiry-list { display: flex; flex-direction: column; gap: 1px; }
-.inquiry-item {
-  background: var(--panel); border: 1px solid var(--border);
-  padding: 20px 24px; cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  border-radius: 3px;
-}
-.inquiry-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.14); }
-.inquiry-item.expanded { border-color: rgba(255,255,255,0.16); }
-.item-header { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
-.item-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
-.item-name { font-weight: 500; font-size: 14px; color: var(--white); }
-.item-email { font-size: 11px; color: var(--mid); }
-.item-date { font-size: 10px; color: var(--dim); letter-spacing: 0.08em; }
-.item-subject { font-size: 12px; color: var(--mid); margin-bottom: 4px; }
-.item-preview { font-size: 12px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 600px; }
-.item-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .login-logo {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
 
-/* Status badge */
-.status {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px; border-radius: 12px; font-size: 10px;
-  font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-}
-.status-pending { background: rgba(232,130,10,0.15); color: var(--pending); }
-.status-wip     { background: rgba(74,158,255,0.15); color: var(--wip); }
-.status-done    { background: rgba(76,175,130,0.15); color: var(--done); }
+  .login-logo span { color: var(--accent); }
 
-/* Detail panel */
-.inquiry-detail {
-  display: none; margin-top: 16px;
-  padding-top: 16px; border-top: 1px solid var(--border);
-}
-.inquiry-item.expanded .inquiry-detail { display: block; }
-.detail-message {
-  font-size: 13px; color: var(--mid); line-height: 1.8;
-  white-space: pre-wrap; background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border); padding: 16px; border-radius: 3px;
-  margin-bottom: 16px;
-}
-.detail-actions { display: flex; gap: 8px; align-items: center; }
-.status-select {
-  padding: 6px 12px; background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border); color: var(--white);
-  font-family: var(--font), sans-serif; font-size: 11px;
-  border-radius: 3px; cursor: pointer; letter-spacing: 0.05em;
-}
+  .login-sub {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 40px;
+    letter-spacing: 0.05em;
+  }
 
-/* Empty / Loading */
-.empty-state { text-align: center; padding: 80px 0; color: var(--dim); }
-.empty-state p { font-size: 13px; margin-top: 12px; }
-.loading { display: flex; align-items: center; justify-content: center; padding: 60px; gap: 10px; color: var(--dim); }
-.spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+  .field-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
 
-/* Toast */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--panel); border: 1px solid var(--border);
-  padding: 12px 20px; border-radius: 4px; font-size: 12px;
-  opacity: 0; transform: translateY(8px);
-  transition: all 0.3s; pointer-events: none; z-index: 999;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.ok { border-left: 3px solid var(--done); }
-.toast.err { border-left: 3px solid #e85454; }
+  .field-group { margin-bottom: 20px; }
 
-/* New inquiry form */
-.new-btn { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); }
+  input[type="text"], input[type="password"], input[type="date"],
+  input[type="month"], textarea, select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .btn-danger:hover { border-color: var(--danger); }
+
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-accent:hover:not(:disabled) { opacity: 0.88; }
+
+  /* ── APP SHELL ── */
+  #app { display: none; }
+
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+  }
+
+  .topbar-logo {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text);
+  }
+
+  .topbar-logo span { color: var(--accent); }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    display: inline-block;
+  }
+
+  .status-dot.ok { background: var(--success); }
+
+  .sidebar {
+    position: fixed;
+    top: 52px; left: 0; bottom: 0;
+    width: 200px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 8px 20px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+    user-select: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+
+  .main {
+    margin-left: 200px;
+    margin-top: 52px;
+    padding: 32px;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+  }
+
+  /* ── WORKS LIST ── */
+  .works-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .work-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .work-thumb {
+    width: 64px; height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .work-info { flex: 1; min-width: 0; }
+
+  .work-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .work-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .badge.video { border-color: #4a7ee8; color: #4a7ee8; }
+  .badge.photo { border-color: #9a4ae8; color: #9a4ae8; }
+  .badge.draft { border-color: #e8a00a; color: #e8a00a; }
+
+  .work-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  /* ── NEWS LIST ── */
+  .news-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .news-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .news-date {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .news-info { flex: 1; min-width: 0; }
+
+  .news-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .news-body {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ── FORM ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-grid .span2 { grid-column: span 2; }
+
+  /* ── HERO ── */
+  .hero-preview {
+    width: 100%;
+    aspect-ratio: 16/7;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--surface2);
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-dim); }
+  .upload-zone-icon { font-size: 32px; margin-bottom: 12px; }
+  .upload-zone-text { color: var(--text-dim); font-size: 13px; }
+  .upload-zone-sub { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .modal-title { font-size: 16px; font-weight: 600; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 13px;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 320px;
+  }
+
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { border-color: var(--success); }
+  #toast.error { border-color: var(--danger); }
+
+  /* ── MISC ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state-text { font-size: 13px; }
+
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .media-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .media-item-row select, .media-item-row input { margin: 0; }
+
+  .media-item-row .btn-danger { margin-left: auto; flex-shrink: 0; }
+
+  #media-rows .media-row-type { width: 110px; flex-shrink: 0; }
+  #media-rows .media-row-src { flex: 1; }
+
+  /* ── IMAGE UPLOAD ── */
+  .img-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-top: 8px;
+  }
+  .img-upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .img-upload-area.has-image { border-style: solid; border-color: var(--accent); }
+  .img-upload-preview {
+    width: 100%; max-height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: none;
+  }
+  .img-upload-label { font-size: 12px; color: var(--text-muted); }
+  .img-upload-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .img-uploading {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .img-preview-small {
+    width: 48px; height: 32px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+
+  /* ── INQUIRIES ── */
+  .inq-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+  .inq-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .inq-stat .num { font-size: 24px; font-weight: 700; margin-bottom: 2px; }
+  .inq-stat .lbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .inq-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .inq-tab { padding: 9px 18px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+  .inq-tab:hover { color: var(--text); }
+  .inq-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .inq-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.15s; }
+  .inq-card:hover { border-color: #3a3a3a; }
+  .inq-card-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; cursor: pointer; }
+  .inq-card-detail { display: none; padding: 0 18px 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+
 </style>
 </head>
 <body>
 
-<div class="layout">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <span>DeFilMe</span>
-      <strong>Admin</strong>
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="login-sub">Content Management System</div>
+
+    <div class="field-group">
+      <label class="field-label">GitHub Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
     </div>
-    <nav class="sidebar-nav">
-      <p class="sidebar-section">Content</p>
-      <a href="index.html">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        Works
-      </a>
-      <a href="index.html">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        News
-      </a>
-      <p class="sidebar-section">Management</p>
-      <a href="inquiries.html" class="active">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        問い合わせ
-      </a>
-      <p class="sidebar-section">Site</p>
-      <a href="../index.html" target="_blank">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        サイトを開く
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main -->
-  <main class="main" id="mainContent">
-    <!-- Auth screen -->
-    <div id="authScreen">
-      <div class="auth-box">
-        <h2>認証</h2>
-        <div class="field">
-          <label>GitHub Personal Access Token (PAT)</label>
-          <input type="password" id="patInput" placeholder="github_pat_..." autocomplete="off">
-        </div>
-        <button class="btn btn-primary" onclick="authenticate()">ログイン</button>
-        <p style="margin-top:16px;font-size:11px;color:var(--dim);">PATはブラウザのlocalStorageに保存されます。共有端末ではご注意ください。</p>
-      </div>
+    <div class="field-group">
+      <label class="field-label">GitHub ユーザー名</label>
+      <input type="text" id="owner-input" value="bitcan2023-boop">
     </div>
-
-    <!-- Inquiries screen -->
-    <div id="inquiriesScreen" style="display:none;">
-      <div class="page-header">
-        <div>
-          <h1>問い合わせ管理 <span class="badge" id="pendingBadge">0</span></h1>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" onclick="loadInquiries()">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            更新
-          </button>
-          <button class="btn btn-primary btn-sm" onclick="showNewForm()">
-            + 手動追加
-          </button>
-          <button class="btn btn-ghost btn-sm" onclick="logout()" style="color:var(--dim);">ログアウト</button>
-        </div>
-      </div>
-
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat-card stat-pending">
-          <div class="num" id="statPending">-</div>
-          <div class="label">未対応</div>
-        </div>
-        <div class="stat-card stat-wip">
-          <div class="num" id="statWip">-</div>
-          <div class="label">対応中</div>
-        </div>
-        <div class="stat-card stat-done">
-          <div class="num" id="statDone">-</div>
-          <div class="label">対応済み</div>
-        </div>
-      </div>
-
-      <!-- Filter -->
-      <div class="filter-tabs">
-        <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">すべて</button>
-        <button class="filter-tab" data-filter="pending" onclick="setFilter('pending',this)">未対応</button>
-        <button class="filter-tab" data-filter="wip" onclick="setFilter('wip',this)">対応中</button>
-        <button class="filter-tab" data-filter="done" onclick="setFilter('done',this)">対応済み</button>
-      </div>
-
-      <!-- List -->
-      <div id="inquiryList" class="inquiry-list">
-        <div class="loading"><div class="spinner"></div> 読み込み中...</div>
-      </div>
+    <div class="field-group">
+      <label class="field-label">リポジトリ名</label>
+      <input type="text" id="repo-input" value="defilme">
     </div>
-
-    <!-- New inquiry modal -->
-    <div id="newFormScreen" style="display:none;">
-      <div class="page-header">
-        <h1>手動追加</h1>
-        <button class="btn btn-ghost btn-sm" onclick="cancelNew()">← 戻る</button>
-      </div>
-      <div style="max-width:560px;">
-        <div class="field"><label>お名前 *</label><input type="text" id="newName"></div>
-        <div class="field"><label>メールアドレス *</label><input type="email" id="newEmail"></div>
-        <div class="field"><label>件名</label><input type="text" id="newSubject"></div>
-        <div class="field"><label>メッセージ *</label><textarea id="newMessage" rows="6"></textarea></div>
-        <div class="field">
-          <label>ステータス</label>
-          <select id="newStatus">
-            <option value="pending">未対応</option>
-            <option value="wip">対応中</option>
-            <option value="done">対応済み</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" onclick="addInquiry()">追加</button>
-      </div>
-    </div>
-  </main>
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">ログイン</button>
+    <div id="login-error" style="color:var(--danger);font-size:12px;margin-top:12px;display:none;"></div>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
+
+
+<!-- APP -->
+<div id="app-screen" style="display:none">
+
+<!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="topbar-right">
+      <span class="status-dot ok" id="status-dot"></span>
+      <span style="font-size:12px;color:var(--text-muted)" id="status-text">接続済み</span>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">ログアウト</button>
+    </div>
+  </div>
+
+  
+
+<div class="layout">
+
+  <div class="sidebar">
+    <div class="nav-label">コンテンツ</div>
+    <div class="nav-item active" onclick="showSection('works')">
+      <span class="nav-icon">🎬</span> Works
+    </div>
+    <div class="nav-item" onclick="showSection('news')">
+      <span class="nav-icon">📰</span> News
+    </div>
+    <div class="nav-label" style="margin-top:8px">設定</div>
+    <div class="nav-item" onclick="showSection('hero')">
+      <span class="nav-icon">🖼️</span> Hero 画像
+    </div>
+    <div class="nav-label" style="margin-top:8px">管理</div>
+    <div class="nav-item" onclick="showSection('inquiries')">
+      <span class="nav-icon">💬</span> 問い合わせ <span id="inq-badge" style="display:none;margin-left:auto;background:var(--accent);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;"></span>
+    </div>
+  </div>
+
+  <div class="main">
+<!-- WORKS -->
+    <div class="section active" id="section-works">
+      <div class="section-header">
+        <div class="section-title">Works</div>
+        <button class="btn btn-accent" onclick="openWorkModal()">＋ 作品を追加</button>
+      </div>
+      <div class="works-list" id="works-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <div class="empty-state-text">読み込み中...</div>
+        </div>
+      </div>
+    </div>
+
+    
+<!-- NEWS -->
+    <div class="section" id="section-news">
+      <div class="section-header">
+        <div class="section-title">News</div>
+        <button class="btn btn-accent" onclick="openNewsModal()">＋ 記事を追加</button>
+      </div>
+      <div class="news-list" id="news-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <div class="empty-state-text">読み込み中...</div>
+        </div>
+      </div>
+    </div>
+
+    
+<!-- HERO -->
+    <div class="section" id="section-hero">
+      <div class="section-header">
+        <div class="section-title">Hero 画像</div>
+      </div>
+
+      <!-- 表示モード選択 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">表示モード</div>
+        <div style="display:flex;gap:12px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-split">
+            <input type="radio" name="hero-mode" value="split" checked onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
+            <div>
+              <div style="font-weight:500;">左右2枚分割</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">現在の表示形式</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-single">
+            <input type="radio" name="hero-mode" value="single" onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
+            <div>
+              <div style="font-weight:500;">1枚全幅</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">1枚の画像を全幅表示</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 現在の表示 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">現在の Hero 画像</div>
+
+        <!-- 2枚分割プレビュー -->
+        <div id="hero-preview-split" style="display:flex;gap:4px;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;">
+          <div style="flex:1;position:relative;background:#111;">
+            <img id="hero-preview-left" src=""
+              style="width:100%;height:100%;object-fit:cover;display:block;"
+              onerror="this.style.opacity='0.2'"
+              alt="左パネル">
+            <div style="position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:0.15em;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px;color:#ccc;">LEFT</div>
+          </div>
+          <div style="flex:1;position:relative;background:#111;">
+            <img id="hero-preview-right" src=""
+              style="width:100%;height:100%;object-fit:cover;display:block;"
+              onerror="this.style.opacity='0.2'"
+              alt="右パネル">
+            <div style="position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:0.15em;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px;color:#ccc;">RIGHT</div>
+          </div>
+        </div>
+
+        <!-- 1枚プレビュー -->
+        <div id="hero-preview-single" style="display:none;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;background:#111;">
+          <img id="hero-preview-one" src=""
+            style="width:100%;height:100%;object-fit:cover;display:block;"
+            onerror="this.style.opacity='0.2'"
+            alt="Hero">
+        </div>
+      </div>
+
+      <!-- 左パネルアップロード -->
+      <div id="hero-panel-left-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">左パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero2.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('left')"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'left')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 960×800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-left" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'left')">
+        <div id="hero-left-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-left-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-left-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-left-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('left')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右パネルアップロード -->
+      <div id="hero-panel-right-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">右パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">bg.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('right')"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'right')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 960×800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-right" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'right')">
+        <div id="hero-right-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-right-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-right-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-right-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('right')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1枚モード用アップロード -->
+      <div id="hero-panel-single-card" class="card" style="display:none;margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">全幅画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('single')"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'single')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 1920×800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-single" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'single')">
+        <div id="hero-single-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-single-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-single-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-single-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('single')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">保存先</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+          左パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero2.jpg</code><br>
+          右パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">bg.jpg</code><br>
+          1枚全幅 → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- INQUIRIES -->
+    <div class="section" id="section-inquiries">
+      <div class="section-header">
+        <div class="section-title">問い合わせ管理</div>
+        <button class="btn btn-accent btn-sm" onclick="openNewInqModal()">＋ 手動追加</button>
+      </div>
+      <div class="inq-stats">
+        <div class="inq-stat"><div class="num" id="inq-stat-pending" style="color:var(--accent);">-</div><div class="lbl">未対応</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-wip" style="color:#4a9eff;">-</div><div class="lbl">対応中</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-done" style="color:var(--success);">-</div><div class="lbl">対応済み</div></div>
+      </div>
+      <div class="inq-tabs">
+        <button class="inq-tab active" onclick="setInqFilter('all',this)">すべて</button>
+        <button class="inq-tab" onclick="setInqFilter('pending',this)">未対応</button>
+        <button class="inq-tab" onclick="setInqFilter('wip',this)">対応中</button>
+        <button class="inq-tab" onclick="setInqFilter('done',this)">対応済み</button>
+      </div>
+      <div id="inq-list"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- WORK MODAL -->
+<div class="modal-overlay" id="work-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="work-modal-title">作品を追加</div>
+      <button class="modal-close" onclick="closeWorkModal()">×</button>
+    </div>
+
+    <input type="hidden" id="work-edit-index">
+
+    <div class="form-grid">
+      <div class="field-group span2">
+        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="work-title" placeholder="感情ワンダーランド">
+      </div>
+      <div class="field-group">
+        <label class="field-label">ID（URL用）<span style="color:var(--danger)">*</span></label>
+        <input type="text" id="work-id" placeholder="kanjo-wonderland">
+      </div>
+      <div class="field-group">
+        <label class="field-label">表示タイトル</label>
+        <input type="text" id="work-displayTitle" placeholder='UIMUI - MV "感情ワンダーランド"'>
+      </div>
+      <div class="field-group">
+        <label class="field-label">カテゴリ <span style="color:var(--danger)">*</span></label>
+        <select id="work-category" onchange="updateSubOptions()">
+          <option value="videography">Videography</option>
+          <option value="photography">Photography</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">サブカテゴリ <span style="color:var(--danger)">*</span></label>
+        <select id="work-sub">
+          <option value="music-video">Music Video</option>
+          <option value="live-shoot">Live Shoot</option>
+          <option value="documentary">Documentary</option>
+          <option value="snap">Snap</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">年月</label>
+        <input type="month" id="work-date" placeholder="2025-12">
+      </div>
+      <div class="field-group">
+        <label class="field-label">クライアント</label>
+        <input type="text" id="work-client" placeholder="UIMUI">
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">説明文</label>
+        <textarea id="work-description" placeholder="作品の説明文"></textarea>
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">サムネイル画像 <span style="color:var(--danger)">*</span></label>
+        <div class="img-upload-area" id="thumb-upload-area" onclick="document.getElementById('thumb-file-input').click()"
+          ondragover="event.preventDefault();this.classList.add('has-image')"
+          ondragleave="this.classList.remove('has-image')"
+          ondrop="handleThumbDrop(event)">
+          <img id="thumb-preview-img" class="img-upload-preview" alt="">
+          <div class="img-upload-label" id="thumb-upload-label">📁 クリックまたはドラッグ＆ドロップ</div>
+          <div class="img-upload-sub">JPG / PNG / WebP</div>
+        </div>
+        <input type="file" id="thumb-file-input" accept="image/*" style="display:none" onchange="handleThumbFile(this.files[0])">
+        <div class="img-uploading" id="thumb-uploading"><span class="spinner"></span> アップロード中...</div>
+        <input type="text" id="work-thumb" placeholder="kanjo-wonderland.png" style="margin-top:8px" readonly>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">または上のエリアから画像をアップロード（保存時に自動アップロード）</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">メディア</div>
+      <button class="btn btn-ghost btn-sm" onclick="addMediaRow()">＋ 追加</button>
+    </div>
+
+    <div id="media-rows"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeWorkModal()">キャンセル</button>
+      <button class="btn btn-ghost" id="work-draft-btn" onclick="saveWork(true)" style="border-color:var(--accent);color:var(--accent)">
+        <span id="work-draft-label">下書き保存</span>
+      </button>
+      <button class="btn btn-accent" id="work-save-btn" onclick="saveWork(false)">
+        <span id="work-save-label">保存して公開</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- NEWS MODAL -->
+<div class="modal-overlay" id="news-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="news-modal-title">記事を追加</div>
+      <button class="modal-close" onclick="closeNewsModal()">×</button>
+    </div>
+
+    <input type="hidden" id="news-edit-index">
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label class="field-label">日付 <span style="color:var(--danger)">*</span></label>
+        <input type="date" id="news-date">
+      </div>
+      <div class="field-group">
+        <label class="field-label">カテゴリ</label>
+        <select id="news-category">
+          <option value="Works">Works</option>
+          <option value="News">News</option>
+          <option value="Info">Info</option>
+        </select>
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="news-title" placeholder="記事タイトル">
+      </div>
+      <div class="field-group span2">
+        <label class="field-label">本文</label>
+        <textarea id="news-body" style="min-height:120px" placeholder="記事の本文"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeNewsModal()">キャンセル</button>
+      <button class="btn btn-ghost" id="news-draft-btn" onclick="saveNews(true)" style="color:var(--text-dim);">下書き保存</button>
+      <button class="btn btn-accent" id="news-save-btn" onclick="saveNews(false)">
+        <span id="news-save-label">保存して公開</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inq-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">問い合わせを手動追加</div>
+      <button class="modal-close" onclick="closeInqModal()">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="field-group"><label class="field-label">お名前 *</label><input type="text" id="inq-form-name" class="field-input"></div>
+      <div class="field-group"><label class="field-label">メールアドレス *</label><input type="email" id="inq-form-email" class="field-input"></div>
+      <div class="field-group span2"><label class="field-label">件名</label><input type="text" id="inq-form-subject" class="field-input"></div>
+      <div class="field-group span2"><label class="field-label">メッセージ *</label><textarea id="inq-form-message" class="field-input" style="min-height:100px;"></textarea></div>
+      <div class="field-group"><label class="field-label">ステータス</label>
+        <select id="inq-form-status" class="field-input">
+          <option value="pending">未対応</option>
+          <option value="wip">対応中</option>
+          <option value="done">対応済み</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeInqModal()">キャンセル</button>
+      <button class="btn btn-accent" onclick="saveNewInq()">追加</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
 
 <script>
-const OWNER = 'bitcan2023-boop';
-const REPO  = 'defilme';
-const PATH  = 'inquiries.json';
 
-let PAT = '';
-let allInquiries = [];
-let currentFilter = 'all';
+// ── STATE ──
+let STATE = {
+  token: '',
+  owner: '',
+  repo: '',
+  worksData: [],
+  newsData: [],
+  worksSHA: '',
+  newsSHA: '',
+};
 
-// ========== Auth ==========
-function authenticate() {
-  const pat = document.getElementById('patInput').value.trim();
-  if (!pat) return showToast('PATを入力してください', 'err');
-  PAT = pat;
-  localStorage.setItem('defilme_admin_pat', pat);
-  showInquiries();
+// ── LOGIN ──
+async function doLogin() {
+  const token = document.getElementById('token-input').value.trim();
+  const owner = document.getElementById('owner-input').value.trim();
+  const repo  = document.getElementById('repo-input').value.trim();
+
+  if (!token || !owner || !repo) return showError('すべての項目を入力してください');
+
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 確認中...';
+
+  // Set STATE before API call so ghHeaders() can use the token
+  STATE.token = token;
+  STATE.owner = owner;
+  STATE.repo  = repo;
+
+  try {
+    // Test GitHub API
+    const res = await ghGet(`repos/${owner}/${repo}`);
+    if (!res.ok) throw new Error('リポジトリへのアクセスに失敗しました');
+
+    sessionStorage.setItem('cms_token', token);
+    sessionStorage.setItem('cms_owner', owner);
+    sessionStorage.setItem('cms_repo',  repo);
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+    await loadAll();
+  } catch(e) {
+    showError(e.message || 'ログインに失敗しました');
+    btn.disabled = false;
+    btn.innerHTML = 'ログイン';
+  }
 }
 
-function logout() {
-  PAT = '';
-  localStorage.removeItem('defilme_admin_pat');
-  document.getElementById('authScreen').style.display = 'block';
-  document.getElementById('inquiriesScreen').style.display = 'none';
+function showError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
-function showInquiries() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('newFormScreen').style.display = 'none';
-  document.getElementById('inquiriesScreen').style.display = 'block';
-  loadInquiries();
+function doLogout() {
+  sessionStorage.clear();
+  location.reload();
 }
 
-// ========== GitHub API ==========
-async function getHeaders() {
+// Restore owner/repo only (token must be entered manually each time)
+window.addEventListener('load', () => {
+  const owner = sessionStorage.getItem('cms_owner');
+  const repo  = sessionStorage.getItem('cms_repo');
+  if (owner) document.getElementById('owner-input').value = owner;
+  if (repo)  document.getElementById('repo-input').value  = repo;
+});
+
+// ── GITHUB API ──
+function ghHeaders() {
   return {
-    'Authorization': 'token ' + PAT,
+    'Authorization': `token ${STATE.token}`,
     'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json'
   };
 }
 
-async function loadInquiries() {
-  document.getElementById('inquiryList').innerHTML = '<div class="loading"><div class="spinner"></div> 読み込み中...</div>';
+async function ghGet(path) {
+  return fetch(`https://api.github.com/${path}`, { headers: ghHeaders() });
+}
+
+async function ghGetFile(filePath) {
+  const res = await ghGet(`repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`);
+  if (!res.ok) return null;
+  return res.json();
+}
+
+async function ghPutFile(filePath, content, sha, message) {
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+  };
+  if (sha) body.sha = sha;
+
+  const res = await fetch(`https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res;
+}
+
+async function ghPutImage(filePath, base64Data, sha, message) {
+  const body = { message, content: base64Data };
+  if (sha) body.sha = sha;
+  const res = await fetch(`https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${filePath}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  return res;
+}
+
+// ── LOAD ALL ──
+async function loadAll() {
+  await Promise.all([loadWorks(), loadNews(), loadHeroPreview()]);
+}
+
+// ── WORKS ──
+async function loadWorks() {
+  const file = await ghGetFile('works-data.js');
+  if (!file) { renderWorks([]); return; }
+
+  STATE.worksSHA = file.sha;
+  const content = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+
+  // Parse WORKS_DATA array from JS
   try {
-    const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, { headers: await getHeaders() });
-    if (res.status === 404) {
-      // ファイルなし → 空で初期化
-      allInquiries = [];
-    } else if (!res.ok) {
-      const e = await res.json();
-      showToast('読み込み失敗: ' + e.message, 'err');
-      return;
-    } else {
-      const data = await res.json();
-      allInquiries = JSON.parse(atob(data.content.replace(/\n/g,'')));
+    const match = content.match(/const WORKS_DATA\s*=\s*(\[[\s\S]*?\]);/);
+    if (match) {
+      STATE.worksData = eval(match[1]);
     }
-    updateStats();
-    renderList();
   } catch(e) {
-    showToast('エラー: ' + e.message, 'err');
+    STATE.worksData = [];
   }
+  renderWorks(STATE.worksData);
 }
 
-async function saveInquiries(msg) {
-  try {
-    const headers = await getHeaders();
-    // 現在のSHAを取得
-    let sha = null;
-    const getRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, { headers });
-    if (getRes.ok) {
-      const cur = await getRes.json();
-      sha = cur.sha;
-    }
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(allInquiries, null, 2))));
-    const body = { message: msg || 'update: inquiries', content };
-    if (sha) body.sha = sha;
-    const putRes = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, {
-      method: 'PUT', headers, body: JSON.stringify(body)
-    });
-    if (!putRes.ok) {
-      const e = await putRes.json();
-      showToast('保存失敗: ' + e.message, 'err');
-      return false;
-    }
-    return true;
-  } catch(e) {
-    showToast('保存エラー: ' + e.message, 'err');
-    return false;
-  }
-}
-
-// ========== Render ==========
-function updateStats() {
-  const pending = allInquiries.filter(i => i.status === 'pending').length;
-  const wip     = allInquiries.filter(i => i.status === 'wip').length;
-  const done    = allInquiries.filter(i => i.status === 'done').length;
-  document.getElementById('statPending').textContent = pending;
-  document.getElementById('statWip').textContent     = wip;
-  document.getElementById('statDone').textContent    = done;
-  document.getElementById('pendingBadge').textContent = pending;
-  document.getElementById('pendingBadge').style.display = pending > 0 ? '' : 'none';
-}
-
-function setFilter(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderList();
-}
-
-function renderList() {
-  const list = document.getElementById('inquiryList');
-  const filtered = currentFilter === 'all'
-    ? [...allInquiries]
-    : allInquiries.filter(i => i.status === currentFilter);
-
-  // 新しい順
-  filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>問い合わせはありません</p></div>';
+function renderWorks(data) {
+  const el = document.getElementById('works-list');
+  if (!data.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎬</div><div class="empty-state-text">作品がまだありません</div></div>`;
     return;
   }
-
-  const statusLabel = { pending: '未対応', wip: '対応中', done: '対応済み' };
-  const statusClass = { pending: 'status-pending', wip: 'status-wip', done: 'status-done' };
-
-  list.innerHTML = filtered.map(item => {
-    const d = new Date(item.date);
-    const dateStr = d.toLocaleDateString('ja-JP', { year:'numeric', month:'2-digit', day:'2-digit' }) + ' ' + d.toLocaleTimeString('ja-JP', { hour:'2-digit', minute:'2-digit' });
-    return `
-    <div class="inquiry-item" id="item-${item.id}" onclick="toggleItem('${item.id}')">
-      <div class="item-header">
-        <div>
-          <div class="item-meta">
-            <span class="item-name">${escHtml(item.name)}</span>
-            <span class="item-email">${escHtml(item.email)}</span>
-            <span class="item-date">${dateStr}</span>
-          </div>
-          ${item.subject ? `<div class="item-subject">${escHtml(item.subject)}</div>` : ''}
-          <div class="item-preview">${escHtml(item.message)}</div>
-        </div>
-        <div class="item-actions" onclick="event.stopPropagation()">
-          <span class="status ${statusClass[item.status]}">${statusLabel[item.status]}</span>
+  el.innerHTML = data.map((w, i) => `
+    <div class="work-item" style="${w.draft ? 'opacity:0.6' : ''}">
+      <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
+      <div class="work-info">
+        <div class="work-title">${w.title || w.id} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
+        <div class="work-meta">
+          <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${w.category}</span>
+          <span>${w.sub || ''}</span>
+          <span>${w.date || ''}</span>
         </div>
       </div>
-      <div class="inquiry-detail">
-        <div class="detail-message">${escHtml(item.message)}</div>
-        <div class="detail-actions">
-          <select class="status-select" onchange="changeStatus('${item.id}', this.value)">
+      <div class="work-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editWork(${i})">編集</button>
+        <button class="btn btn-danger" onclick="deleteWork(${i})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openWorkModal(editIndex) {
+  document.getElementById('work-edit-index').value = '';
+  document.getElementById('work-modal-title').textContent = '作品を追加';
+  document.getElementById('work-title').value = '';
+  document.getElementById('work-id').value = '';
+  document.getElementById('work-displayTitle').value = '';
+  document.getElementById('work-category').value = 'videography';
+  document.getElementById('work-date').value = '';
+  document.getElementById('work-client').value = '';
+  document.getElementById('work-description').value = '';
+  document.getElementById('work-thumb').value = '';
+  document.getElementById('media-rows').innerHTML = '';
+  updateSubOptions();
+  document.getElementById('work-modal').classList.add('open');
+}
+
+function editWork(i) {
+  const w = STATE.worksData[i];
+  document.getElementById('work-edit-index').value = i;
+  document.getElementById('work-modal-title').textContent = '作品を編集';
+  document.getElementById('work-title').value = w.title || '';
+  document.getElementById('work-id').value = w.id || '';
+  document.getElementById('work-displayTitle').value = w.displayTitle || '';
+  document.getElementById('work-category').value = w.category || 'videography';
+  updateSubOptions();
+  document.getElementById('work-sub').value = w.sub || '';
+  document.getElementById('work-date').value = w.date || '';
+  document.getElementById('work-client').value = w.client || '';
+  document.getElementById('work-description').value = w.description || '';
+  document.getElementById('work-thumb').value = w.thumb || '';
+
+  // Media rows
+  document.getElementById('media-rows').innerHTML = '';
+  (w.media || []).forEach(m => addMediaRow(m));
+
+  document.getElementById('work-modal').classList.add('open');
+}
+
+function closeWorkModal() {
+  document.getElementById('work-modal').classList.remove('open');
+  // Reset thumb upload state
+  thumbFileBase64 = null;
+  thumbFileToUpload = null;
+  thumbFileName = null;
+  const preview = document.getElementById('thumb-preview-img');
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const label = document.getElementById('thumb-upload-label');
+  if (label) label.textContent = '📁 クリックまたはドラッグ＆ドロップ';
+  const area = document.getElementById('thumb-upload-area');
+  if (area) area.classList.remove('has-image');
+}
+
+function updateSubOptions() {
+  const cat = document.getElementById('work-category').value;
+  const sub = document.getElementById('work-sub');
+  if (cat === 'videography') {
+    sub.innerHTML = `
+      <option value="music-video">Music Video</option>
+      <option value="live-shoot">Live Shoot</option>
+      <option value="documentary">Documentary</option>
+      <option value="snap">Snap</option>`;
+  } else {
+    sub.innerHTML = `
+      <option value="portrait">Portrait</option>
+      <option value="snap">Snap</option>`;
+  }
+}
+
+function addMediaRow(m) {
+  const div = document.createElement('div');
+  div.className = 'media-item-row';
+  div.setAttribute('ondragover', "event.preventDefault();this.style.borderColor='var(--accent)'");
+  div.setAttribute('ondragleave', "this.style.borderColor=''");
+  div.setAttribute('ondrop', "handleMediaDrop(event,this)");
+  div.innerHTML = `
+    <select class="media-row-type" onchange="updateMediaRow(this)">
+      <option value="image" ${m && m.type==='image' ? 'selected' : ''}>Image</option>
+      <option value="video" ${m && m.type==='video' ? 'selected' : ''}>Video</option>
+      <option value="youtube" ${m && m.type==='youtube' ? 'selected' : ''}>YouTube</option>
+    </select>
+    <input class="media-row-src" type="text" placeholder="${m && m.type==='youtube' ? 'YouTube ID' : 'ファイルパスまたはドロップ'}"
+      value="${m ? (m.src || m.id || '') : ''}">
+    <button class="btn btn-ghost btn-sm" onclick="triggerMediaUpload(this)" title="ファイルをアップロード">📁</button>
+    <input type="file" accept="image/*,video/*" style="display:none" onchange="handleMediaFile(this)">
+    <button class="btn btn-danger" onclick="this.closest('.media-item-row').remove()">✕</button>
+  `;
+  document.getElementById('media-rows').appendChild(div);
+}
+
+function updateMediaRow(sel) {
+  const input = sel.nextElementSibling;
+  input.placeholder = sel.value === 'youtube' ? 'YouTube ID（例: dQw4w9WgXcQ）' : 'ファイルパス';
+}
+
+// ── IMAGE UPLOAD HELPERS ──
+let thumbFileToUpload = null;
+let thumbFileBase64 = null;
+let thumbFileName = null;
+
+function handleThumbFile(file) {
+  if (!file) return;
+  thumbFileToUpload = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    thumbFileBase64 = e.target.result.split(',')[1];
+    thumbFileName = file.name;
+    const preview = document.getElementById('thumb-preview-img');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('thumb-upload-label').textContent = '✓ ' + file.name;
+    document.getElementById('thumb-upload-area').classList.add('has-image');
+    document.getElementById('work-thumb').value = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleThumbDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleThumbFile(file);
+}
+
+async function uploadThumbIfNeeded() {
+  if (!thumbFileBase64 || !thumbFileName) return;
+  const existing = await ghGetFile(thumbFileName);
+  const sha = existing ? existing.sha : null;
+  const res = await ghPutImage(thumbFileName, thumbFileBase64, sha,
+    `CMS: upload image ${thumbFileName}`);
+  if (!res.ok) throw new Error('画像のアップロードに失敗しました');
+  thumbFileBase64 = null;
+  thumbFileToUpload = null;
+}
+
+function triggerMediaUpload(btn) {
+  const fileInput = btn.nextElementSibling;
+  fileInput.click();
+}
+
+async function handleMediaFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const row = input.closest('.media-item-row');
+  const srcInput = row.querySelector('.media-row-src');
+  const typeSelect = row.querySelector('.media-row-type');
+
+  // Auto-select type based on file
+  if (file.type.startsWith('video/')) {
+    typeSelect.value = 'video';
+  } else if (file.type.startsWith('image/')) {
+    typeSelect.value = 'image';
+  }
+
+  // Show uploading state
+  srcInput.placeholder = 'アップロード中...';
+  srcInput.disabled = true;
+
+  const reader = new FileReader();
+  reader.onload = async e => {
+    const base64 = e.target.result.split(',')[1];
+    const existing = await ghGetFile(file.name);
+    const sha = existing ? existing.sha : null;
+    try {
+      const res = await ghPutImage(file.name, base64, sha, `CMS: upload media ${file.name}`);
+      if (res.ok) {
+        srcInput.value = file.name;
+        srcInput.placeholder = 'ファイルパスまたはドロップ';
+        srcInput.disabled = false;
+        toast(`アップロード完了: ${file.name} ✓`, 'success');
+      } else {
+        srcInput.placeholder = 'アップロード失敗';
+        srcInput.disabled = false;
+        toast('アップロード失敗', 'error');
+      }
+    } catch(e) {
+      srcInput.placeholder = 'エラーが発生しました';
+      srcInput.disabled = false;
+      toast('アップロードエラー', 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleMediaDrop(e, row) {
+  e.preventDefault();
+  row.style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) return;
+  const fileInput = row.querySelector('input[type="file"]');
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  fileInput.files = dt.files;
+  handleMediaFile(fileInput);
+}
+
+async function saveWork(isDraft = false) {
+  const editIdx = document.getElementById('work-edit-index').value;
+  const isEdit = editIdx !== '';
+
+  const id = document.getElementById('work-id').value.trim();
+  const title = document.getElementById('work-title').value.trim();
+  const thumb = document.getElementById('work-thumb').value.trim();
+
+  if (!id || !title || !thumb) { toast('ID・タイトル・サムネイルは必須です', 'error'); return; }
+
+  // Collect media
+  const mediaRows = document.querySelectorAll('#media-rows .media-item-row');
+  const media = [];
+  mediaRows.forEach(row => {
+    const type = row.querySelector('.media-row-type').value;
+    const src  = row.querySelector('.media-row-src').value.trim();
+    if (!src) return;
+    if (type === 'youtube') media.push({ type, id: src });
+    else media.push({ type, src });
+  });
+
+  const work = {
+    id,
+    category: document.getElementById('work-category').value,
+    sub: document.getElementById('work-sub').value,
+    title,
+    date: document.getElementById('work-date').value,
+    client: document.getElementById('work-client').value.trim(),
+    description: document.getElementById('work-description').value.trim(),
+    thumb,
+    displayTitle: document.getElementById('work-displayTitle').value.trim(),
+    media,
+  };
+
+  // Remove empty optional fields
+  if (!work.client) delete work.client;
+  if (!work.description) delete work.description;
+  if (!work.displayTitle) delete work.displayTitle;
+  if (!work.date) delete work.date;
+  if (isDraft) work.draft = true;
+
+  if (isEdit) {
+    STATE.worksData[parseInt(editIdx)] = work;
+  } else {
+    STATE.worksData.push(work);
+  }
+
+  setSaving('work', true);
+  try {
+    // Upload thumb image if selected
+    document.getElementById('thumb-uploading').style.display = 'flex';
+    await uploadThumbIfNeeded();
+    document.getElementById('thumb-uploading').style.display = 'none';
+    await commitWorks();
+    toast(isDraft ? '下書きとして保存しました ✓' : '保存して公開しました ✓', 'success');
+    closeWorkModal();
+    renderWorks(STATE.worksData);
+  } catch(e) {
+    toast('保存に失敗しました: ' + e.message, 'error');
+  }
+  setSaving('work', false);
+}
+
+async function deleteWork(i) {
+  if (!confirm(`「${STATE.worksData[i].title}」を削除しますか？`)) return;
+  STATE.worksData.splice(i, 1);
+  try {
+    await commitWorks();
+    toast('削除しました', 'success');
+    renderWorks(STATE.worksData);
+  } catch(e) {
+    toast('削除に失敗しました', 'error');
+  }
+}
+
+async function commitWorks() {
+  // Always refresh SHA before committing to avoid 409
+  const latest = await ghGetFile('works-data.js');
+  if (latest) STATE.worksSHA = latest.sha;
+
+  const entries = STATE.worksData.map(w => {
+    const lines = [];
+    lines.push('  {');
+    Object.entries(w).forEach(([k, v]) => {
+      // Skip undefined values (e.g. draft: undefined)
+      if (v === undefined) return;
+      if (k === 'media') {
+        const mediaStr = JSON.stringify(v, null, 4).split('\n').map((l,i) => i===0 ? l : '    '+l).join('\n');
+        lines.push(`    media: ${mediaStr},`);
+      } else if (typeof v === 'string') {
+        lines.push(`    ${k}: ${JSON.stringify(v)},`);
+      } else if (typeof v === 'boolean') {
+        lines.push(`    ${k}: ${v},`);
+      } else {
+        lines.push(`    ${k}: ${JSON.stringify(v)},`);
+      }
+    });
+    lines.push('  }');
+    return lines.join('\n');
+  }).join(',\n\n');
+
+  const content = `/**
+ * works-data.js — 作品データ管理（DeFilMe CMS で生成）
+ */
+
+const WORKS_DATA = [
+${entries}
+];
+`;
+
+  const res = await ghPutFile('works-data.js', content, STATE.worksSHA,
+    `CMS: update works-data.js (${new Date().toISOString().slice(0,10)})`);
+  if (!res.ok) throw new Error(await res.text());
+
+  const json = await res.json();
+  STATE.worksSHA = json.content.sha;
+}
+
+// ── NEWS ──
+async function loadNews() {
+  const file = await ghGetFile('news.json');
+  if (!file) { renderNews([]); return; }
+
+  STATE.newsSHA = file.sha;
+  const content = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+  try {
+    STATE.newsData = JSON.parse(content);
+  } catch(e) {
+    STATE.newsData = [];
+  }
+  renderNews(STATE.newsData);
+}
+
+function renderNews(data) {
+  const el = document.getElementById('news-list');
+  if (!data.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📰</div><div class="empty-state-text">記事がまだありません</div></div>`;
+    return;
+  }
+  const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
+  el.innerHTML = sorted.map((n, i) => `
+    <div class="news-item">
+      <div class="news-date">${n.date}</div>
+      <div class="news-info">
+        <div class="news-title">${n.title}</div>
+        <div class="news-body">${n.body || ''}</div>
+      </div>
+      <div class="work-actions">
+        <span class="badge">${n.category || ''}</span>
+        <button class="btn btn-ghost btn-sm" onclick="editNews(${data.indexOf(n)})">編集</button>
+        <button class="btn btn-danger" onclick="deleteNews(${data.indexOf(n)})">削除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewsModal() {
+  document.getElementById('news-edit-index').value = '';
+  document.getElementById('news-modal-title').textContent = '記事を追加';
+  document.getElementById('news-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('news-category').value = 'News';
+  document.getElementById('news-title').value = '';
+  document.getElementById('news-body').value = '';
+  document.getElementById('news-modal').classList.add('open');
+}
+
+function editNews(i) {
+  const n = STATE.newsData[i];
+  document.getElementById('news-edit-index').value = i;
+  document.getElementById('news-modal-title').textContent = '記事を編集';
+  document.getElementById('news-date').value = n.date || '';
+  document.getElementById('news-category').value = n.category || 'News';
+  document.getElementById('news-title').value = n.title || '';
+  document.getElementById('news-body').value = n.body || '';
+  document.getElementById('news-draft-flag').value = n.draft ? 'true' : 'false';
+  document.getElementById('news-modal').classList.add('open');
+}
+
+function closeNewsModal() {
+  document.getElementById('news-modal').classList.remove('open');
+}
+
+async function saveNews() {
+  const editIdx = document.getElementById('news-edit-index').value;
+  const isEdit = editIdx !== '';
+
+  const date  = document.getElementById('news-date').value;
+  const title = document.getElementById('news-title').value.trim();
+  if (!date || !title) { toast('日付とタイトルは必須です', 'error'); return; }
+
+  const item = {
+    id: isEdit ? STATE.newsData[parseInt(editIdx)].id : Date.now(),
+    date,
+    category: document.getElementById('news-category').value,
+    title,
+    body: document.getElementById('news-body').value.trim(),
+  };
+
+  if (isEdit) {
+    STATE.newsData[parseInt(editIdx)] = item;
+  } else {
+    STATE.newsData.push(item);
+  }
+
+  setSaving('news', true);
+  try {
+    await commitNews();
+    toast('保存して公開しました ✓', 'success');
+    closeNewsModal();
+    renderNews(STATE.newsData);
+  } catch(e) {
+    toast('保存に失敗しました: ' + e.message, 'error');
+  }
+  setSaving('news', false);
+}
+
+async function deleteNews(i) {
+  if (!confirm(`この記事を削除しますか？`)) return;
+  STATE.newsData.splice(i, 1);
+  try {
+    await commitNews();
+    toast('削除しました', 'success');
+    renderNews(STATE.newsData);
+  } catch(e) {
+    toast('削除に失敗しました', 'error');
+  }
+}
+
+async function commitNews() {
+  // Always refresh SHA before committing to avoid 409
+  const latest = await ghGetFile('news.json');
+  if (latest) STATE.newsSHA = latest.sha;
+
+  const content = JSON.stringify(STATE.newsData, null, 2);
+  const res = await ghPutFile('news.json', content, STATE.newsSHA,
+    `CMS: update news.json (${new Date().toISOString().slice(0,10)})`);
+  if (!res.ok) throw new Error(await res.text());
+  const json = await res.json();
+  STATE.newsSHA = json.content.sha;
+}
+
+// ── HERO ──
+async function loadHeroPreview() {
+  const base = `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/`;
+  const ts = '?t=' + Date.now();
+  // 左: hero2.jpg
+  const imgLeft = document.getElementById('hero-preview-left');
+  if (imgLeft) { imgLeft.src = base + 'hero2.jpg' + ts; imgLeft.style.opacity='1'; }
+  // 右: bg.jpg
+  const imgRight = document.getElementById('hero-preview-right');
+  if (imgRight) { imgRight.src = base + 'bg.jpg' + ts; imgRight.style.opacity='1'; }
+  // 1枚: hero.jpg
+  const imgOne = document.getElementById('hero-preview-one');
+  if (imgOne) { imgOne.src = base + 'hero.jpg' + ts; imgOne.style.opacity='1'; }
+}
+
+function heroModeChange(mode) {
+  const isSplit = mode === 'split';
+  document.getElementById('hero-preview-split').style.display = isSplit ? 'flex' : 'none';
+  document.getElementById('hero-preview-single').style.display = isSplit ? 'none' : 'block';
+  document.getElementById('hero-panel-left-card').style.display = isSplit ? '' : 'none';
+  document.getElementById('hero-panel-right-card').style.display = isSplit ? '' : 'none';
+  document.getElementById('hero-panel-single-card').style.display = isSplit ? 'none' : '';
+  // ラジオラベルのボーダー色
+  document.getElementById('mode-label-split').style.borderColor = isSplit ? 'var(--accent)' : 'var(--border)';
+  document.getElementById('mode-label-single').style.borderColor = isSplit ? 'var(--border)' : 'var(--accent)';
+}
+
+function triggerHeroUpload(panel) {
+  document.getElementById('hero-file-' + panel).click();
+}
+
+function handleHeroPanelFile(file, panel) {
+  if (!file) return;
+  const thumb = document.getElementById('hero-' + panel + '-thumb');
+  const nameEl = document.getElementById('hero-' + panel + '-name');
+  const sizeEl = document.getElementById('hero-' + panel + '-size');
+  const infoEl = document.getElementById('hero-' + panel + '-info');
+  const reader = new FileReader();
+  reader.onload = e => { thumb.src = e.target.result; };
+  reader.readAsDataURL(file);
+  nameEl.textContent = file.name;
+  sizeEl.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+  infoEl.style.display = 'block';
+  STATE['heroFile_' + panel] = file;
+}
+
+function handleHeroPanelDrop(e, panel) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleHeroPanelFile(file, panel);
+}
+
+async function uploadHeroPanelImage(panel) {
+  const file = STATE['heroFile_' + panel];
+  if (!file) return toast('画像を選択してください', 'error');
+
+  const fileMap = { left: 'hero2.jpg', right: 'bg.jpg', single: 'hero.jpg' };
+  const fileName = fileMap[panel];
+  if (!fileName) return;
+
+  setSaving(true);
+  try {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      const b64 = e.target.result.split(',')[1];
+      // 既存SHAを取得
+      const existing = await ghGetFile(fileName);
+      const sha = existing ? existing.sha : undefined;
+      const body = {
+        message: `update: hero image ${fileName}`,
+        content: b64,
+      };
+      if (sha) body.sha = sha;
+      const res = await fetch(
+        `https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${fileName}`,
+        { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+      );
+      if (res.ok) {
+        toast(`${fileName} をアップロードしました`, 'success');
+        document.getElementById('hero-' + panel + '-info').style.display = 'none';
+        STATE['heroFile_' + panel] = null;
+        setTimeout(() => loadHeroPreview(), 1500);
+      } else {
+        const err = await res.json();
+        toast('エラー: ' + err.message, 'error');
+      }
+      setSaving(false);
+    };
+    reader.readAsDataURL(file);
+  } catch(e) {
+    toast('エラー: ' + e.message, 'error');
+    setSaving(false);
+  }
+}
+
+
+function handleHeroFile(file) {
+  if (!file) return;
+  heroFileData = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    heroFileBase64 = e.target.result.split(',')[1];
+    document.getElementById('hero-new-preview').src = e.target.result;
+    document.getElementById('hero-file-name').textContent = file.name;
+    document.getElementById('hero-file-size').textContent = (file.size / 1024).toFixed(0) + ' KB';
+    document.getElementById('hero-upload-info').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleHeroDrop(e) {
+  e.preventDefault();
+  document.getElementById('hero-drop-zone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleHeroFile(file);
+}
+
+async function uploadHeroImage() {
+  if (!heroFileBase64) return;
+  const ext = heroFileData.name.split('.').pop().toLowerCase();
+  const filename = `hero.${ext}`;
+
+  const existingFile = await ghGetFile(filename);
+  const sha = existingFile ? existingFile.sha : null;
+
+  try {
+    const res = await ghPutImage(filename, heroFileBase64, sha,
+      `CMS: update hero image (${new Date().toISOString().slice(0,10)})`);
+    if (!res.ok) throw new Error();
+    toast(`Hero 画像をアップロードしました: ${filename} ✓`, 'success');
+    setTimeout(() => {
+      document.getElementById('hero-preview').src =
+        `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/${filename}?t=${Date.now()}`;
+      document.getElementById('hero-upload-info').style.display = 'none';
+    }, 1500);
+  } catch(e) {
+    toast('アップロードに失敗しました', 'error');
+  }
+}
+
+// ── UI ──
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`section-${name}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function setSaving(type, saving) {
+  const btn = document.getElementById(`${type}-save-btn`);
+  const label = document.getElementById(`${type}-save-label`);
+  const draftBtn = document.getElementById(`${type}-draft-btn`);
+  btn.disabled = saving;
+  if (draftBtn) draftBtn.disabled = saving;
+  label.innerHTML = saving ? '<span class="spinner"></span> 保存中...' : '保存して公開';
+}
+
+let toastTimer;
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.className = '', 3500);
+}
+
+// Auto-generate ID from title
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('work-title')?.addEventListener('input', e => {
+    if (!document.getElementById('work-edit-index').value) {
+      document.getElementById('work-id').value = e.target.value
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]/g, '')
+        .slice(0, 40);
+    }
+  });
+});
+
+
+
+// ─────────────────────────────────────
+// INQUIRIES
+// ─────────────────────────────────────
+const INQPATH = 'inquiries.json';
+
+async function loadInquiries() {
+  const el = document.getElementById('inq-list');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">読み込み中...</div></div>';
+  try {
+    const f = await ghGetFile(INQPATH);
+    STATE.inqData = f ? JSON.parse(atob(f.content.replace(/\n/g,''))) : [];
+    STATE.inqSHA = f ? f.sha : '';
+  } catch(e) { STATE.inqData = []; STATE.inqSHA = ''; }
+  renderInquiries();
+  updateInqStats();
+}
+
+function updateInqStats() {
+  const d = STATE.inqData || [];
+  const setEl = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+  setEl('inq-stat-pending', d.filter(i=>i.status==='pending').length);
+  setEl('inq-stat-wip',     d.filter(i=>i.status==='wip').length);
+  setEl('inq-stat-done',    d.filter(i=>i.status==='done').length);
+  const pCount = d.filter(i=>i.status==='pending').length;
+  const badge = document.getElementById('inq-badge');
+  if (badge) { badge.textContent = pCount; badge.style.display = pCount > 0 ? '' : 'none'; }
+}
+
+let inqFilter = 'all';
+function setInqFilter(f, el) {
+  inqFilter = f;
+  document.querySelectorAll('.inq-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderInquiries();
+}
+
+function renderInquiries() {
+  const el = document.getElementById('inq-list');
+  if (!el) return;
+  const data = (STATE.inqData || []).filter(i => inqFilter === 'all' || i.status === inqFilter);
+  data.sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (!data.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">問い合わせはありません</div></div>';
+    return;
+  }
+  const sLabel = {pending:'未対応', wip:'対応中', done:'対応済み'};
+  const sColor = {pending:'var(--accent)', wip:'#4a9eff', done:'var(--success)'};
+  el.innerHTML = data.map(item => {
+    const d = new Date(item.date);
+    const ds = d.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="inq-card" id="inqcard-${item.id}">
+      <div class="inq-card-header" onclick="toggleInqCard('${item.id}')">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-weight:500;font-size:14px;">${esc(item.name)}</span>
+            <span style="font-size:11px;color:var(--text-muted);">${esc(item.email)}</span>
+            <span style="font-size:10px;color:var(--text-muted);">${ds}</span>
+          </div>
+          ${item.subject ? `<div style="font-size:12px;color:var(--text-dim);margin-bottom:2px;">${esc(item.subject)}</div>` : ''}
+          <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;">${esc(item.message)}</div>
+        </div>
+        <span style="flex-shrink:0;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:500;background:${sColor[item.status]}22;color:${sColor[item.status]};">${sLabel[item.status]}</span>
+      </div>
+      <div class="inq-card-detail" id="inqdetail-${item.id}">
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;white-space:pre-wrap;background:var(--surface2);border:1px solid var(--border);padding:14px;border-radius:6px;margin-bottom:14px;">${esc(item.message)}</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select class="field-input" style="width:auto;font-size:12px;padding:5px 10px;" onchange="changeInqStatus('${item.id}',this.value)">
             <option value="pending" ${item.status==='pending'?'selected':''}>未対応</option>
             <option value="wip"     ${item.status==='wip'    ?'selected':''}>対応中</option>
             <option value="done"    ${item.status==='done'   ?'selected':''}>対応済み</option>
           </select>
-          <a href="mailto:${escHtml(item.email)}?subject=Re: ${encodeURIComponent(item.subject||'お問い合わせ')}" class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">
-            返信メールを開く
-          </a>
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteItem('${item.id}')" style="color:#e85454;">削除</button>
+          <a href="mailto:${esc(item.email)}?subject=Re: ${encodeURIComponent(item.subject||'お問い合わせ')}" class="btn btn-ghost btn-sm">返信メールを開く</a>
+          <button class="btn btn-ghost btn-sm" style="color:var(--danger);" onclick="deleteInq('${item.id}')">削除</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleItem(id) {
-  const el = document.getElementById('item-' + id);
-  el.classList.toggle('expanded');
-}
-
-function escHtml(s) {
+function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// ========== Actions ==========
-async function changeStatus(id, status) {
-  const item = allInquiries.find(i => i.id === id);
+function toggleInqCard(id) {
+  const d = document.getElementById('inqdetail-' + id);
+  if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
+}
+async function changeInqStatus(id, status) {
+  const item = (STATE.inqData||[]).find(i=>i.id===id);
   if (!item) return;
   item.status = status;
-  const ok = await saveInquiries('update: inquiry status ' + id);
-  if (ok) {
-    showToast('ステータスを更新しました', 'ok');
-    updateStats();
-    renderList();
-  }
+  await saveInquiries('update: inquiry status ' + id);
+  updateInqStats();
+  renderInquiries();
 }
-
-async function deleteItem(id) {
+async function deleteInq(id) {
   if (!confirm('この問い合わせを削除しますか？')) return;
-  allInquiries = allInquiries.filter(i => i.id !== id);
-  const ok = await saveInquiries('update: delete inquiry ' + id);
-  if (ok) {
-    showToast('削除しました', 'ok');
-    updateStats();
-    renderList();
-  }
+  STATE.inqData = (STATE.inqData||[]).filter(i=>i.id!==id);
+  await saveInquiries('update: delete inquiry ' + id);
+  updateInqStats();
+  renderInquiries();
+}
+async function saveInquiries(msg) {
+  setSaving(true);
+  try {
+    const latest = await ghGetFile(INQPATH);
+    const sha = latest ? latest.sha : undefined;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(STATE.inqData||[], null, 2))));
+    const body = { message: msg || 'update: inquiries', content };
+    if (sha) body.sha = sha;
+    const res = await fetch(
+      `https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${INQPATH}`,
+      { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+    );
+    if (res.ok) { toast('保存しました', 'success'); }
+    else { const e = await res.json(); toast('エラー: '+e.message, 'error'); }
+  } catch(e) { toast('エラー: '+e.message, 'error'); }
+  setSaving(false);
+}
+function openNewInqModal() { document.getElementById('inq-modal').classList.add('open'); }
+function closeInqModal() {
+  document.getElementById('inq-modal').classList.remove('open');
+  ['inq-form-name','inq-form-email','inq-form-subject','inq-form-message'].forEach(id => {
+    const e = document.getElementById(id); if(e) e.value='';
+  });
+  const s = document.getElementById('inq-form-status'); if(s) s.value='pending';
+}
+async function saveNewInq() {
+  const name    = (document.getElementById('inq-form-name')||{}).value?.trim();
+  const email   = (document.getElementById('inq-form-email')||{}).value?.trim();
+  const message = (document.getElementById('inq-form-message')||{}).value?.trim();
+  if (!name || !email || !message) return toast('必須項目を入力してください', 'error');
+  const entry = {
+    id: Date.now().toString(), date: new Date().toISOString(), name, email,
+    subject: (document.getElementById('inq-form-subject')||{}).value?.trim() || '',
+    message, status: (document.getElementById('inq-form-status')||{}).value || 'pending',
+  };
+  if (!STATE.inqData) STATE.inqData = [];
+  STATE.inqData.unshift(entry);
+  await saveInquiries('add: inquiry from ' + name);
+  closeInqModal(); updateInqStats(); renderInquiries();
 }
 
-// ========== New inquiry ==========
-function showNewForm() {
-  document.getElementById('inquiriesScreen').style.display = 'none';
-  document.getElementById('newFormScreen').style.display = 'block';
-}
-function cancelNew() {
-  document.getElementById('newFormScreen').style.display = 'none';
-  document.getElementById('inquiriesScreen').style.display = 'block';
-}
 
-async function addInquiry() {
-  const name    = document.getElementById('newName').value.trim();
-  const email   = document.getElementById('newEmail').value.trim();
-  const subject = document.getElementById('newSubject').value.trim();
-  const message = document.getElementById('newMessage').value.trim();
-  const status  = document.getElementById('newStatus').value;
-  if (!name || !email || !message) return showToast('必須項目を入力してください', 'err');
+// showSection 拡張: inquiries対応
+(function() {
+  const _orig = showSection;
+  window.showSection = function(name) {
+    _orig(name);
+    if (name === 'inquiries') {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      const sec = document.getElementById('section-inquiries');
+      if (sec) sec.style.display = '';
+    }
+    // nav-item active 状態更新
+    document.querySelectorAll('.nav-item').forEach(el => {
+      const txt = el.textContent.trim().toLowerCase();
+      const match =
+        (name === 'works'       && txt.startsWith('works')) ||
+        (name === 'news'        && txt.startsWith('news')) ||
+        (name === 'hero'        && txt.includes('hero')) ||
+        (name === 'inquiries'   && txt.includes('問い合わせ'));
+      el.classList.toggle('active', match);
+    });
+    if (name === 'inquiries' && (!STATE.inqData || STATE.inqData.length === 0)) {
+      loadInquiries();
+    }
+  };
+})();
 
-  const entry = { id: Date.now().toString(), date: new Date().toISOString(), name, email, subject, message, status };
-  allInquiries.unshift(entry);
-  const ok = await saveInquiries('add: new inquiry from ' + name);
-  if (ok) {
-    showToast('追加しました', 'ok');
-    cancelNew();
-    updateStats();
-    renderList();
-  }
-}
-
-// ========== Toast ==========
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + (type||'');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ========== Init ==========
-window.addEventListener('load', () => {
-  const saved = localStorage.getItem('defilme_admin_pat');
-  if (saved) {
-    PAT = saved;
-    showInquiries();
-  }
-});
 </script>
 </body>
 </html>
