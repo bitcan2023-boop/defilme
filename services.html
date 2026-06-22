@@ -326,14 +326,20 @@
       const nav = document.getElementById('mobileNav');
       const openBtn = document.getElementById('hamburger');
       const closeBtn = document.getElementById('mobileNavClose');
-      if (openBtn)  openBtn.addEventListener('click',  () => nav.classList.add('open'));
-      if (closeBtn) closeBtn.addEventListener('click', () => nav.classList.remove('open'));
-      nav.querySelectorAll('a').forEach(a =>
-        a.addEventListener('click', () => nav.classList.remove('open'))
-      );
-      nav.addEventListener('click', e => {
-        if (e.target === nav) nav.classList.remove('open');
+      function openNav() {
+        nav.classList.add('open');
+        document.body.classList.add('nav-open');
+      }
+      function closeNav() {
+        nav.classList.remove('open');
+        document.body.classList.remove('nav-open');
+      }
+      if (openBtn) openBtn.addEventListener('click', () => {
+        nav.classList.contains('open') ? closeNav() : openNav();
       });
+      if (closeBtn) closeBtn.addEventListener('click', closeNav);
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+      nav.addEventListener('click', e => { if (e.target === nav) closeNav(); });
     })();
     // Header scroll
     const hdr = document.querySelector('header');
