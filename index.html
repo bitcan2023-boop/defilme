@@ -652,21 +652,6 @@
     </div>
   </section>
 
-  <!-- Message -->
-  <section class="message-section reveal">
-    <div class="section-label reveal">Philosophy</div>
-    <div class="message-main reveal reveal-d1">
-      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
-    </div>
-    <div class="message-sub reveal reveal-d2">
-      <div class="message-sub-text">
-        Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
-        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
-      </div>
-
-    </div>
-  </section>
-
   <!-- About -->
   <section class="about-section reveal" id="about">
     <div class="about-image-wrap reveal reveal-d1">
@@ -688,6 +673,21 @@
         <p>音楽と映像の交錯点に立ち、被写体に流れるリズムを写真や映像に落とし込む。<br>企業・自治体向けのプロモーション映像から個人向け制作まで幅広く対応。</p>
         <p>現在もドラマーとして活動中。</p>
       </div>
+    </div>
+  </section>
+
+  <!-- Message -->
+  <section class="message-section reveal">
+    <div class="section-label reveal">Philosophy</div>
+    <div class="message-main reveal reveal-d1">
+      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
+    </div>
+    <div class="message-sub reveal reveal-d2">
+      <div class="message-sub-text">
+        Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
+        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
+      </div>
+
     </div>
   </section>
 
@@ -773,28 +773,43 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // Safari blur fix: アニメーション完了後(2.3s)にfilter/transformをnoneにリセット
-    // translateZ(0)→noneの順でGPUレイヤーを解放してシャープに戻す
+    // Safari/Chrome スマホ blur fix:
+    // animation完了後(delay 0.3s + duration 2s = 2.3s)に
+    // animation自体をnoneにしてGPUレイヤーを完全解放する
     const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
     setTimeout(() => {
       heroTextEls.forEach(el => {
+        // アニメーションを切ってフラットな状態に戻す
+        el.style.animation = 'none';
         el.style.filter = 'none';
         el.style.transform = 'none';
         el.style.opacity = '1';
-        el.style.webkitFontSmoothing = 'antialiased';
+        el.style.willChange = 'auto';
       });
       heroPanelImgs.forEach(img => {
         img.style.filter = 'none';
+        img.style.willChange = 'auto';
       });
     }, 2400);
 
 
 
     // Hamburger
-    document.getElementById('hamburger').addEventListener('click', () =>
-      document.getElementById('mobileNav').classList.add('open'));
-    document.getElementById('mobileNavClose').addEventListener('click', () =>
-      document.getElementById('mobileNav').classList.remove('open'));
+    (function() {
+      const nav = document.getElementById('mobileNav');
+      const openBtn = document.getElementById('hamburger');
+      const closeBtn = document.getElementById('mobileNavClose');
+      if (openBtn)  openBtn.addEventListener('click',  () => nav.classList.add('open'));
+      if (closeBtn) closeBtn.addEventListener('click', () => nav.classList.remove('open'));
+      // メニューリンクをタップしても閉じる
+      nav.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => nav.classList.remove('open'))
+      );
+      // 背景タップで閉じる
+      nav.addEventListener('click', e => {
+        if (e.target === nav) nav.classList.remove('open');
+      });
+    })();
 
 
 
