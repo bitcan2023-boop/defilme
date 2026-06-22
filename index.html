@@ -138,6 +138,7 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
+      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
@@ -152,6 +153,7 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
+      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
@@ -163,6 +165,7 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
+      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
       width: min(320px, 55vw);
       justify-content: space-between;
@@ -239,8 +242,8 @@
     .about-section {
       padding: 100px 80px;
       display: grid;
-      grid-template-columns: 2fr 3fr;
-      gap: 64px;
+      grid-template-columns: 5fr 7fr;
+      gap: 72px;
       align-items: start;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
@@ -257,16 +260,15 @@
 
     .about-image-wrap {
       overflow: hidden;
-      padding-top: 0;
-      align-self: start;
+      padding-top: 78px;
     }
 
     .about-image-wrap img {
       width: 100%;
       height: auto;
-      aspect-ratio: 3/4;
+      aspect-ratio: 6/5;
       object-fit: cover;
-      object-position: center 10%;
+      object-position: center 15%;
       display: block;
       transition: transform 0.7s ease;
     }
@@ -579,7 +581,7 @@
     /* Heroテキスト3段共通 */
     @keyframes heroTextReveal {
       0%   { opacity: 0; filter: blur(20px); transform: scale(1.2); }
-      100% { opacity: 1; filter: blur(0px);  transform: none; }
+      100% { opacity: 1; filter: blur(0px);  transform: scale(1); }
     }
 
     @keyframes fadeUp {
@@ -815,27 +817,13 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // Safari/Chrome スマホ blur fix:
-    // animation完了後(delay 0.3s + duration 2s = 2.3s)に
-    // animation自体をnoneにしてGPUレイヤーを完全解放する
+    // アニメーション完了後(2.4s)にwill-changeをautoに戻してGPUメモリを解放
+    // ※ animation:noneはパチッの原因になるため使わない
     const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
     setTimeout(() => {
-      heroTextEls.forEach(el => {
-        // まず最終状態を明示してからアニメーションを切る（パチっと動くのを防ぐ）
-        el.style.opacity = '1';
-        el.style.filter = 'none';
-        el.style.transform = 'none';
-        // 1フレーム後にアニメーション定義を解除してGPUレイヤーを解放
-        requestAnimationFrame(() => {
-          el.style.animation = 'none';
-          el.style.willChange = 'auto';
-        });
-      });
-      heroPanelImgs.forEach(img => {
-        img.style.filter = 'none';
-        img.style.willChange = 'auto';
-      });
-    }, 2400);
+      heroTextEls.forEach(el => { el.style.willChange = 'auto'; });
+      heroPanelImgs.forEach(img => { img.style.willChange = 'auto'; });
+    }, 2600);
 
 
 
