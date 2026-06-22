@@ -760,6 +760,25 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
+    // Safari blur fix:
+    // アニメーション完了後(0.3s delay + 2s duration = 2.3s)、
+    // filter/transformをnoneにリセットしてSafariのGPUレイヤーから解放。
+    // これによりテキストのぼやけを防ぐ。
+    const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
+    setTimeout(() => {
+      heroTextEls.forEach(el => {
+        el.style.filter = 'none';
+        el.style.transform = 'none';
+        el.style.opacity = '1';
+        el.style.willChange = 'auto';
+      });
+      // 画像のfilterもリセット（scale-downのtransformは残す）
+      heroPanelImgs.forEach(img => {
+        img.style.filter = 'none';
+        img.style.willChange = 'transform';
+      });
+    }, 2400);
+
     // Hamburger
     document.getElementById('hamburger').addEventListener('click', () =>
       document.getElementById('mobileNav').classList.add('open'));
