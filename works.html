@@ -316,13 +316,24 @@
 
   <script src="works-data.js"></script>
   <script>
-    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.add('open'));
+    (function() {
+      const nav = document.getElementById('mobileNav');
+      const openBtn = document.getElementById('hamburger');
+      const closeBtn = document.getElementById('mobileNavClose');
+      if (openBtn)  openBtn.addEventListener('click',  () => nav.classList.add('open'));
+      if (closeBtn) closeBtn.addEventListener('click', () => nav.classList.remove('open'));
+      nav.querySelectorAll('a').forEach(a =>
+        a.addEventListener('click', () => nav.classList.remove('open'))
+      );
+      nav.addEventListener('click', e => {
+        if (e.target === nav) nav.classList.remove('open');
+      });
+    })();
     // Header scroll
     const hdr = document.querySelector('header');
     window.addEventListener('scroll', () => {
       hdr.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
-    document.getElementById('mobileNavClose').addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
 
     const subLabels = {
       'music-video': 'Music Video',
