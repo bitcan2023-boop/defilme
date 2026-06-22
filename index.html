@@ -138,7 +138,6 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
-      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
@@ -153,7 +152,6 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
-      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
@@ -165,7 +163,6 @@
       filter: blur(20px);
       transform: scale(1.2);
       transform-origin: center center;
-      will-change: filter, transform, opacity;
       animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
       width: min(320px, 55vw);
       justify-content: space-between;
@@ -806,6 +803,9 @@
       <a href="news.html">News</a>
       <a href="contact.html">Contact</a>
     </nav>
+    <nav class="footer-sub-nav">
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
     <p class="footer-copy">© DeFilMe</p>
   </footer>
 
@@ -817,11 +817,27 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // アニメーション完了後(2.4s)にwill-changeをautoに戻してGPUメモリを解放
-    // ※ animation:noneはパチッの原因になるため使わない
+    // Safari blur fix:
+    // アニメーション完了後(2.4s)に backface-visibility:hidden を適用し
+    // 直後に解除することで Safari の GPU レイヤーを再構築してシャープに戻す
     const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     setTimeout(() => {
-      heroTextEls.forEach(el => { el.style.willChange = 'auto'; });
+      if (isSafari) {
+        // Safari: backface-visibility trick でレイヤーをリセット
+        heroTextEls.forEach(el => {
+          el.style.webkitBackfaceVisibility = 'hidden';
+          el.style.backfaceVisibility = 'hidden';
+        });
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            heroTextEls.forEach(el => {
+              el.style.webkitBackfaceVisibility = '';
+              el.style.backfaceVisibility = '';
+            });
+          });
+        });
+      }
       heroPanelImgs.forEach(img => { img.style.willChange = 'auto'; });
     }, 2600);
 
