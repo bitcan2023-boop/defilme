@@ -332,6 +332,10 @@
         nav.classList.remove('open');
         document.body.classList.remove('nav-open');
       }
+      // ページ離脱/ロード時に nav-open を必ずリセット
+      window.addEventListener('beforeunload', () => document.body.classList.remove('nav-open'));
+      // 念のため: ページロード時に nav-open が残っていたらリセット
+      document.body.classList.remove('nav-open');
       if (openBtn) openBtn.addEventListener('click', () => {
         nav.classList.contains('open') ? closeNav() : openNav();
       });
