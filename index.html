@@ -2,7 +2,7 @@
 <html lang="ja" style="background-color:#1e1e1e;">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>DeFilMe | HIBIKI TAKAI</title>
   <meta name="description" content="関東を拠点に活動するビデオグラファー/フォトグラファー HIBIKI TAKAI のポートフォリオサイト。">
   <meta name="color-scheme" content="dark">
@@ -113,7 +113,9 @@
       color: rgba(240,240,240,0.62);
       margin-bottom: 10px;
       opacity: 0;
-      animation: heroTextFadeIn 1.4s ease 0.6s both;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
     .hero-name {
@@ -124,7 +126,9 @@
       letter-spacing: 0.07em;
       color: var(--white);
       opacity: 0;
-      animation: heroTextFadeIn 1.4s ease 0.8s both;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
     }
 
     .hero-buttons {
@@ -132,7 +136,9 @@
       gap: 0;
       margin-top: 28px;
       opacity: 0;
-      animation: heroTextFadeIn 1.4s ease 1.0s both;
+      filter: blur(20px);
+      transform: scale(1.2);
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
       width: min(320px, 55vw);
       justify-content: space-between;
     }
@@ -527,10 +533,10 @@
       100% { opacity: 1; filter: blur(0px); }
     }
 
-    /* Heroテキスト: opacityのみ（Safari blur問題を回避） */
-    @keyframes heroTextFadeIn {
-      0%   { opacity: 0; }
-      100% { opacity: 1; }
+    /* Heroテキスト3段共通 */
+    @keyframes heroTextReveal {
+      0%   { opacity: 0; filter: blur(20px); transform: scale(1.2); }
+      100% { opacity: 1; filter: blur(0px);  transform: scale(1.0); }
     }
 
     @keyframes fadeUp {
@@ -570,12 +576,18 @@
 
     @media (max-width: 768px) {
       .about-section { padding: 60px 24px; }
-      .message-section { padding: 80px 24px; }
-      .news-section { padding: 80px 24px; }
+      .message-section { padding: 60px 24px; }
+      .news-section { padding: 60px 24px; }
       .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
       /* スマホ: 写真縮小 */
       .about-image-wrap { padding-top: 0; }
-      .about-image-wrap img { aspect-ratio: 3/2; max-height: 260px; }
+      .about-image-wrap img { aspect-ratio: 3/2; max-height: 240px; }
+      /* スマホ: ロゴコンパクト */
+      .header-logo svg { width: 88px; height: 32px; }
+      /* スマホ: テキストサイズ調整 */
+      .about-body { font-size: 0.78rem; line-height: 1.9; }
+      .message-main { font-size: clamp(1.1rem, 4.5vw, 1.5rem); }
+      .message-sub-text { font-size: 0.78rem; line-height: 1.9; }
     }
   </style>
 </head>
@@ -600,11 +612,17 @@
   </header>
 
   <div class="mobile-nav" id="mobileNav">
-    <button class="mobile-nav-close" id="mobileNavClose">✕</button>
+    <button class="mobile-nav-close" id="mobileNavClose">×</button>
     <a href="works.html">Works</a>
     <a href="services.html">Services</a>
     <a href="news.html">News</a>
     <a href="contact.html">Contact</a>
+    <div class="mobile-nav-divider"></div>
+    <div class="mobile-nav-sns">
+      <a href="https://instagram.com/bitcan_teto" aria-label="Instagram" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" aria-label="YouTube" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/bitcan47" aria-label="X" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
   </div>
 
 
@@ -634,6 +652,21 @@
     </div>
   </section>
 
+  <!-- Message -->
+  <section class="message-section reveal">
+    <div class="section-label reveal">Philosophy</div>
+    <div class="message-main reveal reveal-d1">
+      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
+    </div>
+    <div class="message-sub reveal reveal-d2">
+      <div class="message-sub-text">
+        Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
+        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
+      </div>
+
+    </div>
+  </section>
+
   <!-- About -->
   <section class="about-section reveal" id="about">
     <div class="about-image-wrap reveal reveal-d1">
@@ -655,21 +688,6 @@
         <p>音楽と映像の交錯点に立ち、被写体に流れるリズムを写真や映像に落とし込む。<br>企業・自治体向けのプロモーション映像から個人向け制作まで幅広く対応。</p>
         <p>現在もドラマーとして活動中。</p>
       </div>
-    </div>
-  </section>
-
-  <!-- Message -->
-  <section class="message-section reveal">
-    <div class="section-label reveal">Philosophy</div>
-    <div class="message-main reveal reveal-d1">
-      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
-    </div>
-    <div class="message-sub reveal reveal-d2">
-      <div class="message-sub-text">
-        Music Video、企業VP、商品プロモーション、家族の記念日撮影等、様々なご要望にお応えします。<br>
-        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
-      </div>
-
     </div>
   </section>
 
@@ -754,6 +772,21 @@
     setTimeout(() => {
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
+
+    // Safari blur fix: アニメーション完了後(2.3s)にfilter/transformをnoneにリセット
+    // translateZ(0)→noneの順でGPUレイヤーを解放してシャープに戻す
+    const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
+    setTimeout(() => {
+      heroTextEls.forEach(el => {
+        el.style.filter = 'none';
+        el.style.transform = 'none';
+        el.style.opacity = '1';
+        el.style.webkitFontSmoothing = 'antialiased';
+      });
+      heroPanelImgs.forEach(img => {
+        img.style.filter = 'none';
+      });
+    }, 2400);
 
 
 
