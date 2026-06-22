@@ -113,9 +113,7 @@
       color: rgba(240,240,240,0.62);
       margin-bottom: 10px;
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextFadeIn 1.4s ease 0.6s both;
     }
 
     .hero-name {
@@ -126,9 +124,7 @@
       letter-spacing: 0.07em;
       color: var(--white);
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextFadeIn 1.4s ease 0.8s both;
     }
 
     .hero-buttons {
@@ -136,9 +132,7 @@
       gap: 0;
       margin-top: 28px;
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextFadeIn 1.4s ease 1.0s both;
       width: min(320px, 55vw);
       justify-content: space-between;
     }
@@ -332,10 +326,11 @@
 
     .message-sub {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 48px;
       padding-top: 48px;
       border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: 680px;
     }
 
     .message-sub-text {
@@ -532,11 +527,10 @@
       100% { opacity: 1; filter: blur(0px); }
     }
 
-    /* Heroテキスト3段共通: STUDIO設定そのまま
-       opacity0→1, blur20px→0, scale1.2→1.0, S字イージング */
-    @keyframes heroTextReveal {
-      0%   { opacity: 0; filter: blur(20px); transform: scale(1.2); }
-      100% { opacity: 1; filter: blur(0px);  transform: scale(1.0); }
+    /* Heroテキスト: opacityのみ（Safari blur問題を回避） */
+    @keyframes heroTextFadeIn {
+      0%   { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     @keyframes fadeUp {
@@ -561,9 +555,10 @@
       .about-section {
         grid-template-columns: 1fr;
         padding: 80px 40px;
-        gap: 48px;
+        gap: 32px;
       }
-      .about-text { padding-right: 0; }
+      .about-text { padding-right: 0; order: 1; }
+      .about-image-wrap { order: 2; }
       .about-image-wrap img { height: 420px; }
       .message-section { padding: 80px 40px; }
       .message-sub { grid-template-columns: 1fr; }
@@ -574,10 +569,13 @@
     }
 
     @media (max-width: 768px) {
-      .about-section { padding: 80px 24px; }
+      .about-section { padding: 60px 24px; }
       .message-section { padding: 80px 24px; }
       .news-section { padding: 80px 24px; }
       .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
+      /* スマホ: 写真縮小 */
+      .about-image-wrap { padding-top: 0; }
+      .about-image-wrap img { aspect-ratio: 3/2; max-height: 260px; }
     }
   </style>
 </head>
@@ -652,10 +650,10 @@
         <a href="https://www.youtube.com/channel/UCp01U8T46XUDg-Nu3HK0YMQ" target="_blank" rel="noopener">YouTube</a>
       </div>
       <div class="about-body">
-        <p>関東を拠点に活動するビデオグラファー/フォトグラファー。<br>1975年東京生まれの京都育ち。横浜在住。</p>
-        <p>音楽を起点とした映像を得意とする映像制作者。10代からロックに目覚めギターとドラムを始める。以降、様々なバンドでCDリリース、全国ツアーを行う。</p>
-        <p>Webデザインを学び始めたことをきっかけに独学で始めた写真・動画制作にハマる。バンドのMusic Video制作をきっかけに様々な映像・写真の制作に取り組み始める。現在ドラマーとして活動しながら、CDのジャケットやWebサイト制作も並行して行う。</p>
-        <p>被写体の肉体性（リズム）をファインダーに捉え、そこに内在する表現と発露する情景を一体にする作品作りを信条としている。クライアントワークでは自治体・企業等のプロモーション動画からイベント等の記録動画、また記念日等の個人向けの制作まで幅広く対応。</p>
+        <p>関東を拠点に活動するビデオグラファー/フォトグラファー。<br>1975年生まれ。京都を経て現在は横浜在住。</p>
+        <p>楽曲制作・バンド活動を起点に映像と写真を独学で習得。<br>明治学院大学で映画史を専攻後、Webデザイン・Music Video制作を機に本格的なビジュアル制作へ。</p>
+        <p>音楽と映像の交錯点に立ち、被写体に流れるリズムを写真や映像に落とし込む。<br>企業・自治体向けのプロモーション映像から個人向け制作まで幅広く対応。</p>
+        <p>現在もドラマーとして活動中。</p>
       </div>
     </div>
   </section>
@@ -671,10 +669,7 @@
         Music Video、企業VP、商品プロモーション、家族の記念日撮影等、様々なご要望にお応えします。<br>
         ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
       </div>
-      <div class="message-quote">
-        <p>行き交う幾つもの視線。<br>レンズ越しに見たその交わりは<br>レンズを通した視点がその交わりを唯一無二のワンシーンに</p>
-        <cite>— HIBIKI TAKAI</cite>
-      </div>
+
     </div>
   </section>
 
@@ -760,24 +755,7 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // Safari blur fix:
-    // アニメーション完了後(0.3s delay + 2s duration = 2.3s)、
-    // filter/transformをnoneにリセットしてSafariのGPUレイヤーから解放。
-    // これによりテキストのぼやけを防ぐ。
-    const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
-    setTimeout(() => {
-      heroTextEls.forEach(el => {
-        el.style.filter = 'none';
-        el.style.transform = 'none';
-        el.style.opacity = '1';
-        el.style.willChange = 'auto';
-      });
-      // 画像のfilterもリセット（scale-downのtransformは残す）
-      heroPanelImgs.forEach(img => {
-        img.style.filter = 'none';
-        img.style.willChange = 'transform';
-      });
-    }, 2400);
+
 
     // Hamburger
     document.getElementById('hamburger').addEventListener('click', () =>
