@@ -154,44 +154,71 @@
 
     .form-success {
       display: none;
-      text-align: center;
-      padding: 80px 0 60px;
+    }
+    .form-success.show { display: block; }
+
+    .success-wrap {
+      padding: 120px 80px 100px;
+      max-width: 640px;
     }
 
-    .form-success.show { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .success-label {
+      font-family: var(--font-display);
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
 
-    .success-icon { margin-bottom: 8px; }
+    .success-check {
+      width: 40px;
+      height: 1px;
+      background: var(--accent);
+      margin-bottom: 32px;
+    }
 
     .success-title {
       font-family: var(--font-display);
-      font-size: 2.4rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
       color: var(--white);
+      margin-bottom: 32px;
     }
 
     .success-body {
       font-family: var(--font-noto);
       font-size: 0.88rem;
       color: var(--text-mid);
-      line-height: 2;
+      line-height: 2.2;
       font-weight: 300;
+      margin-bottom: 48px;
+      border-left: 1px solid rgba(255,255,255,0.08);
+      padding-left: 20px;
     }
 
     .success-back {
-      display: inline-block;
-      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       font-family: var(--font-display);
       font-size: 0.72rem;
       font-weight: 400;
       letter-spacing: 0.25em;
       text-transform: uppercase;
       color: var(--text-mid);
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 3px;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 14px 28px;
       transition: color 0.2s, border-color 0.2s;
     }
-    .success-back:hover { color: var(--white); border-color: var(--white); }
+    .success-back:hover { color: var(--white); border-color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 768px) {
+      .success-wrap { padding: 80px 24px 60px; }
+    }
 
     @media (max-width: 768px) {
       .contact-wrap { padding: 110px 24px 80px; }
@@ -277,18 +304,27 @@
         </div>
 
         <button class="form-submit" type="submit">SUBMIT</button>
+        <p style="margin-top:16px;font-size:0.72rem;color:var(--text-dim);line-height:1.8;">
+          送信いただいた個人情報は、お問い合わせへの返信目的にのみ使用します。<br>
+          詳しくは<a href="privacy.html" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">プライバシーポリシー</a>をご確認ください。
+        </p>
       </form>
 
       <div class="form-success" id="formSuccess">
-        <div class="success-icon">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="23" stroke="#e8820a" stroke-width="1.5"/>
-            <path d="M14 24l7 7 13-14" stroke="#e8820a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <div class="success-wrap">
+          <p class="success-label">Message Sent</p>
+          <div class="success-check"></div>
+          <h2 class="success-title">お問い合わせ<br>ありがとうございます。</h2>
+          <p class="success-body">
+            内容を確認の上、<br>
+            折り返しご連絡いたします。<br>
+            通常2〜3営業日以内にご返信いたします。
+          </p>
+          <a href="index.html" class="success-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+            トップページへ戻る
+          </a>
         </div>
-        <h2 class="success-title">Thank you.</h2>
-        <p class="success-body">お問い合わせを受け付けました。<br>内容を確認の上、折り返しご連絡いたします。<br>通常2〜3営業日以内にご返信いたします。</p>
-        <a href="index.html" class="success-back">TOPへ戻る</a>
       </div>
     </div>
   </div>
@@ -325,6 +361,9 @@
       <a href="services.html">Services</a>
       <a href="news.html">News</a>
       <a href="contact.html">Contact</a>
+    </nav>
+    <nav class="footer-sub-nav">
+      <a href="privacy.html">Privacy Policy</a>
     </nav>
     <p class="footer-copy">© DeFilMe</p>
   </footer>
