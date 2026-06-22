@@ -211,7 +211,17 @@
 
     @media (max-width: 768px) {
       .news-page-wrap { padding: 90px 24px 60px; }
-      .news-row { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
+      .news-row,
+      a.news-row {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        padding: 20px 0;
+        word-break: break-word;
+      }
+      .news-row-date { font-size: 0.72rem; }
+      .news-row-cat { font-size: 0.62rem; margin-bottom: 2px; }
+      .news-row-body { font-size: 0.82rem; }
+      .news-row-title { font-size: 0.88rem; line-height: 1.6; white-space: normal; overflow: visible; text-overflow: unset; }
       .update-guide { padding: 28px 20px; }
     }
   </style>
