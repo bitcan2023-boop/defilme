@@ -612,7 +612,7 @@
 
 
 <!-- APP -->
-<div id="app-screen" style="display:none">
+<div id="app" style="display:none">
 
 <!-- Topbar -->
   <div class="topbar">
@@ -1017,8 +1017,10 @@ let STATE = {
   repo: '',
   worksData: [],
   newsData: [],
+  inqData: [],
   worksSHA: '',
   newsSHA: '',
+  inqSHA: '',
 };
 
 // ── LOGIN ──
@@ -1123,7 +1125,7 @@ async function ghPutImage(filePath, base64Data, sha, message) {
 
 // ── LOAD ALL ──
 async function loadAll() {
-  await Promise.all([loadWorks(), loadNews(), loadHeroPreview()]);
+  await Promise.all([loadWorks(), loadNews(), loadHeroPreview(), loadInquiries()]);
 }
 
 // ── WORKS ──
