@@ -183,6 +183,33 @@
     @media (max-width: 768px) {
       .works-header { padding: 80px 24px 48px; }
       .works-grid { padding: 32px 24px 80px; grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+      /* スマホ: フィルターメニューをスクロール対応に */
+      .filter-top {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .filter-top::-webkit-scrollbar { display: none; }
+      .filter-btn {
+        padding: 14px 18px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+      }
+      .filter-sub {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+      }
+      .filter-sub::-webkit-scrollbar { display: none; }
+      .filter-sub-btn {
+        padding: 12px 16px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 0.62rem;
+      }
     }
     @media (max-width: 480px) {
       .works-grid { grid-template-columns: 1fr; }
