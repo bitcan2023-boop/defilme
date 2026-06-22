@@ -135,10 +135,7 @@
       color: rgba(240,240,240,0.62);
       margin-bottom: 10px;
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      transform-origin: center center;
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s forwards;
     }
 
     .hero-name {
@@ -149,10 +146,7 @@
       letter-spacing: 0.07em;
       color: var(--white);
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      transform-origin: center center;
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s forwards;
     }
 
     .hero-buttons {
@@ -160,10 +154,7 @@
       gap: 0;
       margin-top: 28px;
       opacity: 0;
-      filter: blur(20px);
-      transform: scale(1.2);
-      transform-origin: center center;
-      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s both;
+      animation: heroTextReveal 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s forwards;
       width: min(320px, 55vw);
       justify-content: space-between;
     }
@@ -817,29 +808,23 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // Safari blur fix:
-    // アニメーション完了後(2.4s)に backface-visibility:hidden を適用し
-    // 直後に解除することで Safari の GPU レイヤーを再構築してシャープに戻す
+    // ぼやけ根本修正:
+    // アニメーション完了後(2.35s)に最終値をinline styleで固定してから
+    // animationを解除 → GPUレイヤーから完全解放
     const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     setTimeout(() => {
-      if (isSafari) {
-        // Safari: backface-visibility trick でレイヤーをリセット
-        heroTextEls.forEach(el => {
-          el.style.webkitBackfaceVisibility = 'hidden';
-          el.style.backfaceVisibility = 'hidden';
-        });
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            heroTextEls.forEach(el => {
-              el.style.webkitBackfaceVisibility = '';
-              el.style.backfaceVisibility = '';
-            });
-          });
-        });
-      }
+      heroTextEls.forEach(el => {
+        // 最終値をinlineで確定（アニメーション解除後も維持）
+        el.style.opacity = '1';
+        el.style.filter = 'none';
+        el.style.transform = 'none';
+        el.style.webkitFilter = 'none';
+        // animationを解除してGPUレイヤーを解放
+        el.style.animation = 'none';
+        el.style.webkitAnimation = 'none';
+      });
       heroPanelImgs.forEach(img => { img.style.willChange = 'auto'; });
-    }, 2600);
+    }, 2350);
 
 
 
@@ -856,6 +841,10 @@
         nav.classList.remove('open');
         document.body.classList.remove('nav-open');
       }
+      // ページ離脱/ロード時に nav-open を必ずリセット
+      window.addEventListener('beforeunload', () => document.body.classList.remove('nav-open'));
+      // 念のため: ページロード時に nav-open が残っていたらリセット
+      document.body.classList.remove('nav-open');
 
       // ハンバーガーボタン: トグル（開いていれば閉じる）
       if (openBtn) openBtn.addEventListener('click', () => {
