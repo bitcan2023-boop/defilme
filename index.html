@@ -614,9 +614,12 @@
       .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
       /* スマホ: 写真縮小 */
       .about-image-wrap { padding-top: 0; }
+      /* TOP NEWS スマホ: 1列レイアウト */
+      #newsListTop a { --news-item-cols: 1fr !important; grid-template-columns: 1fr !important; gap: 4px !important; }
+      #newsListTop .news-date { font-size: 0.7rem; }
       .about-image-wrap img { aspect-ratio: 3/2; max-height: 240px; }
-      /* スマホ: ロゴコンパクト */
-      .header-logo svg { width: 88px; height: 32px; }
+      /* スマホ: ロゴサイズ（他ページと統一） */
+      .header-logo svg { width: 114px; height: 41px; }
       /* スマホ: テキストサイズ調整 */
       .about-body { font-size: 0.78rem; line-height: 1.9; }
       .message-main { font-size: clamp(1.1rem, 4.5vw, 1.5rem); }
@@ -808,23 +811,31 @@
       heroPanelImgs.forEach(img => img.classList.add('scale-down'));
     }, 1800);
 
-    // ぼやけ根本修正:
-    // アニメーション完了後(2.35s)に最終値をinline styleで固定してから
-    // animationを解除 → GPUレイヤーから完全解放
+    // ぼやけ・パチッ根本修正:
+    // setTimeoutのタイミングズレを避けるためanimationendイベントを使用
+    // 各要素のアニメーションが実際に完了した瞬間に処理を実行
     const heroTextEls = document.querySelectorAll('.hero-label, .hero-name, .hero-buttons');
-    setTimeout(() => {
-      heroTextEls.forEach(el => {
-        // 最終値をinlineで確定（アニメーション解除後も維持）
+    let doneCount = 0;
+    const totalEls = heroTextEls.length;
+    heroTextEls.forEach(el => {
+      el.addEventListener('animationend', function onEnd() {
+        el.removeEventListener('animationend', onEnd);
+        // 最終値をinline styleで確定
         el.style.opacity = '1';
         el.style.filter = 'none';
         el.style.transform = 'none';
         el.style.webkitFilter = 'none';
-        // animationを解除してGPUレイヤーを解放
-        el.style.animation = 'none';
-        el.style.webkitAnimation = 'none';
-      });
-      heroPanelImgs.forEach(img => { img.style.willChange = 'auto'; });
-    }, 2350);
+        // 次フレームでanimationを解除（パチッを防ぐためrAF経由）
+        requestAnimationFrame(() => {
+          el.style.animation = 'none';
+          el.style.webkitAnimation = 'none';
+        });
+        doneCount++;
+        if (doneCount === totalEls) {
+          heroPanelImgs.forEach(img => { img.style.willChange = 'auto'; });
+        }
+      }, { once: true });
+    });
 
 
 
@@ -871,11 +882,11 @@
           return;
         }
         container.innerHTML = items.map(item => `
-          <div class="news-item">
+          <a class="news-item" href="news-detail.html?id=${item.id}" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:var(--news-item-cols,120px 90px 1fr);gap:24px;align-items:baseline;padding:20px 0;border-top:1px solid rgba(255,255,255,0.08);transition:opacity 0.2s;cursor:pointer;" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             <span class="news-date">${item.date.replace(/-/g,'.')}</span>
             <span class="news-cat">${item.category}</span>
             <span class="news-title-text">${item.title}</span>
-          </div>
+          </a>
         `).join('');
       })
       .catch(() => {
