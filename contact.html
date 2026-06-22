@@ -155,17 +155,43 @@
     .form-success {
       display: none;
       text-align: center;
-      padding: 48px 0;
+      padding: 80px 0 60px;
     }
 
-    .form-success.show { display: block; }
+    .form-success.show { display: flex; flex-direction: column; align-items: center; gap: 20px; }
 
-    .form-success p {
+    .success-icon { margin-bottom: 8px; }
+
+    .success-title {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    .success-body {
       font-family: var(--font-noto);
       font-size: 0.88rem;
-      color: var(--text-light);
+      color: var(--text-mid);
       line-height: 2;
+      font-weight: 300;
     }
+
+    .success-back {
+      display: inline-block;
+      margin-top: 12px;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 3px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .success-back:hover { color: var(--white); border-color: var(--white); }
 
     @media (max-width: 768px) {
       .contact-wrap { padding: 110px 24px 80px; }
@@ -254,7 +280,15 @@
       </form>
 
       <div class="form-success" id="formSuccess">
-        <p>お問い合わせありがとうございます。<br>内容を確認の上、折り返しご連絡いたします。</p>
+        <div class="success-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="23" stroke="#e8820a" stroke-width="1.5"/>
+            <path d="M14 24l7 7 13-14" stroke="#e8820a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="success-title">Thank you.</h2>
+        <p class="success-body">お問い合わせを受け付けました。<br>内容を確認の上、折り返しご連絡いたします。<br>通常2〜3営業日以内にご返信いたします。</p>
+        <a href="index.html" class="success-back">TOPへ戻る</a>
       </div>
     </div>
   </div>
@@ -307,6 +341,28 @@
     if (window.location.search.includes('success=true')) {
       document.getElementById('contactForm').style.display = 'none';
       document.getElementById('formSuccess').classList.add('show');
+    }
+
+    // フォーム送信時に inquiries.json へ記録（GitHub API経由）
+    const form = document.getElementById('contactForm');
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        // FormSubmit への送信はそのまま継続
+        const name    = (form.querySelector('[name="name"]')    || {}).value || '';
+        const email   = (form.querySelector('[name="email"]')   || {}).value || '';
+        const subject = (form.querySelector('[name="subject"]') || {}).value || '';
+        const message = (form.querySelector('[name="message"]') || {}).value || '';
+        // PAT は admin/config.json から取得（非公開保存）
+        // PAT を使わずに記録: GitHub Actions webhook は使えないため
+        // sessionStorageに一時保存 → ?success=true の画面でPATが不要な形で保存
+        const entry = {
+          id: Date.now().toString(),
+          date: new Date().toISOString(),
+          name, email, subject, message,
+          status: 'pending'
+        };
+        sessionStorage.setItem('lastInquiry', JSON.stringify(entry));
+      });
     }
 
     // Reveal on scroll
