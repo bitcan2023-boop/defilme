@@ -15,6 +15,28 @@
       opacity: 1;
       transition: opacity 0.4s cubic-bezier(0.4,0.4,0,1);
     }
+
+    /* Philosophy sub text (under About) */
+    .philosophy-sub {
+      padding: 0 80px 80px;
+    }
+    .philosophy-sub-text {
+      font-family: var(--font-noto);
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 2.1;
+      font-weight: 300;
+      max-width: 640px;
+    }
+    .philosophy-sub-text a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    @media (max-width: 768px) {
+      .philosophy-sub { padding: 0 24px 60px; }
+      .philosophy-sub-text { font-size: 0.82rem; }
+    }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -652,6 +674,21 @@
     </div>
   </section>
 
+  <!-- Message -->
+  <section class="message-section reveal">
+    <div class="section-label reveal">Philosophy</div>
+    <div class="message-main reveal reveal-d1">
+      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
+    </div>
+    <div class="message-sub reveal reveal-d2">
+      <div class="message-sub-text">
+        Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
+        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
+      </div>
+
+    </div>
+  </section>
+
   <!-- About -->
   <section class="about-section reveal" id="about">
     <div class="about-image-wrap reveal reveal-d1">
@@ -676,20 +713,11 @@
     </div>
   </section>
 
-  <!-- Message -->
-  <section class="message-section reveal">
-    <div class="section-label reveal">Philosophy</div>
-    <div class="message-main reveal reveal-d1">
-      音と映像で彩る、<br>"誰か"へ届けたい特別なシーンを。
-    </div>
-    <div class="message-sub reveal reveal-d2">
-      <div class="message-sub-text">
-        Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
-        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。
-      </div>
-
-    </div>
-  </section>
+  <!-- Philosophy Text (under About) -->
+  <div class="philosophy-sub reveal reveal-d1">
+    <p class="philosophy-sub-text">Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
+    ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。</p>
+  </div>
 
   <!-- Nav Boxes -->
   <div class="nav-boxes reveal">
