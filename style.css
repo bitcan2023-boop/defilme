@@ -405,6 +405,25 @@ footer {
   letter-spacing: 0.12em;
   font-family: var(--font-display);
 }
+
+.footer-sub-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.footer-sub-nav a {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.footer-sub-nav a:hover { color: var(--text-mid); }
 /* Footer S6リンク */
 .footer-s6-link {
   display: block;
