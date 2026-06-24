@@ -231,10 +231,17 @@
       padding: 100px 80px;
       display: grid;
       grid-template-columns: 5fr 7fr;
-      gap: 72px;
+      grid-template-areas:
+        "img txt"
+        "phil phil";
+      column-gap: 72px;
+      row-gap: 0;
       align-items: start;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
+    .about-image-wrap { grid-area: img; }
+    .about-text { grid-area: txt; }
+    .about-philosophy { grid-area: phil; }
 
     .about-heading {
       font-family: var(--font-display);
@@ -350,7 +357,7 @@
        MESSAGE
        ===================== */
     .message-section {
-      padding: 120px 80px;
+      padding: 110px 80px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -360,7 +367,7 @@
       line-height: 1.8;
       color: var(--white);
       max-width: 860px;
-      margin-bottom: 64px;
+      margin-bottom: 0;
     }
 
     .message-sub {
@@ -593,11 +600,15 @@
     @media (max-width: 1024px) {
       .about-section {
         grid-template-columns: 1fr;
+        grid-template-areas:
+          "txt"
+          "img"
+          "phil";
+        column-gap: 0;
+        row-gap: 32px;
         padding: 80px 40px;
-        gap: 32px;
       }
-      .about-text { padding-right: 0; order: 1; }
-      .about-image-wrap { order: 2; }
+      .about-text { padding-right: 0; }
       .about-image-wrap img { height: 420px; }
       .message-section { padding: 80px 40px; }
       .message-sub { grid-template-columns: 1fr; }
@@ -614,6 +625,8 @@
       .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
       /* スマホ: 写真縮小 */
       .about-image-wrap { padding-top: 0; }
+      /* スマホ: 写真直下の文言ブロック（grid row-gap で間隔を取るため余白を調整） */
+      .about-philosophy { margin-top: 0; padding-top: 22px; }
       /* TOP NEWS スマホ: 1列レイアウト */
       #newsListTop a { --news-item-cols: 1fr !important; grid-template-columns: 1fr !important; gap: 4px !important; }
       #newsListTop .news-date { font-size: 0.7rem; }
@@ -698,9 +711,6 @@
 
   <!-- About -->
   <section class="about-section reveal" id="about">
-    <div class="about-image-wrap reveal reveal-d1">
-      <img src="profile.jpg" alt="HIBIKI TAKAI">
-    </div>
     <div class="about-text reveal reveal-d2">
       <p class="about-heading">About</p>
       <p class="about-name-ja">高井 響</p>
@@ -717,10 +727,13 @@
         <p>音楽と映像の交錯点に立ち、被写体に流れるリズムを写真や映像に落とし込む。<br>企業・自治体向けのプロモーション映像から個人向け制作まで幅広く対応。</p>
         <p>現在もドラマーとして活動中。</p>
       </div>
-      <div class="about-philosophy">
-        <p>Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
-        ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。</p>
-      </div>
+    </div>
+    <div class="about-image-wrap reveal reveal-d1">
+      <img src="profile.jpg" alt="HIBIKI TAKAI">
+    </div>
+    <div class="about-philosophy reveal reveal-d2">
+      <p>Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
+      ご相談は<a href="contact.html">contact</a>フォームよりお問い合わせください。</p>
     </div>
   </section>
 
