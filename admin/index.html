@@ -817,11 +817,7 @@
       </div>
     </div>
 
-  </div>
-</div>
-
-
-<!-- INQUIRIES -->
+    <!-- INQUIRIES -->
     <div class="section" id="section-inquiries">
       <div class="section-header">
         <div class="section-title">問い合わせ管理</div>
@@ -839,10 +835,10 @@
         <button class="inq-tab" onclick="setInqFilter('done',this)">対応済み</button>
       </div>
       <div id="inq-list"></div>
-    </div>
-  </div>
-</div>
-</div>
+    </div><!-- /#section-inquiries -->
+  </div><!-- /.main -->
+  </div><!-- /.layout -->
+</div><!-- /#app -->
 
 <!-- WORK MODAL -->
 <div class="modal-overlay" id="work-modal">
@@ -1939,11 +1935,10 @@ async function saveNewInq() {
   const _orig = showSection;
   window.showSection = function(name) {
     _orig(name);
-    if (name === 'inquiries') {
-      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-      const sec = document.getElementById('section-inquiries');
-      if (sec) sec.style.display = '';
-    }
+    // インラインdisplayを全てクリアし、表示は .active クラスに一任する
+    // （以前は inquiries 表示時に他セクションへ display:none を残し、
+    //   Works等へ戻れなくなる不具合があったため）
+    document.querySelectorAll('.section').forEach(s => s.style.display = '');
     // nav-item active 状態更新
     document.querySelectorAll('.nav-item').forEach(el => {
       const txt = el.textContent.trim().toLowerCase();
