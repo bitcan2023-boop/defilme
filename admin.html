@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DeFilMe CMS</title>
+<link rel="icon" type="image/svg+xml" href="https://defilme.com/f3-dark.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://defilme.com/f3-dark-180.png">
 <style>
+
   :root {
     --bg: #0a0a0a;
     --surface: #141414;
@@ -563,6 +566,22 @@
     border: 1px solid var(--border);
     flex-shrink: 0;
   }
+
+
+  /* ── INQUIRIES ── */
+  .inq-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+  .inq-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .inq-stat .num { font-size: 24px; font-weight: 700; margin-bottom: 2px; }
+  .inq-stat .lbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .inq-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .inq-tab { padding: 9px 18px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+  .inq-tab:hover { color: var(--text); }
+  .inq-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .inq-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.15s; }
+  .inq-card:hover { border-color: #3a3a3a; }
+  .inq-card-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; cursor: pointer; }
+  .inq-card-detail { display: none; padding: 0 18px 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+
 </style>
 </head>
 <body>
@@ -590,9 +609,12 @@
   </div>
 </div>
 
+
+
 <!-- APP -->
-<div id="app">
-  <!-- Topbar -->
+<div id="app" style="display:none">
+
+<!-- Topbar -->
   <div class="topbar">
     <div class="topbar-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
     <div class="topbar-right">
@@ -602,7 +624,10 @@
     </div>
   </div>
 
-  <!-- Sidebar -->
+  
+
+<div class="layout">
+
   <div class="sidebar">
     <div class="nav-label">コンテンツ</div>
     <div class="nav-item active" onclick="showSection('works')">
@@ -615,12 +640,14 @@
     <div class="nav-item" onclick="showSection('hero')">
       <span class="nav-icon">🖼️</span> Hero 画像
     </div>
+    <div class="nav-label" style="margin-top:8px">管理</div>
+    <div class="nav-item" onclick="showSection('inquiries')">
+      <span class="nav-icon">💬</span> 問い合わせ <span id="inq-badge" style="display:none;margin-left:auto;background:var(--accent);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;"></span>
+    </div>
   </div>
 
-  <!-- Main -->
   <div class="main">
-
-    <!-- WORKS -->
+<!-- WORKS -->
     <div class="section active" id="section-works">
       <div class="section-header">
         <div class="section-title">Works</div>
@@ -634,7 +661,8 @@
       </div>
     </div>
 
-    <!-- NEWS -->
+    
+<!-- NEWS -->
     <div class="section" id="section-news">
       <div class="section-header">
         <div class="section-title">News</div>
@@ -648,46 +676,169 @@
       </div>
     </div>
 
-    <!-- HERO -->
+    
+<!-- HERO -->
     <div class="section" id="section-hero">
       <div class="section-header">
         <div class="section-title">Hero 画像</div>
       </div>
-      <div class="card">
+
+      <!-- 表示モード選択 -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">表示モード</div>
+        <div style="display:flex;gap:12px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-split">
+            <input type="radio" name="hero-mode" value="split" checked onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
+            <div>
+              <div style="font-weight:500;">左右2枚分割</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">現在の表示形式</div>
+            </div>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-single">
+            <input type="radio" name="hero-mode" value="single" onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
+            <div>
+              <div style="font-weight:500;">1枚全幅</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">1枚の画像を全幅表示</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 現在の表示 -->
+      <div class="card" style="margin-bottom:16px;">
         <div class="card-title">現在の Hero 画像</div>
-        <img id="hero-preview" class="hero-preview" src="" alt="Hero プレビュー" onerror="this.style.display='none'">
-        <div class="upload-zone" id="hero-drop-zone" onclick="document.getElementById('hero-file-input').click()"
+
+        <!-- 2枚分割プレビュー -->
+        <div id="hero-preview-split" style="display:flex;gap:4px;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;">
+          <div style="flex:1;position:relative;background:#111;">
+            <img id="hero-preview-left" src=""
+              style="width:100%;height:100%;object-fit:cover;display:block;"
+              onerror="this.style.opacity='0.2'"
+              alt="左パネル">
+            <div style="position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:0.15em;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px;color:#ccc;">LEFT</div>
+          </div>
+          <div style="flex:1;position:relative;background:#111;">
+            <img id="hero-preview-right" src=""
+              style="width:100%;height:100%;object-fit:cover;display:block;"
+              onerror="this.style.opacity='0.2'"
+              alt="右パネル">
+            <div style="position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:0.15em;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px;color:#ccc;">RIGHT</div>
+          </div>
+        </div>
+
+        <!-- 1枚プレビュー -->
+        <div id="hero-preview-single" style="display:none;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;background:#111;">
+          <img id="hero-preview-one" src=""
+            style="width:100%;height:100%;object-fit:cover;display:block;"
+            onerror="this.style.opacity='0.2'"
+            alt="Hero">
+        </div>
+      </div>
+
+      <!-- 左パネルアップロード -->
+      <div id="hero-panel-left-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">左パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero2.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('left')"
           ondragover="event.preventDefault();this.classList.add('drag')"
           ondragleave="this.classList.remove('drag')"
-          ondrop="handleHeroDrop(event)">
+          ondrop="handleHeroPanelDrop(event, 'left')">
           <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップで画像をアップロード</div>
-          <div class="upload-zone-sub">JPG / PNG / WebP 推奨サイズ: 1920×800px</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 960×800px 以上</div>
         </div>
-        <input type="file" id="hero-file-input" accept="image/*" style="display:none" onchange="handleHeroFile(this.files[0])">
-        <div id="hero-upload-info" style="display:none;margin-top:16px;">
-          <div class="divider"></div>
+        <input type="file" id="hero-file-left" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'left')">
+        <div id="hero-left-info" style="display:none;margin-top:12px;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <img id="hero-new-preview" style="width:120px;height:60px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
-            <div>
-              <div id="hero-file-name" style="font-size:13px;font-weight:500;margin-bottom:4px;"></div>
-              <div id="hero-file-size" style="font-size:11px;color:var(--text-muted);"></div>
+            <img id="hero-left-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-left-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-left-size" style="font-size:11px;color:var(--text-muted);"></div>
             </div>
-            <button class="btn btn-accent btn-sm" style="margin-left:auto" onclick="uploadHeroImage()">アップロード</button>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('left')">アップロード</button>
           </div>
         </div>
       </div>
-      <div class="card" style="margin-top:16px;">
-        <div class="card-title">Hero 画像について</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">
-          アップロードした画像は GitHub の <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code> として保存されます。<br>
-          index.html の hero src を <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code> に変更することで表示されます。
+
+      <!-- 右パネルアップロード -->
+      <div id="hero-panel-right-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">右パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">bg.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('right')"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'right')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 960×800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-right" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'right')">
+        <div id="hero-right-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-right-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-right-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-right-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('right')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1枚モード用アップロード -->
+      <div id="hero-panel-single-card" class="card" style="display:none;margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">全幅画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('single')"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'single')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 1920×800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-single" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'single')">
+        <div id="hero-single-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-single-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;">
+              <div id="hero-single-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div>
+              <div id="hero-single-size" style="font-size:11px;color:var(--text-muted);"></div>
+            </div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('single')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">保存先</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
+          左パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero2.jpg</code><br>
+          右パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">bg.jpg</code><br>
+          1枚全幅 → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code>
         </p>
       </div>
     </div>
 
-  </div>
-</div>
+    <!-- INQUIRIES -->
+    <div class="section" id="section-inquiries">
+      <div class="section-header">
+        <div class="section-title">問い合わせ管理</div>
+        <button class="btn btn-accent btn-sm" onclick="openNewInqModal()">＋ 手動追加</button>
+      </div>
+      <div class="inq-stats">
+        <div class="inq-stat"><div class="num" id="inq-stat-pending" style="color:var(--accent);">-</div><div class="lbl">未対応</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-wip" style="color:#4a9eff;">-</div><div class="lbl">対応中</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-done" style="color:var(--success);">-</div><div class="lbl">対応済み</div></div>
+      </div>
+      <div class="inq-tabs">
+        <button class="inq-tab active" onclick="setInqFilter('all',this)">すべて</button>
+        <button class="inq-tab" onclick="setInqFilter('pending',this)">未対応</button>
+        <button class="inq-tab" onclick="setInqFilter('wip',this)">対応中</button>
+        <button class="inq-tab" onclick="setInqFilter('done',this)">対応済み</button>
+      </div>
+      <div id="inq-list"></div>
+    </div><!-- /#section-inquiries -->
+  </div><!-- /.main -->
+  </div><!-- /.layout -->
+</div><!-- /#app -->
 
 <!-- WORK MODAL -->
 <div class="modal-overlay" id="work-modal">
@@ -778,6 +929,7 @@
   </div>
 </div>
 
+
 <!-- NEWS MODAL -->
 <div class="modal-overlay" id="news-modal">
   <div class="modal">
@@ -813,9 +965,38 @@
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeNewsModal()">キャンセル</button>
-      <button class="btn btn-accent" id="news-save-btn" onclick="saveNews()">
+      <button class="btn btn-ghost" id="news-draft-btn" onclick="saveNews(true)" style="color:var(--text-dim);">下書き保存</button>
+      <button class="btn btn-accent" id="news-save-btn" onclick="saveNews(false)">
         <span id="news-save-label">保存して公開</span>
       </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inq-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">問い合わせを手動追加</div>
+      <button class="modal-close" onclick="closeInqModal()">×</button>
+    </div>
+    <div class="form-grid">
+      <div class="field-group"><label class="field-label">お名前 *</label><input type="text" id="inq-form-name" class="field-input"></div>
+      <div class="field-group"><label class="field-label">メールアドレス *</label><input type="email" id="inq-form-email" class="field-input"></div>
+      <div class="field-group span2"><label class="field-label">件名</label><input type="text" id="inq-form-subject" class="field-input"></div>
+      <div class="field-group span2"><label class="field-label">メッセージ *</label><textarea id="inq-form-message" class="field-input" style="min-height:100px;"></textarea></div>
+      <div class="field-group"><label class="field-label">ステータス</label>
+        <select id="inq-form-status" class="field-input">
+          <option value="pending">未対応</option>
+          <option value="wip">対応中</option>
+          <option value="done">対応済み</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeInqModal()">キャンセル</button>
+      <button class="btn btn-accent" onclick="saveNewInq()">追加</button>
     </div>
   </div>
 </div>
@@ -824,6 +1005,7 @@
 <div id="toast"></div>
 
 <script>
+
 // ── STATE ──
 let STATE = {
   token: '',
@@ -831,8 +1013,10 @@ let STATE = {
   repo: '',
   worksData: [],
   newsData: [],
+  inqData: [],
   worksSHA: '',
   newsSHA: '',
+  inqSHA: '',
 };
 
 // ── LOGIN ──
@@ -937,7 +1121,7 @@ async function ghPutImage(filePath, base64Data, sha, message) {
 
 // ── LOAD ALL ──
 async function loadAll() {
-  await Promise.all([loadWorks(), loadNews(), loadHeroPreview()]);
+  await Promise.all([loadWorks(), loadNews(), loadHeroPreview(), loadInquiries()]);
 }
 
 // ── WORKS ──
@@ -1353,6 +1537,7 @@ function editNews(i) {
   document.getElementById('news-category').value = n.category || 'News';
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-body').value = n.body || '';
+  document.getElementById('news-draft-flag').value = n.draft ? 'true' : 'false';
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1421,21 +1606,100 @@ async function commitNews() {
 
 // ── HERO ──
 async function loadHeroPreview() {
-  // Try to find hero image in repo
-  const candidates = ['hero.jpg', 'hero2.jpg', 'bg.jpg'];
-  for (const c of candidates) {
-    const f = await ghGetFile(c);
-    if (f) {
-      document.getElementById('hero-preview').src =
-        `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/${c}`;
-      document.getElementById('hero-preview').style.display = 'block';
-      break;
-    }
+  const base = `https://raw.githubusercontent.com/${STATE.owner}/${STATE.repo}/main/`;
+  const ts = '?t=' + Date.now();
+  // 左: hero2.jpg
+  const imgLeft = document.getElementById('hero-preview-left');
+  if (imgLeft) { imgLeft.src = base + 'hero2.jpg' + ts; imgLeft.style.opacity='1'; }
+  // 右: bg.jpg
+  const imgRight = document.getElementById('hero-preview-right');
+  if (imgRight) { imgRight.src = base + 'bg.jpg' + ts; imgRight.style.opacity='1'; }
+  // 1枚: hero.jpg
+  const imgOne = document.getElementById('hero-preview-one');
+  if (imgOne) { imgOne.src = base + 'hero.jpg' + ts; imgOne.style.opacity='1'; }
+}
+
+function heroModeChange(mode) {
+  const isSplit = mode === 'split';
+  document.getElementById('hero-preview-split').style.display = isSplit ? 'flex' : 'none';
+  document.getElementById('hero-preview-single').style.display = isSplit ? 'none' : 'block';
+  document.getElementById('hero-panel-left-card').style.display = isSplit ? '' : 'none';
+  document.getElementById('hero-panel-right-card').style.display = isSplit ? '' : 'none';
+  document.getElementById('hero-panel-single-card').style.display = isSplit ? 'none' : '';
+  // ラジオラベルのボーダー色
+  document.getElementById('mode-label-split').style.borderColor = isSplit ? 'var(--accent)' : 'var(--border)';
+  document.getElementById('mode-label-single').style.borderColor = isSplit ? 'var(--border)' : 'var(--accent)';
+}
+
+function triggerHeroUpload(panel) {
+  document.getElementById('hero-file-' + panel).click();
+}
+
+function handleHeroPanelFile(file, panel) {
+  if (!file) return;
+  const thumb = document.getElementById('hero-' + panel + '-thumb');
+  const nameEl = document.getElementById('hero-' + panel + '-name');
+  const sizeEl = document.getElementById('hero-' + panel + '-size');
+  const infoEl = document.getElementById('hero-' + panel + '-info');
+  const reader = new FileReader();
+  reader.onload = e => { thumb.src = e.target.result; };
+  reader.readAsDataURL(file);
+  nameEl.textContent = file.name;
+  sizeEl.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+  infoEl.style.display = 'block';
+  STATE['heroFile_' + panel] = file;
+}
+
+function handleHeroPanelDrop(e, panel) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleHeroPanelFile(file, panel);
+}
+
+async function uploadHeroPanelImage(panel) {
+  const file = STATE['heroFile_' + panel];
+  if (!file) return toast('画像を選択してください', 'error');
+
+  const fileMap = { left: 'hero2.jpg', right: 'bg.jpg', single: 'hero.jpg' };
+  const fileName = fileMap[panel];
+  if (!fileName) return;
+
+  setSaving(true);
+  try {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      const b64 = e.target.result.split(',')[1];
+      // 既存SHAを取得
+      const existing = await ghGetFile(fileName);
+      const sha = existing ? existing.sha : undefined;
+      const body = {
+        message: `update: hero image ${fileName}`,
+        content: b64,
+      };
+      if (sha) body.sha = sha;
+      const res = await fetch(
+        `https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${fileName}`,
+        { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+      );
+      if (res.ok) {
+        toast(`${fileName} をアップロードしました`, 'success');
+        document.getElementById('hero-' + panel + '-info').style.display = 'none';
+        STATE['heroFile_' + panel] = null;
+        setTimeout(() => loadHeroPreview(), 1500);
+      } else {
+        const err = await res.json();
+        toast('エラー: ' + err.message, 'error');
+      }
+      setSaving(false);
+    };
+    reader.readAsDataURL(file);
+  } catch(e) {
+    toast('エラー: ' + e.message, 'error');
+    setSaving(false);
   }
 }
 
-let heroFileData = null;
-let heroFileBase64 = null;
 
 function handleHeroFile(file) {
   if (!file) return;
@@ -1519,6 +1783,178 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+
+// ─────────────────────────────────────
+// INQUIRIES
+// ─────────────────────────────────────
+const INQPATH = 'inquiries.json';
+
+async function loadInquiries() {
+  const el = document.getElementById('inq-list');
+  if (!el) return;
+  el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">読み込み中...</div></div>';
+  try {
+    const f = await ghGetFile(INQPATH);
+    STATE.inqData = f ? JSON.parse(atob(f.content.replace(/\n/g,''))) : [];
+    STATE.inqSHA = f ? f.sha : '';
+  } catch(e) { STATE.inqData = []; STATE.inqSHA = ''; }
+  renderInquiries();
+  updateInqStats();
+}
+
+function updateInqStats() {
+  const d = STATE.inqData || [];
+  const setEl = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+  setEl('inq-stat-pending', d.filter(i=>i.status==='pending').length);
+  setEl('inq-stat-wip',     d.filter(i=>i.status==='wip').length);
+  setEl('inq-stat-done',    d.filter(i=>i.status==='done').length);
+  const pCount = d.filter(i=>i.status==='pending').length;
+  const badge = document.getElementById('inq-badge');
+  if (badge) { badge.textContent = pCount; badge.style.display = pCount > 0 ? '' : 'none'; }
+}
+
+let inqFilter = 'all';
+function setInqFilter(f, el) {
+  inqFilter = f;
+  document.querySelectorAll('.inq-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderInquiries();
+}
+
+function renderInquiries() {
+  const el = document.getElementById('inq-list');
+  if (!el) return;
+  const data = (STATE.inqData || []).filter(i => inqFilter === 'all' || i.status === inqFilter);
+  data.sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (!data.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">問い合わせはありません</div></div>';
+    return;
+  }
+  const sLabel = {pending:'未対応', wip:'対応中', done:'対応済み'};
+  const sColor = {pending:'var(--accent)', wip:'#4a9eff', done:'var(--success)'};
+  el.innerHTML = data.map(item => {
+    const d = new Date(item.date);
+    const ds = d.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="inq-card" id="inqcard-${item.id}">
+      <div class="inq-card-header" onclick="toggleInqCard('${item.id}')">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-weight:500;font-size:14px;">${esc(item.name)}</span>
+            <span style="font-size:11px;color:var(--text-muted);">${esc(item.email)}</span>
+            <span style="font-size:10px;color:var(--text-muted);">${ds}</span>
+          </div>
+          ${item.subject ? `<div style="font-size:12px;color:var(--text-dim);margin-bottom:2px;">${esc(item.subject)}</div>` : ''}
+          <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;">${esc(item.message)}</div>
+        </div>
+        <span style="flex-shrink:0;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:500;background:${sColor[item.status]}22;color:${sColor[item.status]};">${sLabel[item.status]}</span>
+      </div>
+      <div class="inq-card-detail" id="inqdetail-${item.id}">
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;white-space:pre-wrap;background:var(--surface2);border:1px solid var(--border);padding:14px;border-radius:6px;margin-bottom:14px;">${esc(item.message)}</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <select class="field-input" style="width:auto;font-size:12px;padding:5px 10px;" onchange="changeInqStatus('${item.id}',this.value)">
+            <option value="pending" ${item.status==='pending'?'selected':''}>未対応</option>
+            <option value="wip"     ${item.status==='wip'    ?'selected':''}>対応中</option>
+            <option value="done"    ${item.status==='done'   ?'selected':''}>対応済み</option>
+          </select>
+          <a href="mailto:${esc(item.email)}?subject=Re: ${encodeURIComponent(item.subject||'お問い合わせ')}" class="btn btn-ghost btn-sm">返信メールを開く</a>
+          <button class="btn btn-ghost btn-sm" style="color:var(--danger);" onclick="deleteInq('${item.id}')">削除</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function toggleInqCard(id) {
+  const d = document.getElementById('inqdetail-' + id);
+  if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
+}
+async function changeInqStatus(id, status) {
+  const item = (STATE.inqData||[]).find(i=>i.id===id);
+  if (!item) return;
+  item.status = status;
+  await saveInquiries('update: inquiry status ' + id);
+  updateInqStats();
+  renderInquiries();
+}
+async function deleteInq(id) {
+  if (!confirm('この問い合わせを削除しますか？')) return;
+  STATE.inqData = (STATE.inqData||[]).filter(i=>i.id!==id);
+  await saveInquiries('update: delete inquiry ' + id);
+  updateInqStats();
+  renderInquiries();
+}
+async function saveInquiries(msg) {
+  setSaving(true);
+  try {
+    const latest = await ghGetFile(INQPATH);
+    const sha = latest ? latest.sha : undefined;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(STATE.inqData||[], null, 2))));
+    const body = { message: msg || 'update: inquiries', content };
+    if (sha) body.sha = sha;
+    const res = await fetch(
+      `https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${INQPATH}`,
+      { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
+    );
+    if (res.ok) { toast('保存しました', 'success'); }
+    else { const e = await res.json(); toast('エラー: '+e.message, 'error'); }
+  } catch(e) { toast('エラー: '+e.message, 'error'); }
+  setSaving(false);
+}
+function openNewInqModal() { document.getElementById('inq-modal').classList.add('open'); }
+function closeInqModal() {
+  document.getElementById('inq-modal').classList.remove('open');
+  ['inq-form-name','inq-form-email','inq-form-subject','inq-form-message'].forEach(id => {
+    const e = document.getElementById(id); if(e) e.value='';
+  });
+  const s = document.getElementById('inq-form-status'); if(s) s.value='pending';
+}
+async function saveNewInq() {
+  const name    = (document.getElementById('inq-form-name')||{}).value?.trim();
+  const email   = (document.getElementById('inq-form-email')||{}).value?.trim();
+  const message = (document.getElementById('inq-form-message')||{}).value?.trim();
+  if (!name || !email || !message) return toast('必須項目を入力してください', 'error');
+  const entry = {
+    id: Date.now().toString(), date: new Date().toISOString(), name, email,
+    subject: (document.getElementById('inq-form-subject')||{}).value?.trim() || '',
+    message, status: (document.getElementById('inq-form-status')||{}).value || 'pending',
+  };
+  if (!STATE.inqData) STATE.inqData = [];
+  STATE.inqData.unshift(entry);
+  await saveInquiries('add: inquiry from ' + name);
+  closeInqModal(); updateInqStats(); renderInquiries();
+}
+
+
+// showSection 拡張: inquiries対応
+(function() {
+  const _orig = showSection;
+  window.showSection = function(name) {
+    _orig(name);
+    // インラインdisplayを全てクリアし、表示は .active クラスに一任する
+    // （以前は inquiries 表示時に他セクションへ display:none を残し、
+    //   Works等へ戻れなくなる不具合があったため）
+    document.querySelectorAll('.section').forEach(s => s.style.display = '');
+    // nav-item active 状態更新
+    document.querySelectorAll('.nav-item').forEach(el => {
+      const txt = el.textContent.trim().toLowerCase();
+      const match =
+        (name === 'works'       && txt.startsWith('works')) ||
+        (name === 'news'        && txt.startsWith('news')) ||
+        (name === 'hero'        && txt.includes('hero')) ||
+        (name === 'inquiries'   && txt.includes('問い合わせ'));
+      el.classList.toggle('active', match);
+    });
+    if (name === 'inquiries' && (!STATE.inqData || STATE.inqData.length === 0)) {
+      loadInquiries();
+    }
+  };
+})();
+
 </script>
 </body>
 </html>
