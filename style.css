@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Zen+Antique&family=Noto+Sans+JP:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Zen+Antique&family=Noto+Sans+JP:wght@300;400&family=Shippori+Mincho:wght@400;500;600;700;800&display=swap');
 
 /* =====================
    CSS Variables
@@ -17,6 +17,7 @@
   --font-display: 'Poppins', sans-serif;
   --font-zen: 'Zen Antique', serif;
   --font-noto: 'Noto Sans JP', sans-serif;
+  --font-mincho: 'Shippori Mincho', 'Noto Serif JP', serif;
 }
 
 /* =====================
