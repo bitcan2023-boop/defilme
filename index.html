@@ -605,7 +605,7 @@
           "img"
           "phil";
         column-gap: 0;
-        row-gap: 32px;
+        row-gap: 36px;
         padding: 80px 40px;
       }
       .about-text { padding-right: 0; }
@@ -619,14 +619,14 @@
     }
 
     @media (max-width: 768px) {
-      .about-section { padding: 60px 24px; }
+      .about-section { padding: 60px 24px 96px; }
       .message-section { padding: 60px 24px; }
       .news-section { padding: 60px 24px; }
       .news-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
       /* スマホ: 写真縮小 */
       .about-image-wrap { padding-top: 0; }
-      /* スマホ: 写真直下の文言ブロック（grid row-gap で間隔を取るため余白を調整） */
-      .about-philosophy { margin-top: 0; padding-top: 22px; }
+      /* スマホ: 写真と文言の間に余裕を持たせる（row-gap + さらに上マージン） */
+      .about-philosophy { margin-top: 30px; padding-top: 28px; }
       /* TOP NEWS スマホ: 1列レイアウト */
       #newsListTop a { --news-item-cols: 1fr !important; grid-template-columns: 1fr !important; gap: 4px !important; }
       #newsListTop .news-date { font-size: 0.7rem; }
@@ -729,7 +729,7 @@
       </div>
     </div>
     <div class="about-image-wrap reveal reveal-d1">
-      <img src="profile.jpg" alt="HIBIKI TAKAI">
+      <img src="profile.jpg" alt="HIBIKI TAKAI" loading="lazy" decoding="async">
     </div>
     <div class="about-philosophy reveal reveal-d2">
       <p>Music Video、音源等のジャケットデザイン、企業VP、商品プロモーション、ポートレート撮影、家族の記念日撮影等、様々なご要望にお応えします。<br>
@@ -742,21 +742,21 @@
   <!-- Nav Boxes -->
   <div class="nav-boxes reveal">
     <a href="works.html" class="nav-box">
-      <img src="kanjo-wonderland.png" alt="Works">
+      <img src="navbox-works.jpg" alt="Works" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='kanjo-wonderland.png'">
       <div class="nav-box-content">
         <p class="nav-box-label">For Clients</p>
         <p class="nav-box-title">WORKS</p>
       </div>
     </a>
     <a href="services.html" class="nav-box">
-      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80" alt="Services">
+      <img src="navbox-services.jpg" alt="Services" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80'">
       <div class="nav-box-content">
         <p class="nav-box-label">What I Do</p>
         <p class="nav-box-title">SERVICES</p>
       </div>
     </a>
     <a href="contact.html" class="nav-box">
-      <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80" alt="Contact">
+      <img src="navbox-contact.jpg" alt="Contact" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80'">
       <div class="nav-box-content">
         <p class="nav-box-label">Get in Touch</p>
         <p class="nav-box-title">CONTACT</p>
