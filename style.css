@@ -28,14 +28,12 @@ html { scroll-behavior: smooth; }
 
 body {
   background-color: #1e1e1e;
-  -webkit-overflow-scrolling: touch;
   scroll-behavior: auto;
   color: var(--white);
   font-family: var(--font-display);
   font-weight: 300;
   line-height: 1.7;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -513,8 +511,9 @@ footer {
   .works-title,
   .news-page-title { font-size: clamp(2.4rem, 14vw, 3.8rem) !important; margin-bottom: 32px; }
   .services-hero h1 { font-size: clamp(2.2rem, 13vw, 3.5rem) !important; }
-  /* スマホ: 横スクロール防止・スクロール改善 */
-  html, body { overflow-x: hidden; max-width: 100vw; }
+  /* スマホ: 横スクロール防止。overflow:clip はスクロールコンテナを生成しないため
+     ルートスクローラーの高速経路を維持でき、引っ掛かりを避けられる。 */
+  html, body { overflow-x: clip; }
 
   /* スマホ: backdrop-filter はスクロール中の合成負荷が大きく引っ掛かりの原因に
      なるため無効化。代わりに不透明度を上げた背景で視認性を確保する。 */
@@ -527,43 +526,6 @@ footer {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background: rgba(8,8,8,0.985);
-  }
-
-  /* スマホ: filter:blur のトランジションはスクロール中に大量のGPUレイヤーを
-     生成・維持し、強い引っ掛かりの主因となる。スマホでは blur を完全に外し、
-     軽い「フェード＋わずかな上昇」のみに統一する（合成のみで動くため滑らか）。 */
-  .reveal {
-    filter: none !important;
-    -webkit-filter: none !important;
-    transform: translateY(10px);
-    transition:
-      opacity 0.55s ease,
-      transform 0.55s ease;
-    will-change: opacity, transform;
-  }
-  .reveal.visible {
-    filter: none !important;
-    -webkit-filter: none !important;
-    transform: translateY(0);
-  }
-  @keyframes revealBlur {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* スマホ: フッター名も blur を外し、軽いスケールのみに */
-  .footer-name-reveal {
-    filter: none !important;
-    -webkit-filter: none !important;
-    transform: scale(1.04);
-    transition:
-      opacity 0.7s ease,
-      transform 0.7s ease;
-  }
-  .footer-name-reveal.in-view {
-    filter: none !important;
-    -webkit-filter: none !important;
-    transform: scale(1);
   }
 }
 
