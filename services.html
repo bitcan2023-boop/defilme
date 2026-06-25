@@ -41,7 +41,14 @@
     .services-hero-bg {
       position: absolute;
       inset: 0;
-      background: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=1600&q=80') center/cover no-repeat;
+      /* 上のレイヤー(services-hero.jpg)が存在すれば優先表示。無ければ下のUnsplashが表示される。
+         CMSの「Hero画像 > SERVICESヒーロー」からservices-hero.jpgを更新可能。 */
+      background-image:
+        url('services-hero.jpg'),
+        url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=1600&q=80');
+      background-size: cover, cover;
+      background-position: center, center;
+      background-repeat: no-repeat, no-repeat;
       filter: brightness(0.3) grayscale(30%);
     }
 
