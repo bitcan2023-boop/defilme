@@ -25,7 +25,7 @@
       }, 1000);
     });
   </script>
-  <link rel="stylesheet" href="style.css?v=20260613">
+  <link rel="stylesheet" href="style.css?v=20260625">
   <link rel="icon" type="image/svg+xml" href="f3-dark.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="f3-dark-180.png">
   <style>
@@ -121,12 +121,13 @@
     .news-row-body {}
 
     .news-row-title {
-      font-family: var(--font-noto);
-      font-size: 0.9rem;
-      font-weight: 400;
+      font-family: var(--font-mincho);
+      font-size: 1.12rem;
+      font-weight: 500;
       color: var(--white);
-      margin-bottom: 6px;
-      line-height: 1.6;
+      margin-bottom: 0;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
     }
 
     .news-row-text {
@@ -217,13 +218,14 @@
       a.news-row {
         grid-template-columns: 1fr !important;
         gap: 6px !important;
-        padding: 20px 0;
+        padding: 22px 0;
         word-break: break-word;
+        align-items: start !important;
       }
       .news-row-date { font-size: 0.72rem; }
       .news-row-cat { font-size: 0.62rem; margin-bottom: 2px; }
       .news-row-body { font-size: 0.82rem; }
-      .news-row-title { font-size: 0.88rem; line-height: 1.6; white-space: normal; overflow: visible; text-overflow: unset; }
+      .news-row-title { font-size: 1.02rem; line-height: 1.65; margin-top: 2px; }
       .update-guide { padding: 28px 20px; }
     }
   </style>
@@ -371,13 +373,11 @@
       }
 
       container.innerHTML = filtered.map(item => `
-        <a class="news-row" href="news-detail.html?id=${item.id}" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:140px 100px 1fr;gap:32px;align-items:start;padding:28px 0;border-top:1px solid rgba(255,255,255,0.08);transition:background 0.2s;cursor:pointer;">
+        <a class="news-row" href="news-detail.html?id=${item.id}" style="text-decoration:none;color:inherit;display:grid;grid-template-columns:130px 100px 1fr;gap:32px;align-items:center;padding:30px 0;border-top:1px solid rgba(255,255,255,0.08);transition:opacity 0.2s;cursor:pointer;" onmouseover="this.style.opacity='.65'" onmouseout="this.style.opacity='1'">
           <span class="news-row-date">${item.date.replace(/-/g,'.')}</span>
           <span class="news-row-cat">${item.category}</span>
           <div class="news-row-body">
             <p class="news-row-title">${item.title}</p>
-            ${item.body ? `<p class="news-row-text">${item.body}</p>` : ''}
-            ${mediaHTML(item)}
           </div>
         </a>
       `).join('');
