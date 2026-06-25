@@ -378,13 +378,23 @@
   </footer>
 
   <script>
-    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('mobileNav').classList.add('open'));
+    (function() {
+      const nav = document.getElementById('mobileNav');
+      const openBtn = document.getElementById('hamburger');
+      const closeBtn = document.getElementById('mobileNavClose');
+      function openNav() { nav.classList.add('open'); document.body.classList.add('nav-open'); }
+      function closeNav() { nav.classList.remove('open'); document.body.classList.remove('nav-open'); }
+      window.addEventListener('beforeunload', () => document.body.classList.remove('nav-open'));
+      document.body.classList.remove('nav-open');
+      if (openBtn) openBtn.addEventListener('click', () => nav.classList.contains('open') ? closeNav() : openNav());
+      if (closeBtn) closeBtn.addEventListener('click', closeNav);
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+    })();
     // Header scroll
     const hdr = document.querySelector('header');
     window.addEventListener('scroll', () => {
       hdr.classList.toggle('scrolled', window.scrollY > 40);
     }, { passive: true });
-    document.getElementById('mobileNavClose').addEventListener('click', () => document.getElementById('mobileNav').classList.remove('open'));
 
     if (window.location.search.includes('success=true')) {
       document.getElementById('contactForm').style.display = 'none';
