@@ -528,30 +528,41 @@ footer {
     background: rgba(8,8,8,0.985);
   }
 
-  /* スマホ: reveal の blur トランジションは読み込み直後に多数同時発火すると
-     強い引っ掛かりを生むため、blur量・移動量・時間を軽量化する。
-     （フェード＋わずかな上昇の質感は維持） */
+  /* スマホ: filter:blur のトランジションはスクロール中に大量のGPUレイヤーを
+     生成・維持し、強い引っ掛かりの主因となる。スマホでは blur を完全に外し、
+     軽い「フェード＋わずかな上昇」のみに統一する（合成のみで動くため滑らか）。 */
   .reveal {
-    filter: blur(6px);
-    transform: translateY(8px);
+    filter: none !important;
+    -webkit-filter: none !important;
+    transform: translateY(10px);
     transition:
-      opacity 0.6s ease,
-      filter 0.6s ease,
-      transform 0.6s ease;
+      opacity 0.55s ease,
+      transform 0.55s ease;
+    will-change: opacity, transform;
+  }
+  .reveal.visible {
+    filter: none !important;
+    -webkit-filter: none !important;
+    transform: translateY(0);
   }
   @keyframes revealBlur {
-    from { opacity: 0; filter: blur(6px); transform: translateY(8px); }
-    to   { opacity: 1; filter: blur(0); transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* スマホ: フッター名の重い blur+scale を軽量化 */
+  /* スマホ: フッター名も blur を外し、軽いスケールのみに */
   .footer-name-reveal {
-    filter: blur(8px);
-    transform: scale(1.06);
+    filter: none !important;
+    -webkit-filter: none !important;
+    transform: scale(1.04);
     transition:
-      opacity 0.8s ease,
-      filter 0.8s ease,
-      transform 0.8s ease;
+      opacity 0.7s ease,
+      transform 0.7s ease;
+  }
+  .footer-name-reveal.in-view {
+    filter: none !important;
+    -webkit-filter: none !important;
+    transform: scale(1);
   }
 }
 
