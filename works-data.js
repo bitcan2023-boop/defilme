@@ -7,10 +7,10 @@ const WORKS_DATA = [
     id: "kanjo-wonderland",
     category: "videography",
     sub: "music-video",
-    title: "感情ワンダーランド",
+    title: "UIMUI - MV \"感情ワンダーランド\"",
     date: "2025-12",
     client: "UIMUI",
-    description: "UIMUI New Single「感情ワンダーランド」Music Video。",
+    description: "UIMUI 2nd.Single「感情ワンダーランド」Music Video。",
     thumb: "kanjo-wonderland.png",
     displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
     media: [
@@ -19,7 +19,6 @@ const WORKS_DATA = [
             "id": "hKkhIVI3VkI"
         }
     ],
-    draft: undefined,
   },
 
   {
