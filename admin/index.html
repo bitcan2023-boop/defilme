@@ -815,6 +815,86 @@
           1枚全幅 → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code>
         </p>
       </div>
+
+      <div class="divider" style="margin:28px 0;"></div>
+      <div class="card-title" style="margin-bottom:4px;">その他のページ画像</div>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">SERVICESページのヒーロー画像と、TOPページ下部の3つのボックス（WORKS / SERVICES / CONTACT）のサムネイルを更新できます。</p>
+
+      <div id="hero-panel-services-hero-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">SERVICES ヒーロー画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">services-hero.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('services-hero')"
+          ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'services-hero')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 横長 1600px 以上</div>
+        </div>
+        <input type="file" id="hero-file-services-hero" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'services-hero')">
+        <div id="hero-services-hero-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-services-hero-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;"><div id="hero-services-hero-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div><div id="hero-services-hero-size" style="font-size:11px;color:var(--text-muted);"></div></div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('services-hero')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="hero-panel-nav-works-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: WORKS <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-works.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('nav-works')"
+          ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'nav-works')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-nav-works" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-works')">
+        <div id="hero-nav-works-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-nav-works-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;"><div id="hero-nav-works-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div><div id="hero-nav-works-size" style="font-size:11px;color:var(--text-muted);"></div></div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('nav-works')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="hero-panel-nav-services-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: SERVICES <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-services.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('nav-services')"
+          ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'nav-services')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-nav-services" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-services')">
+        <div id="hero-nav-services-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-nav-services-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;"><div id="hero-nav-services-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div><div id="hero-nav-services-size" style="font-size:11px;color:var(--text-muted);"></div></div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('nav-services')">アップロード</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="hero-panel-nav-contact-card" class="card" style="margin-bottom:16px;">
+        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: CONTACT <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-contact.jpg</code></div>
+        <div class="upload-zone" onclick="triggerHeroUpload('nav-contact')"
+          ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+          ondrop="handleHeroPanelDrop(event, 'nav-contact')">
+          <div class="upload-zone-icon">📁</div>
+          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
+        </div>
+        <input type="file" id="hero-file-nav-contact" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-contact')">
+        <div id="hero-nav-contact-info" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="hero-nav-contact-thumb" style="width:100px;height:56px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">
+            <div style="flex:1;"><div id="hero-nav-contact-name" style="font-size:13px;font-weight:500;margin-bottom:2px;"></div><div id="hero-nav-contact-size" style="font-size:11px;color:var(--text-muted);"></div></div>
+            <button class="btn btn-accent btn-sm" onclick="uploadHeroPanelImage('nav-contact')">アップロード</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- INQUIRIES -->
@@ -886,6 +966,13 @@
       <div class="field-group">
         <label class="field-label">クライアント</label>
         <input type="text" id="work-client" placeholder="UIMUI">
+      </div>
+      <div class="field-group">
+        <label class="field-label">サムネイル向き</label>
+        <select id="work-orientation">
+          <option value="landscape">横（標準）</option>
+          <option value="portrait">縦</option>
+        </select>
       </div>
       <div class="field-group span2">
         <label class="field-label">説明文</label>
@@ -961,6 +1048,42 @@
         <label class="field-label">本文</label>
         <textarea id="news-body" style="min-height:120px" placeholder="記事の本文"></textarea>
       </div>
+
+      <div class="field-group span2" style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
+        <label class="field-label">メディア（任意・画像 / 動画 / YouTube）</label>
+        <select id="news-media-type" onchange="newsMediaTypeChange()" style="margin-bottom:10px;">
+          <option value="none">なし</option>
+          <option value="image">画像をアップロード</option>
+          <option value="video">動画をアップロード（小容量のみ・大きい動画はYouTube推奨）</option>
+          <option value="youtube">YouTube</option>
+        </select>
+
+        <div id="news-media-upload-block" style="display:none;">
+          <div class="upload-zone" id="news-media-zone" onclick="document.getElementById('news-media-file').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+            ondrop="handleNewsMediaDrop(event)">
+            <div class="upload-zone-icon">📁</div>
+            <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+            <div class="upload-zone-sub" id="news-media-accept-hint">JPG / PNG / WebP</div>
+          </div>
+          <input type="file" id="news-media-file" accept="image/*" style="display:none" onchange="handleNewsMediaFile(this.files[0])">
+          <div class="img-uploading" id="news-media-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+        </div>
+
+        <div id="news-media-youtube-block" style="display:none;">
+          <input type="text" id="news-media-youtube" placeholder="YouTubeのURL または 動画ID を貼り付け" oninput="parseNewsYoutube()">
+        </div>
+
+        <input type="text" id="news-media" placeholder="（未設定）" readonly style="margin-top:8px;background:var(--surface2);">
+
+        <div style="margin-top:12px;">
+          <label class="field-label">メディアの向き（一覧での表示）</label>
+          <select id="news-orientation">
+            <option value="landscape">横（標準）</option>
+            <option value="portrait">縦</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="modal-footer">
@@ -982,6 +1105,11 @@
       <button class="modal-close" onclick="closeInqModal()">×</button>
     </div>
     <div class="form-grid">
+      <div class="field-group span2" style="background:rgba(232,130,10,0.06);border:1px dashed rgba(232,130,10,0.4);border-radius:8px;padding:12px 14px;">
+        <label class="field-label" style="color:var(--accent);">FormSubmitメールから自動入力（任意）</label>
+        <textarea id="inq-form-paste" class="field-input" style="min-height:90px;font-size:12px;" placeholder="届いたメール本文をそのまま貼り付けて「解析して入力」を押すと、下のお名前・メール・メッセージが自動で埋まります。"></textarea>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="parseInqEmail()">解析して入力</button>
+      </div>
       <div class="field-group"><label class="field-label">お名前 *</label><input type="text" id="inq-form-name" class="field-input"></div>
       <div class="field-group"><label class="field-label">メールアドレス *</label><input type="email" id="inq-form-email" class="field-input"></div>
       <div class="field-group span2"><label class="field-label">件名</label><input type="text" id="inq-form-subject" class="field-input"></div>
@@ -1178,6 +1306,7 @@ function openWorkModal(editIndex) {
   document.getElementById('work-category').value = 'videography';
   document.getElementById('work-date').value = '';
   document.getElementById('work-client').value = '';
+  document.getElementById('work-orientation').value = 'landscape';
   document.getElementById('work-description').value = '';
   document.getElementById('work-thumb').value = '';
   document.getElementById('media-rows').innerHTML = '';
@@ -1197,6 +1326,7 @@ function editWork(i) {
   document.getElementById('work-sub').value = w.sub || '';
   document.getElementById('work-date').value = w.date || '';
   document.getElementById('work-client').value = w.client || '';
+  document.getElementById('work-orientation').value = w.orientation || 'landscape';
   document.getElementById('work-description').value = w.description || '';
   document.getElementById('work-thumb').value = w.thumb || '';
 
@@ -1394,6 +1524,7 @@ async function saveWork(isDraft = false) {
     description: document.getElementById('work-description').value.trim(),
     thumb,
     displayTitle: document.getElementById('work-displayTitle').value.trim(),
+    orientation: document.getElementById('work-orientation').value || 'landscape',
     media,
   };
 
@@ -1402,6 +1533,7 @@ async function saveWork(isDraft = false) {
   if (!work.description) delete work.description;
   if (!work.displayTitle) delete work.displayTitle;
   if (!work.date) delete work.date;
+  if (work.orientation === 'landscape') delete work.orientation;
   if (isDraft) work.draft = true;
 
   if (isEdit) {
@@ -1526,6 +1658,11 @@ function openNewsModal() {
   document.getElementById('news-category').value = 'News';
   document.getElementById('news-title').value = '';
   document.getElementById('news-body').value = '';
+  document.getElementById('news-media').value = '';
+  document.getElementById('news-media-youtube').value = '';
+  document.getElementById('news-media-type').value = 'none';
+  document.getElementById('news-orientation').value = 'landscape';
+  newsMediaTypeChange();
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1538,11 +1675,93 @@ function editNews(i) {
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-body').value = n.body || '';
   document.getElementById('news-draft-flag').value = n.draft ? 'true' : 'false';
+  // メディア・向きを復元
+  const media = n.media || '';
+  document.getElementById('news-media').value = media;
+  document.getElementById('news-media-youtube').value = '';
+  document.getElementById('news-orientation').value = n.orientation || 'landscape';
+  let mtype = 'none';
+  if (media) {
+    if (/^[a-zA-Z0-9_-]{11}$/.test(media)) { mtype = 'youtube'; document.getElementById('news-media-youtube').value = media; }
+    else {
+      const ext = media.split('.').pop().toLowerCase();
+      mtype = ['mp4','mov','webm'].includes(ext) ? 'video' : 'image';
+    }
+  }
+  document.getElementById('news-media-type').value = mtype;
+  newsMediaTypeChange();
   document.getElementById('news-modal').classList.add('open');
 }
 
 function closeNewsModal() {
   document.getElementById('news-modal').classList.remove('open');
+}
+
+// NEWS メディア種別の切り替え
+function newsMediaTypeChange() {
+  const t = document.getElementById('news-media-type').value;
+  const uploadBlock = document.getElementById('news-media-upload-block');
+  const ytBlock = document.getElementById('news-media-youtube-block');
+  const fileInput = document.getElementById('news-media-file');
+  const hint = document.getElementById('news-media-accept-hint');
+  uploadBlock.style.display = (t === 'image' || t === 'video') ? 'block' : 'none';
+  ytBlock.style.display = (t === 'youtube') ? 'block' : 'none';
+  if (t === 'image') { fileInput.accept = 'image/*'; hint.textContent = 'JPG / PNG / WebP'; }
+  else if (t === 'video') { fileInput.accept = 'video/*'; hint.textContent = 'MP4 / MOV / WebM（小容量推奨）'; }
+  if (t === 'none') document.getElementById('news-media').value = '';
+}
+
+// YouTube URL/ID → 11桁ID抽出
+function parseNewsYoutube() {
+  const raw = (document.getElementById('news-media-youtube').value || '').trim();
+  let id = '';
+  if (/^[a-zA-Z0-9_-]{11}$/.test(raw)) id = raw;
+  else {
+    const m = raw.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    if (m) id = m[1];
+  }
+  document.getElementById('news-media').value = id;
+}
+
+function handleNewsMediaDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if (file) handleNewsMediaFile(file);
+}
+
+// NEWS メディアファイルを即時アップロードし、ファイル名を news-media にセット
+async function handleNewsMediaFile(file) {
+  if (!file) return;
+  const isImage = file.type.startsWith('image/');
+  const isVideo = file.type.startsWith('video/');
+  if (!isImage && !isVideo) return toast('画像または動画を選択してください', 'error');
+  // 安全なファイル名: news-media-<timestamp>.<ext>
+  const ext = (file.name.split('.').pop() || (isVideo ? 'mp4' : 'jpg')).toLowerCase();
+  const fileName = `news-media-${Date.now()}.${ext}`;
+  const uploading = document.getElementById('news-media-uploading');
+  uploading.style.display = 'block';
+  try {
+    const b64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+    const existing = await ghGetFile(fileName);
+    const sha = existing ? existing.sha : undefined;
+    const res = await ghPutImage(fileName, b64, sha, `CMS: upload news media ${fileName}`);
+    if (res.ok) {
+      document.getElementById('news-media').value = fileName;
+      toast('アップロードしました ✓', 'success');
+    } else {
+      const err = await res.json();
+      toast('エラー: ' + (err.message || 'upload failed'), 'error');
+    }
+  } catch(e) {
+    toast('エラー: ' + e.message, 'error');
+  }
+  uploading.style.display = 'none';
 }
 
 async function saveNews() {
@@ -1560,6 +1779,12 @@ async function saveNews() {
     title,
     body: document.getElementById('news-body').value.trim(),
   };
+  const media = (document.getElementById('news-media').value || '').trim();
+  if (media) {
+    item.media = media;
+    const ori = document.getElementById('news-orientation').value || 'landscape';
+    if (ori === 'portrait') item.orientation = 'portrait';
+  }
 
   if (isEdit) {
     STATE.newsData[parseInt(editIdx)] = item;
@@ -1661,7 +1886,13 @@ async function uploadHeroPanelImage(panel) {
   const file = STATE['heroFile_' + panel];
   if (!file) return toast('画像を選択してください', 'error');
 
-  const fileMap = { left: 'hero2.jpg', right: 'bg.jpg', single: 'hero.jpg' };
+  const fileMap = {
+    left: 'hero2.jpg', right: 'bg.jpg', single: 'hero.jpg',
+    'services-hero': 'services-hero.jpg',
+    'nav-works': 'navbox-works.jpg',
+    'nav-services': 'navbox-services.jpg',
+    'nav-contact': 'navbox-contact.jpg',
+  };
   const fileName = fileMap[panel];
   if (!fileName) return;
 
@@ -1757,9 +1988,9 @@ function setSaving(type, saving) {
   const btn = document.getElementById(`${type}-save-btn`);
   const label = document.getElementById(`${type}-save-label`);
   const draftBtn = document.getElementById(`${type}-draft-btn`);
-  btn.disabled = saving;
+  if (btn) btn.disabled = saving;
   if (draftBtn) draftBtn.disabled = saving;
-  label.innerHTML = saving ? '<span class="spinner"></span> 保存中...' : '保存して公開';
+  if (label) label.innerHTML = saving ? '<span class="spinner"></span> 保存中...' : '保存して公開';
 }
 
 let toastTimer;
@@ -1908,10 +2139,60 @@ async function saveInquiries(msg) {
 function openNewInqModal() { document.getElementById('inq-modal').classList.add('open'); }
 function closeInqModal() {
   document.getElementById('inq-modal').classList.remove('open');
-  ['inq-form-name','inq-form-email','inq-form-subject','inq-form-message'].forEach(id => {
+  ['inq-form-name','inq-form-email','inq-form-subject','inq-form-message','inq-form-paste'].forEach(id => {
     const e = document.getElementById(id); if(e) e.value='';
   });
   const s = document.getElementById('inq-form-status'); if(s) s.value='pending';
+}
+// FormSubmitメール本文を解析して各フィールドへ自動入力
+function parseInqEmail() {
+  const raw = (document.getElementById('inq-form-paste')||{}).value || '';
+  if (!raw.trim()) return toast('メール本文を貼り付けてください', 'error');
+  const lines = raw.replace(/\r/g,'').split('\n');
+  // "label:" 形式の行を探し、その後ろの非空行を値とする
+  const grab = (labels) => {
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i].trim().toLowerCase().replace(/[：:]\s*$/, ':');
+      if (labels.some(lb => l === lb + ':' || l.startsWith(lb + ':'))) {
+        // 同一行に値がある場合
+        const inline = lines[i].split(/[：:]/).slice(1).join(':').trim();
+        if (inline) return inline;
+        // 次の非空行
+        for (let j = i+1; j < lines.length; j++) {
+          if (lines[j].trim()) return lines[j].trim();
+        }
+      }
+    }
+    return '';
+  };
+  // メッセージは message: 以降〜次のラベル/Submitted まで複数行対応
+  const grabMessage = () => {
+    let start = -1;
+    for (let i = 0; i < lines.length; i++) {
+      if (/^\s*message\s*[：:]/i.test(lines[i])) { start = i; break; }
+    }
+    if (start < 0) return '';
+    const inline = lines[start].split(/[：:]/).slice(1).join(':').trim();
+    const out = inline ? [inline] : [];
+    for (let j = start+1; j < lines.length; j++) {
+      const t = lines[j].trim();
+      if (/^(privacy|email|name|subject)\s*[：:]/i.test(t)) break;
+      if (/^submitted at/i.test(t)) break;
+      out.push(lines[j]);
+    }
+    return out.join('\n').trim();
+  };
+  const name = grab(['name','お名前','名前']);
+  const email = grab(['email','e-mail','メール','メールアドレス']);
+  const subject = grab(['subject','件名']);
+  const message = grabMessage();
+  const set = (id, v) => { const e = document.getElementById(id); if (e && v) e.value = v; };
+  set('inq-form-name', name);
+  set('inq-form-email', email);
+  set('inq-form-subject', subject);
+  set('inq-form-message', message);
+  if (name || email || message) toast('解析しました。内容をご確認ください', 'success');
+  else toast('項目を検出できませんでした。手動で入力してください', 'error');
 }
 async function saveNewInq() {
   const name    = (document.getElementById('inq-form-name')||{}).value?.trim();
