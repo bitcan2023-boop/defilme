@@ -149,6 +149,8 @@
       display: block;
       object-fit: cover;
     }
+    .news-media.is-portrait img,
+    .news-media.is-portrait video { max-width: 300px; }
 
     .news-media video {
       max-width: 480px;
@@ -346,12 +348,13 @@
     function mediaHTML(item) {
       if (!item.media) return '';
       const src = item.media;
+      const ori = item.orientation === 'portrait' ? ' is-portrait' : '';
       const ext = src.split('.').pop().toLowerCase();
       if (['mp4', 'mov', 'webm'].includes(ext)) {
-        return `<div class="news-media"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
+        return `<div class="news-media${ori}"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
       }
       if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
-        return `<div class="news-media"><img src="${src}" alt="${item.title}" loading="lazy"></div>`;
+        return `<div class="news-media${ori}"><img src="${src}" alt="${item.title}" loading="lazy" decoding="async"></div>`;
       }
       return '';
     }
