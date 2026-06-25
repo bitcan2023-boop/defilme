@@ -264,22 +264,31 @@
       return html;
     }
 
+    function normalizeNewsMedia(media) {
+      if (Array.isArray(media)) return media;
+      if (typeof media === 'string' && media) {
+        if (/^[a-zA-Z0-9_-]{11}$/.test(media)) return [{ type:'youtube', id:media }];
+        const ext = media.split('.').pop().toLowerCase();
+        return [{ type: ['mp4','mov','webm'].includes(ext) ? 'video' : 'image', src: media }];
+      }
+      return [];
+    }
     function mediaHTML(item) {
-      if (!item.media) return '';
-      const src = item.media;
+      const arr = normalizeNewsMedia(item.media);
+      if (!arr.length) return '';
       const ori = item.orientation === 'portrait' ? ' is-portrait' : '';
-      // YouTubeのIDかどうか判定（11文字の英数字）
-      if (/^[a-zA-Z0-9_-]{11}$/.test(src)) {
-        return `<div class="detail-media"><iframe src="https://www.youtube.com/embed/${src}" allowfullscreen></iframe></div>`;
-      }
-      const ext = src.split('.').pop().toLowerCase();
-      if (['mp4','mov','webm'].includes(ext)) {
-        return `<div class="detail-media${ori}"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
-      }
-      if (['jpg','jpeg','png','webp','gif'].includes(ext)) {
+      return arr.map(m => {
+        if (m.type === 'youtube') {
+          const id = m.id || m.src || '';
+          return `<div class="detail-media"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen></iframe></div>`;
+        }
+        const src = m.src || '';
+        const ext = String(src).split('.').pop().toLowerCase();
+        if (m.type === 'video' || ['mp4','mov','webm'].includes(ext)) {
+          return `<div class="detail-media${ori}"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
+        }
         return `<div class="detail-media${ori}"><img src="${src}" alt="${item.title}" loading="lazy"></div>`;
-      }
-      return '';
+      }).join('');
     }
 
     const params = new URLSearchParams(window.location.search);
