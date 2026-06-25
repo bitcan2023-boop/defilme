@@ -1368,10 +1368,12 @@ function updateSubOptions() {
       <option value="music-video">Music Video</option>
       <option value="live-shoot">Live Shoot</option>
       <option value="documentary">Documentary</option>
+      <option value="portrait">Portrait</option>
       <option value="snap">Snap</option>`;
   } else {
     sub.innerHTML = `
       <option value="portrait">Portrait</option>
+      <option value="live-shoot">Live Shoot</option>
       <option value="snap">Snap</option>`;
   }
 }
@@ -2058,7 +2060,7 @@ async function loadInquiries() {
   el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">読み込み中...</div></div>';
   try {
     const f = await ghGetFile(INQPATH);
-    STATE.inqData = f ? JSON.parse(atob(f.content.replace(/\n/g,''))) : [];
+    STATE.inqData = f ? JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,''))))) : [];
     STATE.inqSHA = f ? f.sha : '';
   } catch(e) { STATE.inqData = []; STATE.inqSHA = ''; }
   renderInquiries();
