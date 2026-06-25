@@ -531,6 +531,26 @@
   #media-rows .media-row-type { width: 110px; flex-shrink: 0; }
   #media-rows .media-row-src { flex: 1; }
 
+  /* ── 統一メディアマネージャ ── */
+  .mm-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .mm-empty { font-size: 12px; color: var(--text-muted); padding: 8px 2px; }
+  .mm-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .mm-thumb {
+    width: 64px; height: 44px; object-fit: cover; border-radius: 4px;
+    background: #111; flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; font-size: 18px; color: var(--text-muted);
+  }
+  .mm-thumb-yt { background: rgba(232,130,10,0.15); color: var(--accent); }
+  .mm-thumb-vid { background: rgba(255,255,255,0.06); }
+  .mm-label { flex: 1; font-size: 12px; color: var(--text-light); word-break: break-all; line-height: 1.5; }
+  .mm-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .mm-actions .btn { padding: 5px 9px; }
+  .upload-zone.drag { border-color: var(--accent); background: rgba(232,130,10,0.06); }
+
   /* ── IMAGE UPLOAD ── */
   .img-upload-area {
     border: 2px dashed var(--border);
@@ -999,12 +1019,34 @@
 
     <div class="divider"></div>
 
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">メディア</div>
-      <button class="btn btn-ghost btn-sm" onclick="addMediaRow()">＋ 追加</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">メディア（複数可：画像 / 動画 / YouTube）</div>
     </div>
-
-    <div id="media-rows"></div>
+    <div class="mm" id="mm-work">
+      <div class="mm-controls">
+        <select class="mm-type" id="work-mm-type" onchange="mmTypeChange('work')">
+          <option value="image">画像をアップロード</option>
+          <option value="video">動画をアップロード</option>
+          <option value="youtube">YouTube</option>
+        </select>
+        <div class="mm-upload-block" id="work-mm-upload-block">
+          <div class="upload-zone" onclick="document.getElementById('work-mm-file').click()"
+            ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+            ondrop="mmDrop(event,'work')">
+            <div class="upload-zone-icon">📁</div>
+            <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+            <div class="upload-zone-sub" id="work-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
+          </div>
+          <input type="file" id="work-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('work', this.files)">
+          <div class="img-uploading" id="work-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+        </div>
+        <div class="mm-youtube-block" id="work-mm-youtube-block" style="display:none;">
+          <input type="text" id="work-mm-youtube" placeholder="YouTubeのURL または 動画ID">
+          <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="mmAddYoutube('work')">＋ 追加</button>
+        </div>
+      </div>
+      <div class="mm-list" id="work-mm-list"></div>
+    </div>
 
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeWorkModal()">キャンセル</button>
@@ -1059,31 +1101,32 @@
       </div>
 
       <div class="field-group span2" style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
-        <label class="field-label">メディア（任意・画像 / 動画 / YouTube）</label>
-        <select id="news-media-type" onchange="newsMediaTypeChange()" style="margin-bottom:10px;">
-          <option value="none">なし</option>
-          <option value="image">画像をアップロード</option>
-          <option value="video">動画をアップロード（小容量のみ・大きい動画はYouTube推奨）</option>
-          <option value="youtube">YouTube</option>
-        </select>
-
-        <div id="news-media-upload-block" style="display:none;">
-          <div class="upload-zone" id="news-media-zone" onclick="document.getElementById('news-media-file').click()"
-            ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
-            ondrop="handleNewsMediaDrop(event)">
-            <div class="upload-zone-icon">📁</div>
-            <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
-            <div class="upload-zone-sub" id="news-media-accept-hint">JPG / PNG / WebP</div>
+        <label class="field-label">メディア（複数可：画像 / 動画 / YouTube）</label>
+        <div class="mm" id="mm-news">
+          <div class="mm-controls">
+            <select class="mm-type" id="news-mm-type" onchange="mmTypeChange('news')" style="margin-bottom:10px;">
+              <option value="image">画像をアップロード</option>
+              <option value="video">動画をアップロード</option>
+              <option value="youtube">YouTube</option>
+            </select>
+            <div class="mm-upload-block" id="news-mm-upload-block">
+              <div class="upload-zone" onclick="document.getElementById('news-mm-file').click()"
+                ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+                ondrop="mmDrop(event,'news')">
+                <div class="upload-zone-icon">📁</div>
+                <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+                <div class="upload-zone-sub" id="news-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
+              </div>
+              <input type="file" id="news-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('news', this.files)">
+              <div class="img-uploading" id="news-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+            </div>
+            <div class="mm-youtube-block" id="news-mm-youtube-block" style="display:none;">
+              <input type="text" id="news-mm-youtube" placeholder="YouTubeのURL または 動画ID">
+              <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="mmAddYoutube('news')">＋ 追加</button>
+            </div>
           </div>
-          <input type="file" id="news-media-file" accept="image/*" style="display:none" onchange="handleNewsMediaFile(this.files[0])">
-          <div class="img-uploading" id="news-media-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+          <div class="mm-list" id="news-mm-list"></div>
         </div>
-
-        <div id="news-media-youtube-block" style="display:none;">
-          <input type="text" id="news-media-youtube" placeholder="YouTubeのURL または 動画ID を貼り付け" oninput="parseNewsYoutube()">
-        </div>
-
-        <input type="text" id="news-media" placeholder="（未設定）" readonly style="margin-top:8px;background:var(--surface2);">
 
         <div style="margin-top:12px;">
           <label class="field-label">メディアの向き（一覧での表示）</label>
@@ -1318,7 +1361,7 @@ function openWorkModal(editIndex) {
   document.getElementById('work-orientation').value = 'landscape';
   document.getElementById('work-description').value = '';
   document.getElementById('work-thumb').value = '';
-  document.getElementById('media-rows').innerHTML = '';
+  mmInit('work', []);
   updateSubOptions();
   document.getElementById('work-modal').classList.add('open');
 }
@@ -1339,9 +1382,8 @@ function editWork(i) {
   document.getElementById('work-description').value = w.description || '';
   document.getElementById('work-thumb').value = w.thumb || '';
 
-  // Media rows
-  document.getElementById('media-rows').innerHTML = '';
-  (w.media || []).forEach(m => addMediaRow(m));
+  // Media（統一マネージャ）
+  mmInit('work', w.media || []);
 
   document.getElementById('work-modal').classList.add('open');
 }
@@ -1504,6 +1546,116 @@ function handleMediaDrop(e, row) {
   handleMediaFile(fileInput);
 }
 
+// ── 統一メディアマネージャ（WORKS / NEWS 共通・複数対応） ──
+const mmData = { work: [], news: [] };
+const MM_VIDEO_MAX = 25 * 1024 * 1024; // 動画は25MBまで
+
+function mmTypeChange(prefix) {
+  const t = document.getElementById(prefix + '-mm-type').value;
+  const up = document.getElementById(prefix + '-mm-upload-block');
+  const yt = document.getElementById(prefix + '-mm-youtube-block');
+  const file = document.getElementById(prefix + '-mm-file');
+  const hint = document.getElementById(prefix + '-mm-hint');
+  if (up) up.style.display = (t === 'image' || t === 'video') ? 'block' : 'none';
+  if (yt) yt.style.display = (t === 'youtube') ? 'block' : 'none';
+  if (t === 'image') { file.accept = 'image/*'; file.multiple = true; if (hint) hint.textContent = 'JPG / PNG / WebP（複数選択できます）'; }
+  else if (t === 'video') { file.accept = 'video/*'; file.multiple = true; if (hint) hint.innerHTML = 'MP4 / MOV / WebM（1ファイル <b>25MBまで</b>。それ以上はYouTubeをご利用ください）'; }
+}
+function mmDrop(e, prefix) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  if (e.dataTransfer.files && e.dataTransfer.files.length) mmUpload(prefix, e.dataTransfer.files);
+}
+async function mmUpload(prefix, files) {
+  const list = Array.from(files || []);
+  if (!list.length) return;
+  const up = document.getElementById(prefix + '-mm-uploading');
+  if (up) up.style.display = 'flex';
+  for (const file of list) {
+    const isImg = file.type.startsWith('image/');
+    const isVid = file.type.startsWith('video/');
+    if (!isImg && !isVid) { toast('画像または動画を選択してください', 'error'); continue; }
+    if (isVid && file.size > MM_VIDEO_MAX) {
+      toast(`「${file.name}」は ${(file.size/1048576).toFixed(1)}MB です。動画は25MBまで（それ以上はYouTube推奨）`, 'error');
+      continue;
+    }
+    try {
+      const b64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      const existing = await ghGetFile(file.name);
+      const sha = existing ? existing.sha : undefined;
+      const res = await ghPutImage(file.name, b64, sha, `CMS: upload media ${file.name}`);
+      if (res.ok) {
+        mmData[prefix].push({ type: isVid ? 'video' : 'image', src: file.name });
+        mmRender(prefix);
+        toast(`アップロード完了: ${file.name} ✓`, 'success');
+      } else {
+        const er = await res.json();
+        toast('エラー: ' + (er.message || 'アップロード失敗'), 'error');
+      }
+    } catch (e) { toast('エラー: ' + e.message, 'error'); }
+  }
+  if (up) up.style.display = 'none';
+  const fi = document.getElementById(prefix + '-mm-file');
+  if (fi) fi.value = '';
+}
+function mmAddYoutube(prefix) {
+  const raw = (document.getElementById(prefix + '-mm-youtube').value || '').trim();
+  let id = '';
+  if (/^[a-zA-Z0-9_-]{11}$/.test(raw)) id = raw;
+  else { const m = raw.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([a-zA-Z0-9_-]{11})/); if (m) id = m[1]; }
+  if (!id) { toast('YouTubeのURLまたはIDを確認してください', 'error'); return; }
+  mmData[prefix].push({ type: 'youtube', id });
+  document.getElementById(prefix + '-mm-youtube').value = '';
+  mmRender(prefix);
+}
+function mmRemove(prefix, idx) { mmData[prefix].splice(idx, 1); mmRender(prefix); }
+function mmMove(prefix, idx, dir) {
+  const a = mmData[prefix]; const j = idx + dir;
+  if (j < 0 || j >= a.length) return;
+  [a[idx], a[j]] = [a[j], a[idx]];
+  mmRender(prefix);
+}
+function mmRender(prefix) {
+  const wrap = document.getElementById(prefix + '-mm-list');
+  if (!wrap) return;
+  const items = mmData[prefix] || [];
+  if (!items.length) { wrap.innerHTML = '<div class="mm-empty">まだメディアがありません。上から追加してください。</div>'; return; }
+  wrap.innerHTML = items.map((m, i) => {
+    let thumb, label;
+    if (m.type === 'youtube') { thumb = '<div class="mm-thumb mm-thumb-yt">▶</div>'; label = 'YouTube: ' + (m.id || ''); }
+    else if (m.type === 'video') { thumb = '<div class="mm-thumb mm-thumb-vid">🎬</div>'; label = m.src || ''; }
+    else { thumb = `<img class="mm-thumb" src="${m.src}" onerror="this.style.visibility='hidden'" alt="">`; label = m.src || ''; }
+    return `<div class="mm-row">
+      ${thumb}
+      <div class="mm-label">${i + 1}. ${label}</div>
+      <div class="mm-actions">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},1)" ${i === items.length - 1 ? 'disabled' : ''}>↓</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+// media（配列 or レガシー文字列）を正規化して初期化
+function mmInit(prefix, media) {
+  let items = [];
+  if (Array.isArray(media)) items = media.map(m => ({ ...m }));
+  else if (typeof media === 'string' && media) {
+    if (/^[a-zA-Z0-9_-]{11}$/.test(media)) items = [{ type: 'youtube', id: media }];
+    else { const ext = media.split('.').pop().toLowerCase(); items = [{ type: ['mp4','mov','webm'].includes(ext) ? 'video' : 'image', src: media }]; }
+  }
+  mmData[prefix] = items;
+  const typeSel = document.getElementById(prefix + '-mm-type');
+  if (typeSel) typeSel.value = 'image';
+  mmTypeChange(prefix);
+  mmRender(prefix);
+}
+
 async function saveWork(isDraft = false) {
   const editIdx = document.getElementById('work-edit-index').value;
   const isEdit = editIdx !== '';
@@ -1514,16 +1666,8 @@ async function saveWork(isDraft = false) {
 
   if (!id || !title || !thumb) { toast('ID・タイトル・サムネイルは必須です', 'error'); return; }
 
-  // Collect media
-  const mediaRows = document.querySelectorAll('#media-rows .media-item-row');
-  const media = [];
-  mediaRows.forEach(row => {
-    const type = row.querySelector('.media-row-type').value;
-    const src  = row.querySelector('.media-row-src').value.trim();
-    if (!src) return;
-    if (type === 'youtube') media.push({ type, id: src });
-    else media.push({ type, src });
-  });
+  // Collect media（統一マネージャ）
+  const media = mmData.work.map(m => m.type === 'youtube' ? { type: 'youtube', id: m.id } : { type: m.type, src: m.src });
 
   const work = {
     id,
@@ -1669,11 +1813,8 @@ function openNewsModal() {
   document.getElementById('news-category').value = 'News';
   document.getElementById('news-title').value = '';
   document.getElementById('news-body').value = '';
-  document.getElementById('news-media').value = '';
-  document.getElementById('news-media-youtube').value = '';
-  document.getElementById('news-media-type').value = 'none';
   document.getElementById('news-orientation').value = 'landscape';
-  newsMediaTypeChange();
+  mmInit('news', []);
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1685,21 +1826,8 @@ function editNews(i) {
   document.getElementById('news-category').value = n.category || 'News';
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-body').value = n.body || '';
-  // メディア・向きを復元
-  const media = n.media || '';
-  document.getElementById('news-media').value = media;
-  document.getElementById('news-media-youtube').value = '';
   document.getElementById('news-orientation').value = n.orientation || 'landscape';
-  let mtype = 'none';
-  if (media) {
-    if (/^[a-zA-Z0-9_-]{11}$/.test(media)) { mtype = 'youtube'; document.getElementById('news-media-youtube').value = media; }
-    else {
-      const ext = media.split('.').pop().toLowerCase();
-      mtype = ['mp4','mov','webm'].includes(ext) ? 'video' : 'image';
-    }
-  }
-  document.getElementById('news-media-type').value = mtype;
-  newsMediaTypeChange();
+  mmInit('news', n.media || []);
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1811,8 +1939,8 @@ async function saveNews() {
     title,
     body: document.getElementById('news-body').value.trim(),
   };
-  const media = (document.getElementById('news-media').value || '').trim();
-  if (media) {
+  const media = mmData.news.map(m => m.type === 'youtube' ? { type: 'youtube', id: m.id } : { type: m.type, src: m.src });
+  if (media.length) {
     item.media = media;
     const ori = document.getElementById('news-orientation').value || 'landscape';
     if (ori === 'portrait') item.orientation = 'portrait';
