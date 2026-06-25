@@ -141,6 +141,8 @@
       background: #111;
     }
 
+    .work-item-thumb.is-portrait { aspect-ratio: 4/5; }
+
     .work-item-thumb img {
       width: 100%;
       height: 100%;
@@ -363,8 +365,8 @@
       grid.innerHTML = data.map(work => `
         <a class="work-item" data-category="${work.category}" data-sub="${work.sub}"
            href="work-detail.html?id=${work.id}">
-          <div class="work-item-thumb">
-            <img src="${work.thumb}" alt="${work.title}" loading="lazy">
+          <div class="work-item-thumb${work.orientation === 'portrait' ? ' is-portrait' : ''}">
+            <img src="${work.thumb}" alt="${work.title}" loading="lazy" decoding="async">
           </div>
           <div class="work-item-info">
             <p class="work-item-cat">${subLabels[work.sub] || work.sub}</p>
