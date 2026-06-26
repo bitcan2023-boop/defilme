@@ -23,6 +23,43 @@ const WORKS_DATA = [
   },
 
   {
+    id: "portrait--mari-shimizu--mm-gallery-1",
+    category: "photography",
+    sub: "portrait",
+    title: "Portrait / Mari Shimizu @ MM Gallery #1",
+    date: "2026-04",
+    client: "清水麻里",
+    description: "MMギャラリーにて、清水麻里さんを撮らせていただきました。",
+    thumb: "DSC02225-2.jpg",
+    displayTitle: "Portrait / Mari Shimizu @ MM Gallery #1",
+    orientation: "portrait",
+    mediaCols: 4,
+    mediaShape: "portrait",
+    media: [
+        {
+            "type": "image",
+            "src": "DSC02229.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02225-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02227.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02231.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02222.jpg"
+        }
+    ],
+  },
+
+  {
     id: "china-town-silhouette",
     category: "photography",
     sub: "snap",
@@ -83,43 +120,6 @@ const WORKS_DATA = [
         {
             "type": "image",
             "src": "DSC01229-2.jpg"
-        }
-    ],
-  },
-
-  {
-    id: "portrait--mari-shimizu--mm-gallery-1",
-    category: "photography",
-    sub: "portrait",
-    title: "Portrait / Mari Shimizu @ MM Gallery #1",
-    date: "2026-04",
-    client: "清水麻里",
-    description: "MMギャラリーにて、清水麻里さんを撮らせていただきました。",
-    thumb: "DSC02225-2.jpg",
-    displayTitle: "Portrait / Mari Shimizu @ MM Gallery #1",
-    orientation: "portrait",
-    mediaCols: 4,
-    mediaShape: "portrait",
-    media: [
-        {
-            "type": "image",
-            "src": "DSC02229.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02225-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02227.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02231.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02222.jpg"
         }
     ],
   }
