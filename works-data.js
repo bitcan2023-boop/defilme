@@ -32,20 +32,57 @@ const WORKS_DATA = [
     description: "夜の中華街に浮かび上がるネオンシルエット",
     thumb: "FIJタイトル_4.jpg",
     displayTitle: "china town silhouette",
+    orientation: "portrait",
     mediaCols: 3,
     mediaShape: "portrait",
     media: [
-        {
-            "type": "image",
-            "src": "DSC01346.jpg"
-        },
         {
             "type": "image",
             "src": "FIJタイトル_4.jpg"
         },
         {
             "type": "image",
+            "src": "DSC01346.jpg"
+        },
+        {
+            "type": "image",
             "src": "DSC01314.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01200-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01183.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01215.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01272.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01244-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01389.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01305.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01179.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC01229-2.jpg"
         }
     ],
   },
