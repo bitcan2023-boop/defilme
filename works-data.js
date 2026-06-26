@@ -13,6 +13,7 @@ const WORKS_DATA = [
     description: "UIMUI 2nd.Single「感情ワンダーランド」Music Video。",
     thumb: "kanjo-wonderland.png",
     displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
+    orientation: "portrait",
     media: [
         {
             "type": "youtube",
