@@ -200,11 +200,18 @@
       .filter-sub {
         flex-wrap: wrap;
         justify-content: center;
+        align-content: center;
         row-gap: 2px;
+        /* スマホ: 高さアニメで切替する。両サブを同じ固定高さにし、
+           PHOTOGRAPHY↔VIDEOGRAPHY切替で高さが変わらない＝画面が動かない。 */
+        max-height: none;
+        height: 0;
+        transition: height 0.3s ease;
       }
-      /* 折り返しで複数行になっても収まるよう開いた時の高さを拡張 */
+      /* 2行ぶんの固定高さ。videography(2行)もphotography(1行)も同じ高さで表示 */
       .filter-sub.visible {
-        max-height: 240px;
+        height: 84px;
+        max-height: 84px;
       }
       .filter-sub-btn {
         padding: 11px 14px;
