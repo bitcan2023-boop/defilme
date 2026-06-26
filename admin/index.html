@@ -571,6 +571,14 @@
     background: var(--surface2); border: 1px solid var(--border);
     border-radius: 8px; padding: 8px 10px;
   }
+  .mm-row.mm-drag-over { border-color: var(--accent); background: var(--accent-dim); }
+  .mm-row.mm-dragging { opacity: 0.4; }
+  .mm-handle {
+    cursor: grab; color: var(--text-muted); font-size: 15px;
+    flex-shrink: 0; user-select: none; line-height: 1; padding: 0 2px;
+    display: flex; align-items: center;
+  }
+  .mm-handle:active { cursor: grabbing; }
   .mm-thumb {
     width: 64px; height: 44px; object-fit: cover; border-radius: 4px;
     background: #111; flex-shrink: 0; display: flex; align-items: center;
@@ -1706,16 +1714,52 @@ function mmRender(prefix) {
     if (m.type === 'youtube') { thumb = '<div class="mm-thumb mm-thumb-yt">▶</div>'; label = 'YouTube: ' + (m.id || ''); }
     else if (m.type === 'video') { thumb = '<div class="mm-thumb mm-thumb-vid">🎬</div>'; label = m.src || ''; }
     else { thumb = `<img class="mm-thumb" src="${m.src}" onerror="this.style.visibility='hidden'" alt="">`; label = m.src || ''; }
-    return `<div class="mm-row">
+    return `<div class="mm-row" draggable="true" data-mm-index="${i}">
+      <div class="mm-handle" title="ドラッグして並べ替え">⠿</div>
       ${thumb}
       <div class="mm-label">${i + 1}. ${label}</div>
       <div class="mm-actions">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
-        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},1)" ${i === items.length - 1 ? 'disabled' : ''}>↓</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
       </div>
     </div>`;
   }).join('');
+  initMmDragSort(prefix);
+}
+
+// メディアリストのドラッグ並べ替え
+let _mmDragSrc = null;
+function initMmDragSort(prefix) {
+  const wrap = document.getElementById(prefix + '-mm-list');
+  if (!wrap) return;
+  const rows = wrap.querySelectorAll('.mm-row');
+  rows.forEach(row => {
+    row.addEventListener('dragstart', e => {
+      _mmDragSrc = row;
+      row.classList.add('mm-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('mm-dragging');
+      wrap.querySelectorAll('.mm-row').forEach(r => r.classList.remove('mm-drag-over'));
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (row !== _mmDragSrc) row.classList.add('mm-drag-over');
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('mm-drag-over'));
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.classList.remove('mm-drag-over');
+      if (!_mmDragSrc || _mmDragSrc === row) return;
+      const fromIdx = parseInt(_mmDragSrc.getAttribute('data-mm-index'));
+      const toIdx = parseInt(row.getAttribute('data-mm-index'));
+      const arr = mmData[prefix];
+      const [moved] = arr.splice(fromIdx, 1);
+      arr.splice(toIdx, 0, moved);
+      mmRender(prefix);
+    });
+  });
 }
 // media（配列 or レガシー文字列）を正規化して初期化
 function mmInit(prefix, media) {
