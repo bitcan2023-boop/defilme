@@ -31,6 +31,7 @@ const WORKS_DATA = [
     description: "夜の中華街に浮かび上がるネオンシルエット",
     thumb: "FIJタイトル_4.jpg",
     displayTitle: "china town silhouette",
+    mediaCols: 4,
     media: [
         {
             "type": "image",
