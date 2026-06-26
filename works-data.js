@@ -32,6 +32,7 @@ const WORKS_DATA = [
     thumb: "FIJタイトル_4.jpg",
     displayTitle: "china town silhouette",
     mediaCols: 3,
+    mediaShape: "portrait",
     media: [
         {
             "type": "image",
