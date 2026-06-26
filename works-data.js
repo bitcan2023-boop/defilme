@@ -60,6 +60,7 @@ const WORKS_DATA = [
     description: "MMギャラリーにて、清水麻里さんを撮らせていただきました。",
     thumb: "DSC02225-2.jpg",
     displayTitle: "Portrait / Mari Shimizu @ MM Gallery #1",
+    orientation: "portrait",
     mediaCols: 4,
     mediaShape: "portrait",
     media: [
