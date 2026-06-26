@@ -534,6 +534,8 @@
   /* ── 統一メディアマネージャ ── */
   .mm-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
   .mm-empty { font-size: 12px; color: var(--text-muted); padding: 8px 2px; }
+  .mm-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  @media (max-width: 560px) { .mm-settings { grid-template-columns: 1fr; } }
   .mm-row {
     display: flex; align-items: center; gap: 12px;
     background: var(--surface2); border: 1px solid var(--border);
@@ -1046,6 +1048,24 @@
         </div>
       </div>
       <div class="mm-list" id="work-mm-list"></div>
+      <div class="mm-settings">
+        <div>
+          <label class="field-label">レイアウト（複数画像の並べ方）</label>
+          <select id="work-mm-cols">
+            <option value="1">1枚ずつ大きく（縦に並べる）</option>
+            <option value="2">2枚ずつ横に並べる</option>
+            <option value="3">3枚ずつ横に並べる</option>
+            <option value="4">4枚ずつ横に並べる</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">メディアの向き</label>
+          <select id="work-mm-shape">
+            <option value="landscape">横（標準）</option>
+            <option value="portrait">縦</option>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="modal-footer">
@@ -1126,14 +1146,24 @@
             </div>
           </div>
           <div class="mm-list" id="news-mm-list"></div>
-        </div>
-
-        <div style="margin-top:12px;">
-          <label class="field-label">メディアの向き（一覧での表示）</label>
-          <select id="news-orientation">
-            <option value="landscape">横（標準）</option>
-            <option value="portrait">縦</option>
-          </select>
+          <div class="mm-settings">
+            <div>
+              <label class="field-label">レイアウト（複数画像の並べ方）</label>
+              <select id="news-mm-cols">
+                <option value="1">1枚ずつ大きく（縦に並べる）</option>
+                <option value="2">2枚ずつ横に並べる</option>
+                <option value="3">3枚ずつ横に並べる</option>
+                <option value="4">4枚ずつ横に並べる</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">メディアの向き</label>
+              <select id="news-mm-shape">
+                <option value="landscape">横（標準）</option>
+                <option value="portrait">縦</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1362,6 +1392,8 @@ function openWorkModal(editIndex) {
   document.getElementById('work-description').value = '';
   document.getElementById('work-thumb').value = '';
   mmInit('work', []);
+  document.getElementById('work-mm-cols').value = '1';
+  document.getElementById('work-mm-shape').value = 'landscape';
   updateSubOptions();
   document.getElementById('work-modal').classList.add('open');
 }
@@ -1384,6 +1416,8 @@ function editWork(i) {
 
   // Media（統一マネージャ）
   mmInit('work', w.media || []);
+  document.getElementById('work-mm-cols').value = String(w.mediaCols || 1);
+  document.getElementById('work-mm-shape').value = w.mediaShape || 'landscape';
 
   document.getElementById('work-modal').classList.add('open');
 }
@@ -1680,6 +1714,8 @@ async function saveWork(isDraft = false) {
     thumb,
     displayTitle: document.getElementById('work-displayTitle').value.trim(),
     orientation: document.getElementById('work-orientation').value || 'landscape',
+    mediaCols: parseInt(document.getElementById('work-mm-cols').value, 10) || 1,
+    mediaShape: document.getElementById('work-mm-shape').value || 'landscape',
     media,
   };
 
@@ -1689,6 +1725,8 @@ async function saveWork(isDraft = false) {
   if (!work.displayTitle) delete work.displayTitle;
   if (!work.date) delete work.date;
   if (work.orientation === 'landscape') delete work.orientation;
+  if (work.mediaCols === 1) delete work.mediaCols;
+  if (work.mediaShape === 'landscape') delete work.mediaShape;
   if (isDraft) work.draft = true;
 
   if (isEdit) {
@@ -1813,8 +1851,9 @@ function openNewsModal() {
   document.getElementById('news-category').value = 'News';
   document.getElementById('news-title').value = '';
   document.getElementById('news-body').value = '';
-  document.getElementById('news-orientation').value = 'landscape';
   mmInit('news', []);
+  document.getElementById('news-mm-cols').value = '1';
+  document.getElementById('news-mm-shape').value = 'landscape';
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1826,8 +1865,9 @@ function editNews(i) {
   document.getElementById('news-category').value = n.category || 'News';
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-body').value = n.body || '';
-  document.getElementById('news-orientation').value = n.orientation || 'landscape';
   mmInit('news', n.media || []);
+  document.getElementById('news-mm-cols').value = String(n.mediaCols || 1);
+  document.getElementById('news-mm-shape').value = n.mediaShape || n.orientation || 'landscape';
   document.getElementById('news-modal').classList.add('open');
 }
 
@@ -1942,8 +1982,10 @@ async function saveNews() {
   const media = mmData.news.map(m => m.type === 'youtube' ? { type: 'youtube', id: m.id } : { type: m.type, src: m.src });
   if (media.length) {
     item.media = media;
-    const ori = document.getElementById('news-orientation').value || 'landscape';
-    if (ori === 'portrait') item.orientation = 'portrait';
+    const cols = parseInt(document.getElementById('news-mm-cols').value, 10) || 1;
+    const shape = document.getElementById('news-mm-shape').value || 'landscape';
+    if (cols !== 1) item.mediaCols = cols;
+    if (shape === 'portrait') item.mediaShape = 'portrait';
   }
 
   if (isEdit) {
