@@ -118,35 +118,33 @@
     /* ── メディアグリッド ── */
     .detail-media {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
       gap: 16px;
       margin-top: 28px;
     }
+    .detail-media.cols-1 { grid-template-columns: 1fr; }
+    .detail-media.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .detail-media.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .detail-media.cols-4 { grid-template-columns: repeat(4, 1fr); }
 
-    .detail-media .media-item { grid-column: span 1; }
-    .detail-media .media-item:only-child { grid-column: span 3; }
-    .detail-media.count-1 .media-item { grid-column: span 3; }
-    .detail-media.count-2 .media-item { grid-column: span 1; }
-    .detail-media.count-2 .media-item:nth-child(1) { grid-column: span 2; }
-    .detail-media.count-4 .media-item:nth-child(1) { grid-column: span 3; }
-    .detail-media.count-4 .media-item:nth-child(n+2) { grid-column: span 1; }
-    .detail-media.count-5 .media-item:nth-child(1),
-    .detail-media.count-5 .media-item:nth-child(2) { grid-column: span 1; }
+    /* 動画・YouTube は常に横幅いっぱい（1行占有） */
     .detail-media .media-item.type-video,
-    .detail-media .media-item.type-youtube { grid-column: span 3 !important; }
+    .detail-media .media-item.type-youtube { grid-column: 1 / -1; }
 
     .media-item {
       position: relative;
       overflow: hidden;
       background: #0d0d0d;
-      aspect-ratio: 1/1;
     }
-    .media-item.type-video,
-    .media-item.type-youtube { aspect-ratio: unset; }
+    /* 複数列（2〜4枚並べ）の画像は向きに応じてトリミング */
+    .detail-media:not(.cols-1) .media-item.type-image { aspect-ratio: 3 / 2; }
+    .detail-media:not(.cols-1).shape-portrait .media-item.type-image { aspect-ratio: 4 / 5; }
+    .detail-media:not(.cols-1) .media-item.type-image img { width: 100%; height: 100%; object-fit: cover; }
+    /* 1枚ずつ大きく（縦並び）の画像は自然な比率で大きく表示 */
+    .detail-media.cols-1 .media-item.type-image img { width: 100%; height: auto; }
 
     .media-item img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
+      width: 100%; display: block;
       transition: transform 0.4s ease, opacity 0.25s;
       cursor: zoom-in;
     }
@@ -194,7 +192,8 @@
     }
 
     @media (max-width: 768px) {
-      .detail-media { grid-template-columns: repeat(3, 1fr); }
+      /* スマホでは3・4枚並べは詰まりすぎるので2列に、2列はそのまま、1枚大きくは1列 */
+      .detail-media.cols-3, .detail-media.cols-4 { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ローディング */
@@ -402,22 +401,23 @@
     });
 
     // ── Media render ──
-    function renderMedia(mediaList) {
-      if (!mediaList || mediaList.length === 0) return { html: '', countClass: 'count-0' };
+    function renderMedia(mediaList, cols, shape) {
+      if (!mediaList || mediaList.length === 0) return '';
       lbItems = mediaList.filter(m => m.type === 'image' || m.type === 'video');
-      const n = mediaList.length;
-      const countClass = n === 1 ? 'count-1' : n === 2 ? 'count-2' : n === 4 ? 'count-4' : n === 5 ? 'count-5' : '';
+      const c = [1,2,3,4].includes(parseInt(cols,10)) ? parseInt(cols,10) : 1;
+      const shapeClass = shape === 'portrait' ? ' shape-portrait' : '';
       let lbIdx = 0;
-      const html = mediaList.map(item => {
+      const inner = mediaList.map(item => {
         const ci = (item.type==='image'||item.type==='video') ? lbIdx++ : -1;
         return mediaItemHTML(item, ci);
       }).join('');
-      return { html, countClass };
+      return `<div class="detail-media cols-${c}${shapeClass}">${inner}</div>`;
     }
 
     function mediaItemHTML(item, lbIdx) {
       let inner = '', typeClass = '';
       if (item.type === 'image') {
+        typeClass = 'type-image';
         inner = `<img src="${item.src}" alt="${item.caption||''}" onclick="openLightbox(${lbIdx})" loading="lazy">`;
       } else if (item.type === 'video') {
         typeClass = 'type-video';
@@ -458,7 +458,7 @@
             ${work.description ? `<p class="detail-desc">${work.description}</p>` : ''}
           </div>
 
-          ${(()=>{ const {html,countClass}=renderMedia(work.media); return `<div class="detail-media ${countClass}">${html}</div>`; })()}
+          ${renderMedia(work.media, work.mediaCols, work.mediaShape)}
         `;
       }
     }
