@@ -132,6 +132,13 @@
     .nd-blank { height: 1.4em; }
     /* 説明文内に挿入した1枚メディア */
     .detail-media.nd-inline { margin: 28px 0; max-width: 640px; }
+    /* スマホ: タイトルと本文見出しを全階層すこし小さく（PCのclampは据え置き） */
+    @media (max-width: 768px) {
+      .detail-title { font-size: 1.4rem; }
+      .nd-h1 { font-size: 1.22rem; }
+      .nd-h2 { font-size: 1.08rem; }
+      .nd-h3 { font-size: 1.0rem; }
+    }
 
     .detail-media {
       display: grid;
