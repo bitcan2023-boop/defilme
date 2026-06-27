@@ -207,21 +207,30 @@
     @media (max-width: 768px) {
       .news-page-wrap { padding: 80px 20px 60px; }
       /* タイトルをスマホ用に小さく・余白も詰める */
-      .news-page-title { font-size: 3rem; margin-bottom: 32px; }
+      .news-page-title { font-size: 2.6rem; margin-bottom: 20px; }
       /* フィルタータブのパディングを詰める */
-      .news-filter-btn { padding: 10px 16px; font-size: 0.65rem; }
+      .news-filter-btn { padding: 8px 14px; font-size: 0.64rem; }
+      .news-filter { margin-bottom: 6px; }
+      /* 1記事を「日付＋カテゴリの1行」＋「タイトル1行」の2行に圧縮し、
+         スクロールせずに多くの記事が画面に入るようにする */
       .news-row,
       a.news-row {
-        grid-template-columns: 1fr !important;
-        gap: 4px !important;
-        padding: 14px 0;
+        display: block !important;
+        grid-template-columns: none !important;
+        gap: 0 !important;
+        padding: 7px 0 !important;
         word-break: break-word;
-        align-items: start !important;
       }
-      .news-row-date { font-size: 0.7rem; }
-      .news-row-cat { font-size: 0.6rem; margin-bottom: 1px; }
-      .news-row-body { font-size: 0.82rem; }
-      .news-row-title { font-size: 0.98rem; line-height: 1.6; margin-top: 2px; }
+      .news-row-date,
+      .news-row-cat {
+        display: inline;
+        padding-top: 0;
+        vertical-align: baseline;
+      }
+      .news-row-date { font-size: 0.66rem; }
+      .news-row-cat { font-size: 0.58rem; margin-left: 8px; }
+      .news-row-body { display: block; margin-top: 0; }
+      .news-row-title { font-size: 0.9rem; line-height: 1.3; margin: 0; }
       .update-guide { padding: 28px 20px; }
     }
   </style>
