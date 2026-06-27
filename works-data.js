@@ -75,7 +75,7 @@ const WORKS_DATA = [
     title: "UIMUI 1st Single\n\"しがらみしがらむ\" Music Video",
     date: "2025-09",
     client: "UIMUI",
-    description: "[1]\nApple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\nUIMUI YouTube Official CH\nhttps://bit.ly/4ePDZiY",
+    description: "[1]\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\n## Apple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\n## UIMUI YouTube Official CH\nhttps://bit.ly/4ePDZiY",
     thumb: "しがらみMVサムネ2_2.PNG",
     displayTitle: "UIMUI - MV \"しがらみしがらむ\"",
     orientation: "portrait",
