@@ -56,6 +56,11 @@
       padding-bottom: 40px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
+    /* 直後のメディアが画像のときは説明欄下の余白を詰める（動画/YouTubeは従来の広めを維持） */
+    .detail-header.lead-image {
+      margin-bottom: 28px;
+      padding-bottom: 24px;
+    }
 
     .detail-meta {
       display: flex;
@@ -495,6 +500,9 @@
           buildLbItems(workMedia);
           const usedMedia = new Set();
           const descHTML = work.description ? renderWorkBody(work.description, workMedia, usedMedia) : '';
+          // 説明欄の直後に出る（本文に挿入されなかった）メディアの先頭が画像なら、説明欄下の余白を詰める
+          const trailing = workMedia.filter((m, i) => !usedMedia.has(i));
+          const headerLeadClass = (trailing[0] && trailing[0].type === 'image') ? ' lead-image' : '';
 
           wrap.innerHTML = `
             <a href="works.html" class="back-btn">
@@ -502,7 +510,7 @@
               Works
             </a>
 
-            <div class="detail-header">
+            <div class="detail-header${headerLeadClass}">
               <div class="detail-meta">
                 <span class="detail-cat">${subLabel(work.category, work.sub)}</span>
                 ${work.date ? `<span class="detail-date">${work.date.replace('-','.')}</span>` : ''}
