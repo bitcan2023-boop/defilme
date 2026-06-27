@@ -295,7 +295,8 @@
         /(https?:\/\/[^\s<　-鿿＀-￯（）「」【】『』、。！？…]+)/g,
         url => {
           const clean = url.replace(/[.,;:!?)'"\]]+$/, '');
-          return `<a href="${clean}" target="_blank" rel="noopener">${clean}</a>`;
+          const suffix = url.slice(clean.length); // 末尾から取り除いた文字を後ろに戻す
+          return `<a href="${clean}" target="_blank" rel="noopener">${clean}</a>${suffix}`;
         }
       );
       const lines = String(body).replace(/\r/g,'').split('\n');
