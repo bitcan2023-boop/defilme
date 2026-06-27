@@ -105,6 +105,8 @@
     .nd-h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.02em; padding-left: 14px; border-left: 3px solid var(--accent); }
     .nd-h3 { font-size: 1.06rem; font-weight: 600; color: #e6e6e6; }
     .nd-h1:first-child, .nd-h2:first-child, .nd-h3:first-child { margin-top: 0; }
+    /* 複数空行によるスペーサー */
+    .nd-blank { height: 1.4em; }
 
     .detail-media {
       margin-top: 36px;
@@ -300,7 +302,7 @@
         }
       );
       const lines = String(body).replace(/\r/g,'').split('\n');
-      let html = '', para = [];
+      let html = '', para = [], blankCount = 0;
       const flush = () => {
         if (para.length) { html += '<p>' + linkify(para.join('<br>')) + '</p>'; para = []; }
       };
@@ -308,11 +310,16 @@
         const m = line.match(/^(#{1,3})\s+(.*)$/);
         if (m) {
           flush();
+          blankCount = 0;
           const lvl = m[1].length;
           html += `<div class="nd-h${lvl}">${linkify(esc(m[2]))}</div>`;
         } else if (line.trim() === '') {
           flush();
+          blankCount++;
+          // 2行目以降の空行はスペーサーとして1行分の余白を追加
+          if (blankCount > 1) html += '<div class="nd-blank"></div>';
         } else {
+          blankCount = 0;
           para.push(esc(line));
         }
       });
@@ -397,7 +404,7 @@
           return;
         }
 
-        document.title = `${item.title} | DeFilMe`;
+        document.title = `${item.title.replace(/\n/g, ' ')} | DeFilMe`;
 
         wrap.innerHTML = `
           <a href="news.html" class="detail-back">
@@ -408,7 +415,7 @@
             <span class="detail-date">${item.date.replace(/-/g,'.')}</span>
             <span class="detail-cat">${item.category}</span>
           </div>
-          <h1 class="detail-title">${item.title}</h1>
+          <h1 class="detail-title">${item.title.replace(/\n/g, '<br>')}</h1>
           ${item.body ? `<div class="detail-body">${renderNewsBody(item.body)}</div>` : ''}
           ${mediaHTML(item)}
         `;
