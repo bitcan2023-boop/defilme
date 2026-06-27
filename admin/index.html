@@ -1898,6 +1898,7 @@ function toggleSortMode() {
 }
 
 function cancelSortMode() {
+  document.getElementById('works-list').classList.remove('sort-mode');
   renderWorks(STATE.worksData);
   document.getElementById('sort-save-bar').classList.remove('visible');
   document.getElementById('sort-toggle-btn').style.display = '';
@@ -1917,6 +1918,7 @@ async function saveSortOrder() {
   } catch(e) {
     toast('保存に失敗しました', 'error');
   }
+  list.classList.remove('sort-mode');
   renderWorks(STATE.worksData);
   document.getElementById('sort-save-bar').classList.remove('visible');
   document.getElementById('sort-toggle-btn').style.display = '';
