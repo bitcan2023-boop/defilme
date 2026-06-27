@@ -60,6 +60,53 @@ const WORKS_DATA = [
   },
 
   {
+    id: "portrait--mari-shimizu--mm-gallery-2",
+    category: "photography",
+    sub: "portrait",
+    title: "Portrait / Mari Shimizu @ MM Gallery #2",
+    date: "2026-04",
+    client: "清水麻里",
+    thumb: "DSC02316.jpg",
+    displayTitle: "Portrait / Mari Shimizu @ MM Gallery #2",
+    orientation: "portrait",
+    mediaCols: 4,
+    media: [
+        {
+            "type": "image",
+            "src": "DSC02316.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02311.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02318.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02319.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02320.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02323-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02326.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02310-2.jpg"
+        }
+    ],
+  },
+
+  {
     id: "china-town-silhouette",
     category: "photography",
     sub: "snap",
@@ -120,53 +167,6 @@ const WORKS_DATA = [
         {
             "type": "image",
             "src": "DSC01229-2.jpg"
-        }
-    ],
-  },
-
-  {
-    id: "portrait--mari-shimizu--mm-gallery-2",
-    category: "photography",
-    sub: "portrait",
-    title: "Portrait / Mari Shimizu @ MM Gallery #2",
-    date: "2026-04",
-    client: "清水麻里",
-    thumb: "DSC02316.jpg",
-    displayTitle: "Portrait / Mari Shimizu @ MM Gallery #2",
-    orientation: "portrait",
-    mediaCols: 4,
-    media: [
-        {
-            "type": "image",
-            "src": "DSC02316.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02311.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02318.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02319.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02320.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02323-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02326.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02310-2.jpg"
         }
     ],
   }
