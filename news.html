@@ -7,7 +7,6 @@
   <meta name="color-scheme" content="dark">
   <script>document.documentElement.className += ' js-fade';</script>
   <style>
-    /* htmlの黒背景は常に表示したまま、body(中身)だけフェードイン */
     html { background-color: #1e1e1e; }
     html.js-fade body { opacity: 0; }
     html.js-fade.page-ready body {
@@ -18,7 +17,6 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.documentElement.classList.add('page-ready');
-      // backdrop-filterはアニメ開始後(1s)に付与してレイヤー確保チラつきを防ぐ
       setTimeout(function() {
         var h = document.querySelector('header');
         if (h) h.classList.add('blur-ready');
@@ -43,7 +41,6 @@
       margin-bottom: 80px;
     }
 
-    /* Filter tabs */
     .news-filter {
       display: flex;
       gap: 0;
@@ -80,7 +77,6 @@
     .news-filter-btn.active { color: var(--white); }
     .news-filter-btn.active::after { transform: scaleX(1); }
 
-    /* News list */
     .news-full-list {
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
@@ -138,7 +134,6 @@
       line-height: 1.85;
     }
 
-    /* メディア（画像・動画）表示 */
     .news-media {
       margin-top: 14px;
     }
@@ -169,9 +164,6 @@
       text-align: center;
     }
 
-    /* =====================
-       HOW TO UPDATE (開発者向けメモ)
-       ===================== */
     .update-guide {
       margin-top: 80px;
       padding: 40px;
@@ -213,27 +205,30 @@
     .update-guide ol li { margin-bottom: 8px; }
 
     @media (max-width: 768px) {
-      .news-page-wrap { padding: 90px 24px 60px; }
+      .news-page-wrap { padding: 80px 20px 60px; }
+      /* タイトルをスマホ用に小さく・余白も詰める */
+      .news-page-title { font-size: 3rem; margin-bottom: 32px; }
+      /* フィルタータブのパディングを詰める */
+      .news-filter-btn { padding: 10px 16px; font-size: 0.65rem; }
       .news-row,
       a.news-row {
         grid-template-columns: 1fr !important;
-        gap: 6px !important;
-        padding: 22px 0;
+        gap: 4px !important;
+        padding: 14px 0;
         word-break: break-word;
         align-items: start !important;
       }
-      .news-row-date { font-size: 0.72rem; }
-      .news-row-cat { font-size: 0.62rem; margin-bottom: 2px; }
+      .news-row-date { font-size: 0.7rem; }
+      .news-row-cat { font-size: 0.6rem; margin-bottom: 1px; }
       .news-row-body { font-size: 0.82rem; }
-      .news-row-title { font-size: 1.02rem; line-height: 1.65; margin-top: 2px; }
+      .news-row-title { font-size: 0.98rem; line-height: 1.6; margin-top: 2px; }
       .update-guide { padding: 28px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-    <header>
+  <header>
     <a href="index.html" class="header-logo">
       <svg width="114" height="41" viewBox="0 0 162.56 58" xmlns="http://www.w3.org/2000/svg" style="display:block;" aria-label="DeFilMe"><path d="M27.72 29.96Q27.72 34.08 25.9 37.28Q24.080000000000002 40.48 20.740000000000002 42.239999999999995Q17.400000000000002 44.0 13.0 44.0H2.48V15.919999999999998H13.0Q17.44 15.919999999999998 20.76 17.68Q24.080000000000002 19.439999999999998 25.9 22.619999999999997Q27.72 25.8 27.72 29.96ZM20.76 29.96Q20.76 26.08 18.6 23.919999999999998Q16.44 21.759999999999998 12.56 21.759999999999998H9.32V38.08H12.56Q16.44 38.08 18.6 35.96Q20.76 33.84 20.76 29.96Z M52.480000000000004 34.480000000000004H37.0Q37.160000000000004 36.56 38.34 37.66Q39.52 38.76 41.24 38.76Q43.800000000000004 38.76 44.800000000000004 36.6H52.08Q51.52 38.8 50.06 40.56Q48.6 42.32 46.400000000000006 43.32Q44.2 44.32 41.480000000000004 44.32Q38.2 44.32 35.64 42.92Q33.08 41.52 31.64 38.92Q30.200000000000003 36.32 30.200000000000003 32.84Q30.200000000000003 29.36 31.62 26.759999999999998Q33.04 24.16 35.6 22.759999999999998Q38.160000000000004 21.36 41.480000000000004 21.36Q44.72 21.36 47.24 22.72Q49.760000000000005 24.08 51.18000000000001 26.599999999999998Q52.6 29.119999999999997 52.6 32.480000000000004Q52.6 33.44 52.480000000000004 34.480000000000004ZM45.6 30.68Q45.6 28.92 44.400000000000006 27.880000000000003Q43.2 26.84 41.400000000000006 26.84Q39.68 26.84 38.5 27.84Q37.32 28.84 37.04 30.68Z M74.48 15.919999999999998V21.4H63.04V27.32H71.6V32.64H63.04V44.0H56.199999999999996V15.919999999999998Z M77.44 15.68Q77.44 14.079999999999998 78.58 13.02Q79.72 11.96 81.52 11.96Q83.28 11.96 84.42 13.02Q85.56 14.079999999999998 85.56 15.68Q85.56 17.24 84.42 18.299999999999997Q83.28 19.36 81.52 19.36Q79.72 19.36 78.58 18.299999999999997Q77.44 17.24 77.44 15.68ZM84.91999999999999 21.68V44.0H78.08V21.68Z M96.72 14.399999999999999V44.0H89.88V14.399999999999999Z M133.48 15.919999999999998V44.0H126.63999999999999V27.16L120.35999999999999 44.0H114.83999999999999L108.51999999999998 27.12V44.0H101.67999999999999V15.919999999999998H109.75999999999999L117.63999999999999 35.36L125.44 15.919999999999998Z M159.32 34.480000000000004H143.83999999999997Q144.0 36.56 145.18 37.66Q146.35999999999999 38.76 148.07999999999998 38.76Q150.64 38.76 151.64 36.6H158.92Q158.35999999999999 38.8 156.89999999999998 40.56Q155.44 42.32 153.24 43.32Q151.04 44.32 148.32 44.32Q145.04 44.32 142.48 42.92Q139.92 41.52 138.48 38.92Q137.04 36.32 137.04 32.84Q137.04 29.36 138.45999999999998 26.759999999999998Q139.88 24.16 142.44 22.759999999999998Q145.0 21.36 148.32 21.36Q151.56 21.36 154.07999999999998 22.72Q156.6 24.08 158.01999999999998 26.599999999999998Q159.44 29.119999999999997 159.44 32.480000000000004Q159.44 33.44 159.32 34.480000000000004ZM152.44 30.68Q152.44 28.92 151.24 27.880000000000003Q150.04 26.84 148.23999999999998 26.84Q146.51999999999998 26.84 145.33999999999997 27.84Q144.16 28.84 143.88 30.68Z" fill="#f0f0f0"/><circle cx="86.5" cy="12" r="4.5" fill="#e8820a"/></svg>
     </a>
@@ -265,8 +260,6 @@
     </div>
   </div>
 
-
-  <!-- News Main Content -->
   <div class="news-page-wrap reveal">
     <div class="section-label" style="margin-bottom:16px;">Latest Updates</div>
     <h1 class="news-page-title">NEWS</h1>
@@ -279,8 +272,7 @@
     <div class="news-full-list" id="newsFullList"></div>
   </div>
 
-  <!-- Footer -->
-      <footer class="reveal">
+  <footer class="reveal">
     <a href="index.html" class="footer-s6-link" aria-label="TOPへ戻る">
     <svg class="footer-s6" width="180" height="120" viewBox="0 0 180 120" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(68,8)">
@@ -324,21 +316,11 @@
       const nav = document.getElementById('mobileNav');
       const openBtn = document.getElementById('hamburger');
       const closeBtn = document.getElementById('mobileNavClose');
-      function openNav() {
-        nav.classList.add('open');
-        document.body.classList.add('nav-open');
-      }
-      function closeNav() {
-        nav.classList.remove('open');
-        document.body.classList.remove('nav-open');
-      }
-      // ページ離脱/ロード時に nav-open を必ずリセット
+      function openNav() { nav.classList.add('open'); document.body.classList.add('nav-open'); }
+      function closeNav() { nav.classList.remove('open'); document.body.classList.remove('nav-open'); }
       window.addEventListener('beforeunload', () => document.body.classList.remove('nav-open'));
-      // 念のため: ページロード時に nav-open が残っていたらリセット
       document.body.classList.remove('nav-open');
-      if (openBtn) openBtn.addEventListener('click', () => {
-        nav.classList.contains('open') ? closeNav() : openNav();
-      });
+      if (openBtn) openBtn.addEventListener('click', () => nav.classList.contains('open') ? closeNav() : openNav());
       if (closeBtn) closeBtn.addEventListener('click', closeNav);
       nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
       nav.addEventListener('click', e => { if (e.target === nav) closeNav(); });
@@ -346,20 +328,6 @@
 
     let allNews = [];
     let currentCat = 'all';
-
-    function mediaHTML(item) {
-      if (!item.media) return '';
-      const src = item.media;
-      const ori = item.orientation === 'portrait' ? ' is-portrait' : '';
-      const ext = src.split('.').pop().toLowerCase();
-      if (['mp4', 'mov', 'webm'].includes(ext)) {
-        return `<div class="news-media${ori}"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
-      }
-      if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
-        return `<div class="news-media${ori}"><img src="${src}" alt="${item.title}" loading="lazy" decoding="async"></div>`;
-      }
-      return '';
-    }
 
     function renderNews() {
       const container = document.getElementById('newsFullList');
@@ -377,7 +345,7 @@
           <span class="news-row-date">${item.date.replace(/-/g,'.')}</span>
           <span class="news-row-cat">${item.category}</span>
           <div class="news-row-body">
-            <p class="news-row-title">${item.title}</p>
+            <p class="news-row-title">${item.title.replace(/\n/g, ' ')}</p>
           </div>
         </a>
       `).join('');
@@ -402,26 +370,18 @@
       });
     });
 
-    // Reveal on scroll
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(el => {
-        if (el.isIntersecting) {
-          el.target.classList.add('visible');
-          revealObserver.unobserve(el.target);
-        }
+        if (el.isIntersecting) { el.target.classList.add('visible'); revealObserver.unobserve(el.target); }
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Footer HIBIKI TAKAI: スクロールで入ったときにブラーreveal
     const footerNameEl = document.querySelector('.footer-name-reveal');
     if (footerNameEl) {
       const footerObserver = new IntersectionObserver((entries) => {
         entries.forEach(el => {
-          if (el.isIntersecting) {
-            el.target.classList.add('in-view');
-            footerObserver.unobserve(el.target);
-          }
+          if (el.isIntersecting) { el.target.classList.add('in-view'); footerObserver.unobserve(el.target); }
         });
       }, { threshold: 0.2 });
       footerObserver.observe(footerNameEl);
