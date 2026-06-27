@@ -53,5 +53,18 @@
     ],
     "mediaCols": 2,
     "mediaShape": "portrait"
+  },
+  {
+    "id": 1782545121872,
+    "date": "2025-09-15",
+    "category": "Works",
+    "title": "UIMUI 1st.Single ”しがらみしがらむ” MV公開",
+    "body": "# UIMUI 1st.シングル「しがらみしがらむ」のMusic Videoが公開されました。\n\nこちら作品ではディレクション、編集までを担当させていただいています。\n\n「しがらみしがらむ」Music Video\nApple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\nCast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\nUIMUI YouTube Official CH\nhttps://youtube.com/@uimui_official?si=qk1j_Z6cQ8cNacRO",
+    "media": [
+      {
+        "type": "youtube",
+        "id": "dxA3pSiT5II"
+      }
+    ]
   }
 ]
