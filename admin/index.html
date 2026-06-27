@@ -1147,9 +1147,9 @@
       <div class="field-group">
         <label class="field-label">カテゴリ</label>
         <select id="news-category">
-          <option value="Works">Works</option>
-          <option value="News">News</option>
           <option value="Info">Info</option>
+              <option value="Works">Works</option>
+              <option value="Event">Event</option>
         </select>
       </div>
       <div class="field-group span2">
@@ -2009,7 +2009,7 @@ function openNewsModal() {
   document.getElementById('news-edit-index').value = '';
   document.getElementById('news-modal-title').textContent = '記事を追加';
   document.getElementById('news-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('news-category').value = 'News';
+  document.getElementById('news-category').value = 'Info';
   document.getElementById('news-title').value = '';
   document.getElementById('news-body').value = '';
   mmInit('news', []);
