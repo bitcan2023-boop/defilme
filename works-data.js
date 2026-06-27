@@ -169,5 +169,23 @@ const WORKS_DATA = [
             "src": "DSC02310-2.jpg"
         }
     ],
+  },
+
+  {
+    id: "uimui-1st-single--music-video",
+    category: "videography",
+    sub: "music-video",
+    title: "UIMUI 1st Single \"感情ワンダーランド\" Music Video",
+    date: "2025-09",
+    client: "UIMUI",
+    description: "Apple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\nUIMUI YouTube Official CH\nhttps://bit.ly/4ePDZiY",
+    thumb: "しがらみMVサムネ2_2.PNG",
+    displayTitle: "UIMUI 1st Single「感情ワンダーランド」Music Video",
+    media: [
+        {
+            "type": "youtube",
+            "id": "dxA3pSiT5II"
+        }
+    ],
   }
 ];
