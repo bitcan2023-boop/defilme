@@ -105,6 +105,12 @@
     .nd-h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.02em; padding-left: 14px; border-left: 3px solid var(--accent); }
     .nd-h3 { font-size: 1.06rem; font-weight: 600; color: #e6e6e6; }
     .nd-h1:first-child, .nd-h2:first-child, .nd-h3:first-child { margin-top: 0; }
+    /* スマホ: 本文見出しを縮小し、記事タイトル(1.45rem) > H1 の差を明確にする */
+    @media (max-width: 768px) {
+      .nd-h1 { font-size: 1.2rem; }
+      .nd-h2 { font-size: 1.08rem; }
+      .nd-h3 { font-size: 1.0rem; }
+    }
     /* 複数空行によるスペーサー */
     .nd-blank { height: 1.4em; }
     .news-gallery.nd-inline { margin: 28px 0; }
