@@ -340,6 +340,36 @@
 
   .work-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
+  /* ── WORKS SORT ── */
+  .drag-handle {
+    cursor: grab;
+    color: var(--text-muted);
+    font-size: 16px;
+    padding: 0 4px;
+    flex-shrink: 0;
+    display: none;
+    user-select: none;
+    line-height: 1;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  .sort-mode .drag-handle { display: flex; align-items: center; }
+  .sort-mode .work-actions { display: none; }
+  .work-item.drag-over { border-color: var(--accent); background: var(--accent-dim); }
+  .work-item.dragging { opacity: 0.4; }
+  .sort-save-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .sort-save-bar.visible { display: flex; }
+
   /* ── NEWS LIST ── */
   .news-list { display: flex; flex-direction: column; gap: 10px; }
 
@@ -541,6 +571,14 @@
     background: var(--surface2); border: 1px solid var(--border);
     border-radius: 8px; padding: 8px 10px;
   }
+  .mm-row.mm-drag-over { border-color: var(--accent); background: var(--accent-dim); }
+  .mm-row.mm-dragging { opacity: 0.4; }
+  .mm-handle {
+    cursor: grab; color: var(--text-muted); font-size: 15px;
+    flex-shrink: 0; user-select: none; line-height: 1; padding: 0 2px;
+    display: flex; align-items: center;
+  }
+  .mm-handle:active { cursor: grabbing; }
   .mm-thumb {
     width: 64px; height: 44px; object-fit: cover; border-radius: 4px;
     background: #111; flex-shrink: 0; display: flex; align-items: center;
@@ -675,7 +713,17 @@
     <div class="section active" id="section-works">
       <div class="section-header">
         <div class="section-title">Works</div>
-        <button class="btn btn-accent" onclick="openWorkModal()">＋ 作品を追加</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" id="sort-toggle-btn" onclick="toggleSortMode()">並べ替え</button>
+          <button class="btn btn-accent" onclick="openWorkModal()">＋ 作品を追加</button>
+        </div>
+      </div>
+      <div class="sort-save-bar" id="sort-save-bar">
+        <span>☰ ドラッグして順番を変更できます</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="cancelSortMode()">キャンセル</button>
+          <button class="btn btn-accent btn-sm" onclick="saveSortOrder()">順番を保存</button>
+        </div>
       </div>
       <div class="works-list" id="works-list">
         <div class="empty-state">
@@ -1361,7 +1409,8 @@ function renderWorks(data) {
     return;
   }
   el.innerHTML = data.map((w, i) => `
-    <div class="work-item" style="${w.draft ? 'opacity:0.6' : ''}">
+    <div class="work-item" data-index="${i}" draggable="false" style="${w.draft ? 'opacity:0.6' : ''}">
+      <div class="drag-handle" title="ドラッグして並べ替え">⠿</div>
       <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
       <div class="work-info">
         <div class="work-title">${w.title || w.id} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
@@ -1377,6 +1426,7 @@ function renderWorks(data) {
       </div>
     </div>
   `).join('');
+  initDragSort();
 }
 
 function openWorkModal(editIndex) {
@@ -1664,16 +1714,52 @@ function mmRender(prefix) {
     if (m.type === 'youtube') { thumb = '<div class="mm-thumb mm-thumb-yt">▶</div>'; label = 'YouTube: ' + (m.id || ''); }
     else if (m.type === 'video') { thumb = '<div class="mm-thumb mm-thumb-vid">🎬</div>'; label = m.src || ''; }
     else { thumb = `<img class="mm-thumb" src="${m.src}" onerror="this.style.visibility='hidden'" alt="">`; label = m.src || ''; }
-    return `<div class="mm-row">
+    return `<div class="mm-row" draggable="true" data-mm-index="${i}">
+      <div class="mm-handle" title="ドラッグして並べ替え">⠿</div>
       ${thumb}
       <div class="mm-label">${i + 1}. ${label}</div>
       <div class="mm-actions">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},-1)" ${i === 0 ? 'disabled' : ''}>↑</button>
-        <button type="button" class="btn btn-ghost btn-sm" onclick="mmMove('${prefix}',${i},1)" ${i === items.length - 1 ? 'disabled' : ''}>↓</button>
         <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
       </div>
     </div>`;
   }).join('');
+  initMmDragSort(prefix);
+}
+
+// メディアリストのドラッグ並べ替え
+let _mmDragSrc = null;
+function initMmDragSort(prefix) {
+  const wrap = document.getElementById(prefix + '-mm-list');
+  if (!wrap) return;
+  const rows = wrap.querySelectorAll('.mm-row');
+  rows.forEach(row => {
+    row.addEventListener('dragstart', e => {
+      _mmDragSrc = row;
+      row.classList.add('mm-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('mm-dragging');
+      wrap.querySelectorAll('.mm-row').forEach(r => r.classList.remove('mm-drag-over'));
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (row !== _mmDragSrc) row.classList.add('mm-drag-over');
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('mm-drag-over'));
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.classList.remove('mm-drag-over');
+      if (!_mmDragSrc || _mmDragSrc === row) return;
+      const fromIdx = parseInt(_mmDragSrc.getAttribute('data-mm-index'));
+      const toIdx = parseInt(row.getAttribute('data-mm-index'));
+      const arr = mmData[prefix];
+      const [moved] = arr.splice(fromIdx, 1);
+      arr.splice(toIdx, 0, moved);
+      mmRender(prefix);
+    });
+  });
 }
 // media（配列 or レガシー文字列）を正規化して初期化
 function mmInit(prefix, media) {
@@ -1761,6 +1847,81 @@ async function deleteWork(i) {
   } catch(e) {
     toast('削除に失敗しました', 'error');
   }
+}
+
+// ── WORKS 並べ替え ──
+let _sortDragSrc = null;
+
+function initDragSort() {
+  const items = document.querySelectorAll('#works-list .work-item');
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      _sortDragSrc = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      document.querySelectorAll('#works-list .work-item').forEach(i => i.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (item !== _sortDragSrc) item.classList.add('drag-over');
+    });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      if (!_sortDragSrc || _sortDragSrc === item) return;
+      const list = document.getElementById('works-list');
+      const nodes = [...list.querySelectorAll('.work-item')];
+      const fromIdx = nodes.indexOf(_sortDragSrc);
+      const toIdx = nodes.indexOf(item);
+      if (fromIdx < toIdx) {
+        list.insertBefore(_sortDragSrc, item.nextSibling);
+      } else {
+        list.insertBefore(_sortDragSrc, item);
+      }
+    });
+  });
+}
+
+function toggleSortMode() {
+  const list = document.getElementById('works-list');
+  const bar = document.getElementById('sort-save-bar');
+  const btn = document.getElementById('sort-toggle-btn');
+  list.classList.add('sort-mode');
+  bar.classList.add('visible');
+  btn.style.display = 'none';
+  list.querySelectorAll('.work-item').forEach(item => item.setAttribute('draggable', 'true'));
+}
+
+function cancelSortMode() {
+  document.getElementById('works-list').classList.remove('sort-mode');
+  renderWorks(STATE.worksData);
+  document.getElementById('sort-save-bar').classList.remove('visible');
+  document.getElementById('sort-toggle-btn').style.display = '';
+}
+
+async function saveSortOrder() {
+  const list = document.getElementById('works-list');
+  const nodes = [...list.querySelectorAll('.work-item')];
+  const newOrder = nodes.map(node => {
+    const idx = parseInt(node.getAttribute('data-index'));
+    return STATE.worksData[idx];
+  });
+  STATE.worksData = newOrder;
+  try {
+    await commitWorks();
+    toast('並び順を保存しました', 'success');
+  } catch(e) {
+    toast('保存に失敗しました', 'error');
+  }
+  list.classList.remove('sort-mode');
+  renderWorks(STATE.worksData);
+  document.getElementById('sort-save-bar').classList.remove('visible');
+  document.getElementById('sort-toggle-btn').style.display = '';
 }
 
 async function commitWorks() {
