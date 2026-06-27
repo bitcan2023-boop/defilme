@@ -94,7 +94,7 @@ const WORKS_DATA = [
     title: "UIMUI - MV \"感情ワンダーランド\"",
     date: "2025-12",
     client: "UIMUI",
-    description: "UIMUI 2nd.Single「感情ワンダーランド」Music Video\n\nCast：UIMUI\ndirection：KURO\nedit：HIBIKI\nshooti：Your Photography\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\nApple Music,Spotify,etc 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\nUIMUI YouTube Official CH\nhttps://bit.ly/4v4Eko3",
+    description: "[1]\nUIMUI 2nd.Single「感情ワンダーランド」Music Video\n\nCast：UIMUI\ndirection：KURO\nedit：HIBIKI\nshooti：Your Photography\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\nApple Music,Spotify,etc 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\nUIMUI YouTube Official CH\nhttps://bit.ly/4v4Eko3",
     thumb: "kanjo-wonderland.png",
     displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
     orientation: "portrait",
