@@ -184,7 +184,10 @@
     }
     @media (max-width: 768px) {
       .works-header { padding: 80px 24px 48px; }
-      .works-grid { padding: 32px 24px 80px; grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+      .works-grid { padding: 32px 24px 80px; grid-template-columns: repeat(2, 1fr); gap: 30px 12px; }
+      /* スマホ: キャプションを自分の画像に密着させ、次カードとの間隔（row-gap 30px）で
+         どの画像の見出しか一目で分かるようにする。 */
+      .work-item-info { padding: 6px 0 0; }
       /* スマホ: フィルターは横スクロールだと隠れたカテゴリが分かりにくいため、
          折り返して全カテゴリを一目で見せる（中央寄せ）。 */
       .filter-top {
