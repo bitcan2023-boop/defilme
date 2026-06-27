@@ -107,6 +107,7 @@
     .nd-h1:first-child, .nd-h2:first-child, .nd-h3:first-child { margin-top: 0; }
     /* 複数空行によるスペーサー */
     .nd-blank { height: 1.4em; }
+    .news-gallery.nd-inline { margin: 28px 0; }
 
     .detail-media {
       margin-top: 36px;
@@ -288,8 +289,11 @@
       nav.addEventListener('click', e => { if (e.target === nav) closeNav(); });
     })();
 
-    // 本文を見出し(#/##/###)・段落・リンクに変換
-    function renderNewsBody(body) {
+    // 本文を見出し(#/##/###)・段落・リンク・[n]画像トークンに変換
+    // mediaArr: メディア配列 / used: 本文中に挿入したメディアの添字を記録するSet
+    function renderNewsBody(body, mediaArr, used) {
+      mediaArr = mediaArr || [];
+      used = used || new Set();
       const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       // URLを自動リンク化。CJK・全角文字・日本語括弧をURLに含めないよう除外し、
       // 末尾の記号（.,;:!?)'"）も取り除く
@@ -307,6 +311,15 @@
         if (para.length) { html += '<p>' + linkify(para.join('<br>')) + '</p>'; para = []; }
       };
       lines.forEach(line => {
+        // 行が [数字] だけの場合、その番号のメディアを本文中のこの位置に挿入する
+        const im = line.match(/^\s*\[(\d+)\]\s*$/);
+        if (im) {
+          flush();
+          blankCount = 0;
+          const idx = parseInt(im[1], 10) - 1;
+          if (mediaArr[idx]) { html += renderOneMedia(mediaArr[idx]); used.add(idx); }
+          return;
+        }
         const m = line.match(/^(#{1,3})\s+(.*)$/);
         if (m) {
           flush();
@@ -316,7 +329,7 @@
         } else if (line.trim() === '') {
           flush();
           blankCount++;
-          // 2行目以降の空行はスペーサーとして1行分の余白を追加
+          // 2行目以降の空行はスペーサーとして1行分の余白を追加（空行の数だけ余白が増える）
           if (blankCount > 1) html += '<div class="nd-blank"></div>';
         } else {
           blankCount = 0;
@@ -336,24 +349,33 @@
       }
       return [];
     }
-    function mediaHTML(item) {
-      const arr = normalizeNewsMedia(item.media);
-      if (!arr.length) return '';
+    // メディア1件のセルHTML（ギャラリー・インライン共通）
+    function renderMediaCell(m) {
+      if (m.type === 'youtube') {
+        const id = m.id || m.src || '';
+        return `<div class="ng-item type-youtube"><div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe></div></div>`;
+      }
+      const src = m.src || '';
+      const ext = String(src).split('.').pop().toLowerCase();
+      if (m.type === 'video' || ['mp4','mov','webm'].includes(ext)) {
+        return `<div class="ng-item type-video"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
+      }
+      return `<div class="ng-item type-image"><img src="${src}" alt="" loading="lazy" data-lightbox="${src}"></div>`;
+    }
+    // 本文中に1枚だけ挿入する（1カラム）
+    function renderOneMedia(m) {
+      return `<div class="news-gallery cols-1 nd-inline">${renderMediaCell(m)}</div>`;
+    }
+    // 本文で使われなかったメディアだけを末尾ギャラリーとして表示
+    function mediaHTML(item, mediaArr, used) {
+      const arr = mediaArr || normalizeNewsMedia(item.media);
+      used = used || new Set();
+      const remaining = arr.filter((m, i) => !used.has(i));
+      if (!remaining.length) return '';
       const c = [1,2,3,4].includes(parseInt(item.mediaCols,10)) ? parseInt(item.mediaCols,10) : 1;
       const shape = item.mediaShape || item.orientation;
       const shapeClass = shape === 'portrait' ? ' shape-portrait' : '';
-      const cells = arr.map(m => {
-        if (m.type === 'youtube') {
-          const id = m.id || m.src || '';
-          return `<div class="ng-item type-youtube"><div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${id}" allowfullscreen loading="lazy"></iframe></div></div>`;
-        }
-        const src = m.src || '';
-        const ext = String(src).split('.').pop().toLowerCase();
-        if (m.type === 'video' || ['mp4','mov','webm'].includes(ext)) {
-          return `<div class="ng-item type-video"><video controls playsinline preload="metadata"><source src="${src}"></video></div>`;
-        }
-        return `<div class="ng-item type-image"><img src="${src}" alt="${item.title}" loading="lazy" data-lightbox="${src}"></div>`;
-      }).join('');
+      const cells = remaining.map(renderMediaCell).join('');
       return `<div class="news-gallery cols-${c}${shapeClass}">${cells}</div>`;
     }
 
@@ -404,6 +426,10 @@
           return;
         }
 
+        const mediaArr = normalizeNewsMedia(item.media);
+        const usedMedia = new Set();
+        const bodyHTML = item.body ? renderNewsBody(item.body, mediaArr, usedMedia) : '';
+
         document.title = `${item.title.replace(/\n/g, ' ')} | DeFilMe`;
 
         wrap.innerHTML = `
@@ -416,8 +442,8 @@
             <span class="detail-cat">${item.category}</span>
           </div>
           <h1 class="detail-title">${item.title.replace(/\n/g, '<br>')}</h1>
-          ${item.body ? `<div class="detail-body">${renderNewsBody(item.body)}</div>` : ''}
-          ${mediaHTML(item)}
+          ${bodyHTML ? `<div class="detail-body">${bodyHTML}</div>` : ''}
+          ${mediaHTML(item, mediaArr, usedMedia)}
         `;
       })
       .catch(() => {
