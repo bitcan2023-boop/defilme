@@ -1049,7 +1049,14 @@
       </div>
       <div class="field-group span2">
         <label class="field-label">説明文</label>
-        <textarea id="work-description" placeholder="作品の説明文"></textarea>
+        <div class="editor-toolbar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',1)" title="大見出し">見出し大 (H1)</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',2)" title="中見出し">見出し中 (H2)</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',3)" title="小見出し">見出し小 (H3)</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',0)" title="本文に戻す">本文</button>
+        </div>
+        <textarea id="work-description" style="min-height:140px" placeholder="作品の説明文。&#10;見出しにしたい行にカーソルを置き、上のボタンを押すと見出しになります。&#10;（行頭に # / ## / ### が付きます）"></textarea>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.7;">行頭の <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">#</code>=大見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">##</code>=中見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">###</code>=小見出し。改行はそのまま反映され、空行を入れるほど余白が広がります。<br>📷 <b>画像を説明文の途中に入れたい場合：</b>下の「メディア」で追加したあと、各メディアの「<b>本文に挿入</b>」ボタンを押すと、カーソル位置に <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[1]</code> のような番号が入ります。その位置にその番号の画像が表示されます（手入力で <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[2]</code> のように書いてもOK）。説明文に挿入しなかったメディアは、これまで通り最後にまとめて表示されます。</div>
       </div>
       <div class="field-group span2">
         <label class="field-label">サムネイル画像 <span style="color:var(--danger)">*</span></label>
@@ -1721,7 +1728,7 @@ function mmRender(prefix) {
       ${thumb}
       <div class="mm-label">${i + 1}. ${label}</div>
       <div class="mm-actions">
-        ${prefix === 'news' ? `<button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsMediaToken(${i + 1})" title="本文のカーソル位置にこのメディアを挿入">本文に挿入</button>` : ''}
+        ${(prefix === 'news' || prefix === 'work') ? `<button type="button" class="btn btn-ghost btn-sm" onclick="insertMediaToken('${prefix}',${i + 1})" title="本文のカーソル位置にこのメディアを挿入">本文に挿入</button>` : ''}
         <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
       </div>
     </div>`;
@@ -2076,6 +2083,46 @@ function insertNewsMediaToken(n) {
   const pos = start + token.length;
   ta.focus();
   ta.setSelectionRange(pos, pos);
+}
+
+// 汎用：prefix（'work' or 'news'）に応じた本文テキストエリアの取得
+function bodyTextareaFor(prefix) {
+  return document.getElementById(prefix === 'work' ? 'work-description' : 'news-body');
+}
+
+// 汎用：本文のカーソル位置に画像トークン [n] を単独行で挿入
+function insertMediaToken(prefix, n) {
+  const ta = bodyTextareaFor(prefix);
+  if (!ta) return;
+  const start = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+  const end   = (ta.selectionEnd   != null) ? ta.selectionEnd   : ta.value.length;
+  const before = ta.value.slice(0, start);
+  const after  = ta.value.slice(end);
+  const lead = (before === '' || before.endsWith('\n')) ? '' : '\n';
+  const token = lead + '[' + n + ']\n';
+  ta.value = before + token + after;
+  const pos = start + token.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
+}
+
+// 汎用：任意の本文テキストエリアでカーソル行を見出し化（level 1-3）/ 本文化（level 0）
+function insertHeading(taId, level) {
+  const ta = document.getElementById(taId);
+  if (!ta) return;
+  const val = ta.value;
+  const pos = ta.selectionStart;
+  let lineStart = val.lastIndexOf('\n', pos - 1) + 1;
+  let lineEnd = val.indexOf('\n', pos);
+  if (lineEnd === -1) lineEnd = val.length;
+  let line = val.slice(lineStart, lineEnd);
+  const stripped = line.replace(/^#{1,3}\s+/, '');
+  const prefix = level > 0 ? ('#'.repeat(level) + ' ') : '';
+  const newLine = prefix + stripped;
+  ta.value = val.slice(0, lineStart) + newLine + val.slice(lineEnd);
+  const newPos = lineStart + newLine.length;
+  ta.focus();
+  ta.setSelectionRange(newPos, newPos);
 }
 
 // NEWS メディア種別の切り替え
