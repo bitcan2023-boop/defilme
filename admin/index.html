@@ -1005,7 +1005,8 @@
     <div class="form-grid">
       <div class="field-group span2">
         <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
-        <input type="text" id="work-title" placeholder="感情ワンダーランド">
+        <textarea id="work-title" rows="2" placeholder="感情ワンダーランド（改行で複数行にできます）" style="min-height:44px;resize:vertical;line-height:1.5;"></textarea>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">タイトル内で <b>Enter（改行）</b> を押すと、その位置でタイトルが折り返されます。</div>
       </div>
       <div class="field-group">
         <label class="field-label">ID（URL用）<span style="color:var(--danger)">*</span></label>
@@ -1154,7 +1155,8 @@
       </div>
       <div class="field-group span2">
         <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
-        <input type="text" id="news-title" placeholder="記事タイトル">
+        <textarea id="news-title" rows="2" placeholder="記事タイトル（改行で複数行にできます）" style="min-height:44px;resize:vertical;line-height:1.5;"></textarea>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">タイトル内で <b>Enter（改行）</b> を押すと、その位置でタイトルが折り返されます。</div>
       </div>
       <div class="field-group span2">
         <label class="field-label">本文</label>
@@ -1165,7 +1167,7 @@
           <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(0)" title="本文に戻す">本文</button>
         </div>
         <textarea id="news-body" style="min-height:140px" placeholder="記事の本文。&#10;見出しにしたい行にカーソルを置き、上のボタンを押すと見出しになります。&#10;（行頭に # / ## / ### が付きます）"></textarea>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">行頭の <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">#</code>=大見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">##</code>=中見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">###</code>=小見出し。空行で段落が分かれます。</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.7;">行頭の <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">#</code>=大見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">##</code>=中見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">###</code>=小見出し。空行を入れるほど余白が広がります。<br>📷 <b>画像を本文の途中に入れたい場合：</b>下の「メディア」で追加したあと、各メディアの「<b>本文に挿入</b>」ボタンを押すと、カーソル位置に <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[1]</code> のような番号が入ります。その位置にその番号の画像が表示されます（手入力で <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[2]</code> のように書いてもOK）。本文に挿入しなかったメディアは、これまで通り記事の最後にまとめて表示されます。</div>
       </div>
 
       <div class="field-group span2" style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
@@ -1413,7 +1415,7 @@ function renderWorks(data) {
       <div class="drag-handle" title="ドラッグして並べ替え">⠿</div>
       <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
       <div class="work-info">
-        <div class="work-title">${w.title || w.id} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
+        <div class="work-title">${(w.title || w.id).replace(/\n/g, ' ')} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
         <div class="work-meta">
           <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${w.category}</span>
           <span>${w.sub || ''}</span>
@@ -1719,6 +1721,7 @@ function mmRender(prefix) {
       ${thumb}
       <div class="mm-label">${i + 1}. ${label}</div>
       <div class="mm-actions">
+        ${prefix === 'news' ? `<button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsMediaToken(${i + 1})" title="本文のカーソル位置にこのメディアを挿入">本文に挿入</button>` : ''}
         <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
       </div>
     </div>`;
@@ -1993,8 +1996,8 @@ function renderNews(data) {
     <div class="news-item">
       <div class="news-date">${n.date}</div>
       <div class="news-info">
-        <div class="news-title">${n.title}</div>
-        <div class="news-body">${n.body || ''}</div>
+        <div class="news-title">${(n.title || '').replace(/\n/g, ' ')}</div>
+        <div class="news-body">${(n.body || '').replace(/\n/g, ' ')}</div>
       </div>
       <div class="work-actions">
         <span class="badge">${n.category || ''}</span>
@@ -2023,7 +2026,7 @@ function editNews(i) {
   document.getElementById('news-edit-index').value = i;
   document.getElementById('news-modal-title').textContent = '記事を編集';
   document.getElementById('news-date').value = n.date || '';
-  document.getElementById('news-category').value = n.category || 'News';
+  document.getElementById('news-category').value = n.category || 'Info';
   document.getElementById('news-title').value = n.title || '';
   document.getElementById('news-body').value = n.body || '';
   mmInit('news', n.media || []);
@@ -2056,6 +2059,23 @@ function insertNewsHeading(level) {
   const newPos = lineStart + newLine.length;
   ta.focus();
   ta.setSelectionRange(newPos, newPos);
+}
+
+// 本文のカーソル位置に画像トークン [n] を挿入（メディアn番目を本文中のその位置に表示）
+function insertNewsMediaToken(n) {
+  const ta = document.getElementById('news-body');
+  if (!ta) return;
+  const start = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+  const end   = (ta.selectionEnd   != null) ? ta.selectionEnd   : ta.value.length;
+  const before = ta.value.slice(0, start);
+  const after  = ta.value.slice(end);
+  // 直前が改行でなければ改行を補って、トークンを必ず単独行にする
+  const lead = (before === '' || before.endsWith('\n')) ? '' : '\n';
+  const token = lead + '[' + n + ']\n';
+  ta.value = before + token + after;
+  const pos = start + token.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
 }
 
 // NEWS メディア種別の切り替え
