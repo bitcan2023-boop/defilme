@@ -109,6 +109,24 @@
       letter-spacing: 0.02em;
       max-width: 640px;
     }
+    .detail-desc p { margin: 0 0 1.4em; }
+    .detail-desc a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(232,130,10,0.4); word-break: break-all; }
+    .detail-desc a:hover { border-bottom-color: var(--accent); }
+    /* 説明文内の見出し（CMSで # / ## / ### を選択） */
+    .nd-h1, .nd-h2, .nd-h3 {
+      font-family: var(--font-mincho);
+      color: var(--white);
+      line-height: 1.5;
+      margin: 1.8em 0 0.7em;
+    }
+    .nd-h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.02em; }
+    .nd-h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.02em; padding-left: 14px; border-left: 3px solid var(--accent); }
+    .nd-h3 { font-size: 1.06rem; font-weight: 600; color: #e6e6e6; }
+    .nd-h1:first-child, .nd-h2:first-child, .nd-h3:first-child { margin-top: 0; }
+    /* 複数空行によるスペーサー */
+    .nd-blank { height: 1.4em; }
+    /* 説明文内に挿入した1枚メディア */
+    .detail-media.nd-inline { margin: 28px 0; max-width: 640px; }
 
     .detail-media {
       display: grid;
@@ -338,6 +356,10 @@
     let lbItems = [];
     let lbIndex = 0;
 
+    function buildLbItems(mediaList) {
+      lbItems = (mediaList || []).filter(m => m.type === 'image' || m.type === 'video');
+    }
+
     function openLightbox(idx) {
       lbIndex = idx;
       updateLightbox();
@@ -376,20 +398,25 @@
       if (e.key === 'ArrowRight') lbNext();
     });
 
-    function renderMedia(mediaList, cols, shape) {
+    function renderMedia(mediaList, cols, shape, used) {
+      used = used || new Set();
       if (!mediaList || mediaList.length === 0) return '';
-      lbItems = mediaList.filter(m => m.type === 'image' || m.type === 'video');
+      const remaining = mediaList.filter((m, i) => !used.has(i));
+      if (!remaining.length) return '';
       const c = [1,2,3,4].includes(parseInt(cols,10)) ? parseInt(cols,10) : 1;
       const shapeClass = shape === 'portrait' ? ' shape-portrait' : '';
-      let lbIdx = 0;
-      const inner = mediaList.map(item => {
-        const ci = (item.type==='image'||item.type==='video') ? lbIdx++ : -1;
-        return mediaItemHTML(item, ci);
-      }).join('');
+      const inner = remaining.map(item => mediaItemHTML(item)).join('');
       return `<div class="detail-media cols-${c}${shapeClass}">${inner}</div>`;
     }
 
-    function mediaItemHTML(item, lbIdx) {
+    // 説明文内に1枚だけ挿入（1カラム）
+    function renderOneWorkMedia(item) {
+      return `<div class="detail-media cols-1 nd-inline">${mediaItemHTML(item)}</div>`;
+    }
+
+    function mediaItemHTML(item) {
+      // ライトボックス番号は画像・動画のみ通し番号（全メディア共通）
+      const lbIdx = (item.type === 'image' || item.type === 'video') ? lbItems.indexOf(item) : -1;
       let inner = '', typeClass = '';
       if (item.type === 'image') {
         typeClass = 'type-image';
@@ -402,6 +429,53 @@
         inner = `<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${item.id}" allowfullscreen loading="lazy"></iframe></div>`;
       }
       return `<div class="media-item ${typeClass}">${inner}</div>`;
+    }
+
+    // 説明文を見出し(#/##/###)・段落・リンク・[n]画像トークンに変換
+    function renderWorkBody(body, mediaArr, used) {
+      mediaArr = mediaArr || [];
+      used = used || new Set();
+      const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const linkify = s => s.replace(
+        /(https?:\/\/[^\s<　-鿿＀-￯（）「」【】『』、。！？…]+)/g,
+        url => {
+          const clean = url.replace(/[.,;:!?)'"\]]+$/, '');
+          const suffix = url.slice(clean.length);
+          return `<a href="${clean}" target="_blank" rel="noopener">${clean}</a>${suffix}`;
+        }
+      );
+      const lines = String(body).replace(/\r/g,'').split('\n');
+      let html = '', para = [], blankCount = 0;
+      const flush = () => {
+        if (para.length) { html += '<p>' + linkify(para.join('<br>')) + '</p>'; para = []; }
+      };
+      lines.forEach(line => {
+        // 行が [数字] だけの場合、その番号のメディアを説明文中のこの位置に挿入
+        const im = line.match(/^\s*\[(\d+)\]\s*$/);
+        if (im) {
+          flush();
+          blankCount = 0;
+          const idx = parseInt(im[1], 10) - 1;
+          if (mediaArr[idx]) { html += renderOneWorkMedia(mediaArr[idx]); used.add(idx); }
+          return;
+        }
+        const m = line.match(/^(#{1,3})\s+(.*)$/);
+        if (m) {
+          flush();
+          blankCount = 0;
+          const lvl = m[1].length;
+          html += `<div class="nd-h${lvl}">${linkify(esc(m[2]))}</div>`;
+        } else if (line.trim() === '') {
+          flush();
+          blankCount++;
+          if (blankCount > 1) html += '<div class="nd-blank"></div>';
+        } else {
+          blankCount = 0;
+          para.push(esc(line));
+        }
+      });
+      flush();
+      return html;
     }
 
     (async () => {
@@ -417,6 +491,11 @@
           // タイトルの改行をスペースに変換（<title>タグ用）
           document.title = `${work.title.replace(/\n/g, ' ')} — DeFilMe`;
 
+          const workMedia = work.media || [];
+          buildLbItems(workMedia);
+          const usedMedia = new Set();
+          const descHTML = work.description ? renderWorkBody(work.description, workMedia, usedMedia) : '';
+
           wrap.innerHTML = `
             <a href="works.html" class="back-btn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -430,10 +509,10 @@
               </div>
               <h1 class="detail-title">${work.title.replace(/\n/g, '<br>')}</h1>
               ${work.client ? `<p class="detail-client">Client: ${work.client}</p>` : ''}
-              ${work.description ? `<p class="detail-desc">${work.description}</p>` : ''}
+              ${descHTML ? `<div class="detail-desc">${descHTML}</div>` : ''}
             </div>
 
-            ${renderMedia(work.media, work.mediaCols, work.mediaShape)}
+            ${renderMedia(workMedia, work.mediaCols, work.mediaShape, usedMedia)}
           `;
         }
       }
