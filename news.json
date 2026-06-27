@@ -30,5 +30,24 @@
     ],
     "mediaCols": 2,
     "mediaShape": "portrait"
+  },
+  {
+    "id": 1782541530889,
+    "date": "2026-04-25",
+    "category": "Works",
+    "title": "The World in Yokohama 2026 — Portraits #2",
+    "body": "# The World in Yokohama 2026\n@みなとみらいMMギャラリーにて\nNATSUMIさん（https://www.instagram.com/natt.tttsu?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==）を撮影させていただきました。\n\nその他の写真はWORKSページ内PHOTOGRAPHY/PORTRAITにも掲載しています。\n→https://defilme.com/works",
+    "media": [
+      {
+        "type": "image",
+        "src": "DSC02362.jpg"
+      },
+      {
+        "type": "image",
+        "src": "DSC02367-2.jpg"
+      }
+    ],
+    "mediaCols": 2,
+    "mediaShape": "portrait"
   }
 ]
