@@ -188,5 +188,23 @@ const WORKS_DATA = [
             "src": "DSC02310-2.jpg"
         }
     ],
+  },
+
+  {
+    id: "---",
+    category: "videography",
+    sub: "live-shoot",
+    title: "工藤優 - 二十世紀最期少女漂流記",
+    date: "2026-05",
+    client: "工藤優",
+    description: "# 工藤優 - 二十世紀最期少女漂流記\n\n2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
+    thumb: "DSC02705.JPG",
+    displayTitle: "工藤優 - 二十世紀最期少女漂流記",
+    media: [
+        {
+            "type": "youtube",
+            "id": "I3u_-JD6sUI"
+        }
+    ],
   }
 ];
