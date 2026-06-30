@@ -220,6 +220,11 @@ const WORKS_DATA = [
     thumb: "DSC02721.JPG",
     displayTitle: "工藤優 - Victim!",
     orientation: "portrait",
-    media: [],
+    media: [
+        {
+            "type": "youtube",
+            "id": "LB32PyFHDJc"
+        }
+    ],
   }
 ];
