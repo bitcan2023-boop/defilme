@@ -212,7 +212,7 @@ const WORKS_DATA = [
   {
     id: "---victim",
     category: "videography",
-    sub: "music-video",
+    sub: "live-shoot",
     title: "工藤優 - Victim!",
     date: "2026-05",
     client: "工藤優",
