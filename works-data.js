@@ -198,7 +198,7 @@ const WORKS_DATA = [
     date: "2026-05",
     client: "工藤優",
     description: "2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\n\nshoot & edit：HIBIKI TAKAI\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
-    thumb: "DSC02705.JPG",
+    thumb: "二十世紀最期少女漂流記.png",
     displayTitle: "工藤優 - 二十世紀最期少女漂流記",
     orientation: "portrait",
     media: [
