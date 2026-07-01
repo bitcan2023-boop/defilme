@@ -262,7 +262,7 @@ const WORKS_DATA = [
     media: [
         {
             "type": "youtube",
-            "id": "LB32PyFHDJc"
+            "id": "B_D3_1OadiM"
         },
         {
             "type": "youtube",
