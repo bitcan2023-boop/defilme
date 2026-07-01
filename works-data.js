@@ -257,6 +257,7 @@ const WORKS_DATA = [
     description: "比較的落ち着いた平日の夕暮れ時\n雨の横浜中華街\nふらっとカメラを持って街を覗いてみました\n\n[1][2]\n\nshoot & edit：HIBIKI TAKAI（DeFilMe）\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2",
     thumb: "雨の中華街_サムネ.png",
     displayTitle: "【SNAP SHOOT】雨の中華街 ｜ FADE INTO JAPAN",
+    orientation: "portrait",
     media: [
         {
             "type": "youtube",
