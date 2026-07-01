@@ -258,6 +258,7 @@ const WORKS_DATA = [
     thumb: "雨の中華街_サムネ.png",
     displayTitle: "【SNAP SHOOT】雨の中華街｜FADE INTO JAPAN",
     orientation: "portrait",
+    mediaCols: 2,
     media: [
         {
             "type": "youtube",
