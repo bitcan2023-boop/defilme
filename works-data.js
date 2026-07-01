@@ -226,5 +226,24 @@ const WORKS_DATA = [
             "id": "LB32PyFHDJc"
         }
     ],
+  },
+
+  {
+    id: "---",
+    category: "videography",
+    sub: "live-shoot",
+    title: "工藤優 - 嫌いな世界",
+    date: "2026-05",
+    client: "工藤優",
+    description: "2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\nshoot & edit：HIBIKI TAKAI\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
+    thumb: "嫌いな世界.png",
+    displayTitle: "工藤優 - 嫌いな世界",
+    orientation: "portrait",
+    media: [
+        {
+            "type": "youtube",
+            "id": "LB32PyFHDJc"
+        }
+    ],
   }
 ];
