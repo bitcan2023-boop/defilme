@@ -12,7 +12,7 @@ const WORKS_DATA = [
     client: "SideWinDer",
     description: "# SideWinDer Presents\n【TMCP×TOMIROCK】@川越DEPARTURE\n\n2026年7月4日に行われたSideWinDer企画\"TMCP×TOMIROCK\"のイベント映像を制作させていただきました。\n\n\ncamera：sony α7siii\nlens：sony fe24-70m f/2.8 gm2\nmic：audio-technica ATV-SG1\nedited with final cut pro",
     thumb: "サムネ_5.jpg",
-    displayTitle: "SideWinDer Presents “TMCP×TOMICOCK”",
+    displayTitle: "SideWinDer Presents “TMCP×TOMIROCK”",
     orientation: "portrait",
     media: [
         {
