@@ -4,6 +4,25 @@
 
 const WORKS_DATA = [
   {
+    id: "sidewinder-presents-tmcptomicockdepartur",
+    category: "videography",
+    sub: "live-shoot",
+    title: "SideWinDer Presents “TMCP×TOMICOCK”＠川越Departure 2026.07.04",
+    date: "2026-07",
+    client: "SideWinDer",
+    description: "# SideWinDer Presents\n【TMCP×TOMIROCK】@川越DEPARTURE\n\n2026年7月4日に行われたSideWinDer企画\"TMCP×TOMIROCK\"のイベント映像を制作させていただきました。\n\n\ncamera：sony α7siii\nlens：sony fe24-70m f/2.8 gm2\nmic：audio-technica ATV-SG1\nedited with final cut pro",
+    thumb: "サムネ_5.jpg",
+    displayTitle: "SideWinDer Presents “TMCP×TOMICOCK”",
+    orientation: "portrait",
+    media: [
+        {
+            "type": "youtube",
+            "id": "TksgSVzjKiA"
+        }
+    ],
+  },
+
+  {
     id: "china-town-silhouette",
     category: "photography",
     sub: "snap",
@@ -267,25 +286,6 @@ const WORKS_DATA = [
         {
             "type": "youtube",
             "id": "rAOcpwDWRU4"
-        }
-    ],
-  },
-
-  {
-    id: "sidewinder-presents-tmcptomicockdepartur",
-    category: "videography",
-    sub: "live-shoot",
-    title: "SideWinDer Presents “TMCP×TOMICOCK”＠川越Departure 2026.07.04",
-    date: "2026-07",
-    client: "SideWinDer",
-    description: "# SideWinDer Presents\n【TMCP×TOMIROCK】@川越DEPARTURE\n\n2026年7月4日に行われたSideWinDer企画\"TMCP×TOMIROCK\"のイベント映像を制作させていただきました。\n\n\ncamera：sony α7siii\nlens：sony fe24-70m f/2.8 gm2\nmic：audio-technica ATV-SG1\nedited with final cut pro",
-    thumb: "サムネ_5.jpg",
-    displayTitle: "SideWinDer Presents “TMCP×TOMICOCK”",
-    orientation: "portrait",
-    media: [
-        {
-            "type": "youtube",
-            "id": "TksgSVzjKiA"
         }
     ],
   }
