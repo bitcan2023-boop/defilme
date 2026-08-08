@@ -11,7 +11,7 @@ const WORKS_DATA = [
     date: "2026-07",
     client: "SideWinDer",
     description: "# SideWinDer Presents\n【TMCP×TOMIROCK】@川越DEPARTURE\n\n2026年7月4日に行われたSideWinDer企画\"TMCP×TOMIROCK\"のイベント映像を制作させていただきました。\n\n\ncamera：sony α7siii\nlens：sony fe24-70m f/2.8 gm2\nmic：audio-technica ATV-SG1\nedited with final cut pro",
-    thumb: "サムネ_5.jpg",
+    thumb: "TMCP_works_4x5.jpg",
     displayTitle: "SideWinDer Presents “TMCP×TOMIROCK”",
     orientation: "portrait",
     media: [
@@ -95,7 +95,7 @@ const WORKS_DATA = [
     date: "2025-09",
     client: "UIMUI",
     description: "[1]\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\n\n## Apple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\n## UIMUI YouTube Official CH\nhttps://bit.ly/4ePDZiY",
-    thumb: "しがらみMVサムネ2_2.PNG",
+    thumb: "しがらみMVサムネ2_2.jpg",
     displayTitle: "UIMUI - MV \"しがらみしがらむ\"",
     orientation: "portrait",
     media: [
@@ -114,7 +114,7 @@ const WORKS_DATA = [
     date: "2025-12",
     client: "UIMUI",
     description: "[1]\n\nCast：UIMUI\ndirection：KURO\nedit：HIBIKI\nshooti：Your Photography\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\n\n## Apple Music,Spotify,etc 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\n## UIMUI YouTube Official CH\nhttps://bit.ly/4v4Eko3",
-    thumb: "kanjo-wonderland.png",
+    thumb: "kanjo-wonderland.jpg",
     displayTitle: "UIMUI - MV \"感情ワンダーランド\"",
     orientation: "portrait",
     media: [
@@ -217,7 +217,7 @@ const WORKS_DATA = [
     date: "2026-05",
     client: "工藤優",
     description: "2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\n\nshoot & edit：HIBIKI TAKAI\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
-    thumb: "二十世紀最期少女漂流記.png",
+    thumb: "二十世紀最期少女漂流記.jpg",
     displayTitle: "工藤優 - 二十世紀最期少女漂流記",
     orientation: "portrait",
     media: [
@@ -236,7 +236,7 @@ const WORKS_DATA = [
     date: "2026-05",
     client: "工藤優",
     description: "2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\n\nshoot & edit：HIBIKI TAKAI\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
-    thumb: "Victim_サムネ.png",
+    thumb: "Victim_サムネ.jpg",
     displayTitle: "工藤優 - Victim!",
     orientation: "portrait",
     media: [
@@ -255,7 +255,7 @@ const WORKS_DATA = [
     date: "2026-05",
     client: "工藤優",
     description: "2026.05.02 大宮ヒソミネでのライブを撮影させていただきました。\n[1]\nshoot & edit：HIBIKI TAKAI\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\nmic：Audio-Technica ATV-SG1\n\n### アーティスト情報はこちら\n工藤優：https://lit.link/kudoyuu",
-    thumb: "嫌いな世界.png",
+    thumb: "嫌いな世界.jpg",
     displayTitle: "工藤優 - 嫌いな世界",
     orientation: "portrait",
     media: [
@@ -274,7 +274,7 @@ const WORKS_DATA = [
     date: "2026-05",
     client: "china town",
     description: "比較的落ち着いた平日の夕暮れ時\n雨の横浜中華街\nふらっとカメラを持って街を覗いてみました\n\n[1]\n\n\n[2]\n\n\nshoot & edit：HIBIKI TAKAI（DeFilMe）\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2",
-    thumb: "雨の中華街_サムネ.png",
+    thumb: "雨の中華街_サムネ.jpg",
     displayTitle: "【SNAP SHOOT】雨の中華街｜FADE INTO JAPAN",
     orientation: "portrait",
     mediaCols: 2,
