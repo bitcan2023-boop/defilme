@@ -142,3 +142,10 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 .claude/
+
+# macOS（Finderが作る隠しファイル。サイトには無関係）
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
