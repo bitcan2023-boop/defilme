@@ -258,7 +258,12 @@ const WORKS_DATA = [
     thumb: "嫌いな世界.jpg",
     displayTitle: "工藤優 - 嫌いな世界",
     orientation: "portrait",
-    media: [],
+    media: [
+        {
+            "type": "youtube",
+            "id": "RqnVv1bGmbw"
+        }
+    ],
   },
 
   {
