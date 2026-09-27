@@ -248,7 +248,7 @@ const WORKS_DATA = [
   },
 
   {
-    id: "---",
+    id: "kudoyuu-kiraina-sekai",
     category: "videography",
     sub: "live-shoot",
     title: "工藤優 - 嫌いな世界",
