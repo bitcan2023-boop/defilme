@@ -91,7 +91,8 @@ macOSはファイル名をNFD（分解形）で保持することがあり、リ
 | `works.html` / `work-detail.html` | 作品一覧・詳細 |
 | `news.html` / `news-detail.html` | ニュース |
 | `works-data.js` / `news.json` | **CMSが生成。手で書き換えるときは競合に注意** |
-| `admin.html`, `admin/` | CMS本体 |
+| `admin.html` | CMS本体（`/admin` で開くのはこれ）。**管理画面の修正はこのファイルだけ** |
+| `admin/index.html` | `/admin/`（末尾スラッシュ）で開かれたときに `admin.html` へ転送するだけ。2026-09-28 までは同じ中身のコピーで、片方だけ直す事故が起きたため転送に変えた。コードを戻さない |
 | `style.css` | 共通スタイル |
 | `CNAME`, `.nojekyll` | GitHub Pages設定。触らない |
 
