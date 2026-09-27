@@ -229,7 +229,7 @@ const WORKS_DATA = [
   },
 
   {
-    id: "---victim",
+    id: "kudoyuu-victim",
     category: "videography",
     sub: "live-shoot",
     title: "工藤優 - Victim!",
