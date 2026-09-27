@@ -1440,6 +1440,7 @@ function renderWorks(data) {
 
 function openWorkModal(editIndex) {
   document.getElementById('work-edit-index').value = '';
+  resetWorkIdAuto();
   document.getElementById('work-modal-title').textContent = '作品を追加';
   document.getElementById('work-title').value = '';
   document.getElementById('work-id').value = '';
@@ -1795,6 +1796,26 @@ async function saveWork(isDraft = false) {
   const thumb = document.getElementById('work-thumb').value.trim();
 
   if (!id || !title || !thumb) { toast('ID・タイトル・サムネイルは必須です', 'error'); return; }
+
+  // IDのチェック（作品ページのURLに使われるので、空・重複は保存させない）
+  if (!workIdIsValid(id)) {
+    toast('IDには英数字を1文字以上入れてください（例: kudoyuu-kiraina-sekai）', 'error');
+    document.getElementById('work-id').focus();
+    return;
+  }
+  const dup = STATE.worksData.find((w, i) => w.id === id && (!isEdit || i !== parseInt(editIdx)));
+  if (dup) {
+    toast(`このID「${id}」は「${dup.title}」で使われています。別のIDにしてください`, 'error');
+    document.getElementById('work-id').focus();
+    return;
+  }
+  if (isEdit) {
+    const oldId = STATE.worksData[parseInt(editIdx)].id;
+    if (oldId && oldId !== id &&
+        !confirm(`IDを「${oldId}」から「${id}」に変えると、この作品のページのURLも変わります。\n（前のURLを共有していた場合、そのリンクは開けなくなります）\n\n変更してよろしいですか？`)) {
+      return;
+    }
+  }
 
   // Collect media（統一マネージャ）
   const media = mmData.work.map(m => m.type === 'youtube' ? { type: 'youtube', id: m.id } : { type: m.type, src: m.src });
@@ -2432,16 +2453,59 @@ function toast(msg, type='success') {
   toastTimer = setTimeout(() => el.className = '', 3500);
 }
 
-// Auto-generate ID from title
+// Auto-generate ID from title（新規作成時のみ。編集中の作品のIDはURLが変わるので触らない）
+// 日本語だけのタイトルは英数字が残らず「---」のような同じIDになってしまうため、
+// その場合は「work-日付-乱数」を1回だけ作って使う。既存の作品と重なる場合は -2, -3… を付ける。
+let workIdTouched = false;   // IDを手で入力したら、以後はタイトルから上書きしない
+let workIdFallback = '';     // この作品用に作った予備のID（入力のたびに変わらないよう保持）
+
+function resetWorkIdAuto() {
+  workIdTouched = false;
+  workIdFallback = '';
+}
+
+function workIdIsValid(id) {
+  return /[a-z0-9]/i.test(id);
+}
+
+function uniqueWorkId(base) {
+  const taken = new Set(STATE.worksData.map(w => w.id));
+  if (!taken.has(base)) return base;
+  let n = 2;
+  while (taken.has(`${base}-${n}`)) n++;
+  return `${base}-${n}`;
+}
+
+function makeFallbackWorkId() {
+  const d = new Date();
+  const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  const rand = Math.random().toString(36).slice(2, 6).padEnd(4, '0');
+  return uniqueWorkId(`work-${ymd}-${rand}`);
+}
+
+function workIdFromTitle(title) {
+  const slug = title
+    .normalize('NFKC')              // 全角英数字 → 半角
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9_\-]/g, '')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40)
+    .replace(/-+$/, '');
+  if (workIdIsValid(slug)) return uniqueWorkId(slug);
+  if (!workIdFallback) workIdFallback = makeFallbackWorkId();
+  return workIdFallback;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('work-id')?.addEventListener('input', () => {
+    workIdTouched = true;
+  });
   document.getElementById('work-title')?.addEventListener('input', e => {
-    if (!document.getElementById('work-edit-index').value) {
-      document.getElementById('work-id').value = e.target.value
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]/g, '')
-        .slice(0, 40);
-    }
+    if (document.getElementById('work-edit-index').value) return;
+    if (workIdTouched) return;
+    document.getElementById('work-id').value = e.target.value.trim() ? workIdFromTitle(e.target.value) : '';
   });
 });
 
