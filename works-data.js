@@ -210,7 +210,7 @@ const WORKS_DATA = [
   },
 
   {
-    id: "---",
+    id: "kudoyuu-nijyuseikisaigosyoujyohyouryuki",
     category: "videography",
     sub: "live-shoot",
     title: "工藤優 - 二十世紀最期少女漂流記",
