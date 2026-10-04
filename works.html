@@ -385,7 +385,8 @@
       `).join('');
     }
 
-    buildGrid(WORKS_DATA);
+    // 下書き（draft: true）の作品は一覧に出さない
+    buildGrid(WORKS_DATA.filter(w => !w.draft));
 
     const topBtns = document.querySelectorAll('.filter-btn');
     const subPhoto = document.getElementById('sub-photography');
