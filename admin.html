@@ -2021,10 +2021,10 @@ function renderNews(data) {
   }
   const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
   el.innerHTML = sorted.map((n, i) => `
-    <div class="news-item">
+    <div class="news-item" style="${n.draft ? 'opacity:0.6' : ''}">
       <div class="news-date">${n.date}</div>
       <div class="news-info">
-        <div class="news-title">${(n.title || '').replace(/\n/g, ' ')}</div>
+        <div class="news-title">${(n.title || '').replace(/\n/g, ' ')} ${n.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
         <div class="news-body">${(n.body || '').replace(/\n/g, ' ')}</div>
       </div>
       <div class="work-actions">
@@ -2213,7 +2213,7 @@ async function handleNewsMediaFile(file) {
   uploading.style.display = 'none';
 }
 
-async function saveNews() {
+async function saveNews(isDraft = false) {
   const editIdx = document.getElementById('news-edit-index').value;
   const isEdit = editIdx !== '';
 
@@ -2228,6 +2228,7 @@ async function saveNews() {
     title,
     body: document.getElementById('news-body').value.trim(),
   };
+  if (isDraft) item.draft = true;   // 下書きはサイトに出さない（index / news / news-detail で除外）
   const media = mmData.news.map(m => m.type === 'youtube' ? { type: 'youtube', id: m.id } : { type: m.type, src: m.src });
   if (media.length) {
     item.media = media;
@@ -2246,7 +2247,7 @@ async function saveNews() {
   setSaving('news', true);
   try {
     await commitNews();
-    toast('保存して公開しました ✓', 'success');
+    toast(isDraft ? '下書きとして保存しました（サイトには出ません）✓' : '保存して公開しました ✓', 'success');
     closeNewsModal();
     renderNews(STATE.newsData);
   } catch(e) {
@@ -2514,14 +2515,39 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─────────────────────────────────────
 // INQUIRIES
 // ─────────────────────────────────────
+// 問い合わせは個人情報なので、公開リポジトリ（サイト本体）ではなく
+// 非公開リポジトリ defilme-private に保存する（2026-10-04 に移動）。
+// サイト本体に置くと https://defilme.com/inquiries.json で誰でも読めてしまうため。
 const INQPATH = 'inquiries.json';
+const INQ_REPO = 'defilme-private';
+let inqBlocked = false;   // 非公開リポジトリを読めないときは保存もしない（空で上書きしないため）
+
+function inqUrl() {
+  return `repos/${STATE.owner}/${INQ_REPO}/contents/${INQPATH}`;
+}
+
+async function getInqFile() {
+  const res = await ghGet(inqUrl());
+  if (!res.ok) return null;
+  return res.json();
+}
 
 async function loadInquiries() {
   const el = document.getElementById('inq-list');
   if (!el) return;
   el.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">読み込み中...</div></div>';
+  // まず非公開リポジトリにアクセスできるか確認（カギの権限が足りないと読めない）
+  const repoRes = await ghGet(`repos/${STATE.owner}/${INQ_REPO}`);
+  if (!repoRes.ok) {
+    inqBlocked = true;
+    STATE.inqData = []; STATE.inqSHA = '';
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔒</div><div class="empty-state-text">問い合わせの保存先（非公開リポジトリ「${INQ_REPO}」）を開けませんでした。<br>ログイン用のアクセストークンが、このリポジトリも使えるようになっているか確認してください。</div></div>`;
+    updateInqStats();
+    return;
+  }
+  inqBlocked = false;
   try {
-    const f = await ghGetFile(INQPATH);
+    const f = await getInqFile();
     STATE.inqData = f ? JSON.parse(decodeURIComponent(escape(atob(f.content.replace(/\n/g,''))))) : [];
     STATE.inqSHA = f ? f.sha : '';
   } catch(e) { STATE.inqData = []; STATE.inqSHA = ''; }
@@ -2614,15 +2640,16 @@ async function deleteInq(id) {
   renderInquiries();
 }
 async function saveInquiries(msg) {
+  if (inqBlocked) { toast('問い合わせの保存先を開けないため、保存できません', 'error'); return; }
   setSaving(true);
   try {
-    const latest = await ghGetFile(INQPATH);
+    const latest = await getInqFile();
     const sha = latest ? latest.sha : undefined;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(STATE.inqData||[], null, 2))));
     const body = { message: msg || 'update: inquiries', content };
     if (sha) body.sha = sha;
     const res = await fetch(
-      `https://api.github.com/repos/${STATE.owner}/${STATE.repo}/contents/${INQPATH}`,
+      `https://api.github.com/${inqUrl()}`,
       { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) }
     );
     if (res.ok) { toast('保存しました', 'success'); }

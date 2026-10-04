@@ -419,6 +419,7 @@
     fetch('news.json')
       .then(r => r.json())
       .then(data => {
+        data = data.filter(n => !n.draft);   // 下書きのお知らせはサイトに出さない
         const item = data.find(n => String(n.id) === String(targetId));
         const wrap = document.getElementById('detailWrap');
 

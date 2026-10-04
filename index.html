@@ -890,6 +890,7 @@
     fetch('news.json')
       .then(r => r.json())
       .then(data => {
+        data = data.filter(n => !n.draft);   // 下書きのお知らせはサイトに出さない
         const container = document.getElementById('newsListTop');
         const items = [...data].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,3);
         if (items.length === 0) {

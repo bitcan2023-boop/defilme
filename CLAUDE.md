@@ -92,6 +92,7 @@ macOSはファイル名をNFD（分解形）で保持することがあり、リ
 | `news.html` / `news-detail.html` | ニュース |
 | `works-data.js` / `news.json` | **CMSが生成。手で書き換えるときは競合に注意** |
 | `admin.html` | CMS本体（`/admin` で開くのはこれ）。**管理画面の修正はこのファイルだけ** |
+| 問い合わせ（`inquiries.json`） | **非公開リポジトリ `bitcan2023-boop/defilme-private` に置く**（2026-10-04 に移動）。公開リポジトリに置くと `defilme.com/inquiries.json` で誰でも読めるため。管理画面の「問い合わせ」はそちらを読み書きする。ローカルは `~/Documents/GitHub/defilme-private`。過去の版はこのリポジトリの履歴に残っている |
 | `admin/index.html` | `/admin/`（末尾スラッシュ）で開かれたときに `admin.html` へ転送するだけ。2026-09-28 までは同じ中身のコピーで、片方だけ直す事故が起きたため転送に変えた。コードを戻さない |
 | `style.css` | 共通スタイル |
 | `CNAME`, `.nojekyll` | GitHub Pages設定。触らない |

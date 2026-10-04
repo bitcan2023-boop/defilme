@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 .LSOverride
 Icon?
 ._*
+
+# 問い合わせ（個人情報）は非公開リポジトリ defilme-private に置く。ここには絶対に置かない
+inquiries.json
