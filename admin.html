@@ -6,21 +6,33 @@
 <title>DeFilMe CMS</title>
 <link rel="icon" type="image/svg+xml" href="https://defilme.com/f3-dark.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="https://defilme.com/f3-dark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <style>
-
+  /* ── 色・文字（白ベース。2026-10 に黒ベースから変更） ── */
   :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface2: #1c1c1c;
-    --border: #2a2a2a;
+    --bg: #f4f4f1;
+    --surface: #ffffff;
+    --surface2: #f7f7f4;
+    --border: #e3e3de;
+    --border-strong: #cfcfc8;
     --accent: #e8820a;
-    --accent-dim: rgba(232,130,10,0.12);
-    --text: #e8e8e8;
-    --text-muted: #666;
-    --text-dim: #999;
-    --danger: #e84a4a;
-    --success: #4ae89a;
-    --font: 'Poppins', sans-serif;
+    --accent-ink: #b45f00;          /* 白地に置く文字用（オレンジのままだと薄い） */
+    --accent-dim: rgba(232,130,10,0.09);
+    --text: #1f1f22;
+    --text-light: #3a3a3f;
+    --text-dim: #55555c;
+    --text-muted: #85858c;
+    --danger: #d33a3a;
+    --danger-dim: rgba(211,58,58,0.08);
+    --success: #1f9d55;
+    --info: #2f6fd6;
+    --shadow: 0 1px 2px rgba(20,20,20,0.04), 0 2px 8px rgba(20,20,20,0.04);
+    --shadow-lg: 0 12px 40px rgba(20,20,20,0.18);
+    --font: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+    --font-logo: 'Poppins', var(--font);
+    --radius: 10px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,11 +42,20 @@
     color: var(--text);
     font-family: var(--font);
     font-size: 14px;
+    line-height: 1.6;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ── FONTS ── */
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+  a { color: inherit; }
+  code {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 0.92em;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0 5px;
+    border-radius: 4px;
+  }
 
   /* ── LOGIN ── */
   #login-screen {
@@ -47,114 +68,137 @@
 
   .login-box {
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 36px 32px 32px;
   }
 
   .login-logo {
+    font-family: var(--font-logo);
     font-size: 22px;
     font-weight: 600;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     color: var(--text);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .login-logo span { color: var(--accent); }
 
   .login-sub {
-    color: var(--text-muted);
-    font-size: 12px;
-    margin-bottom: 40px;
-    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 28px;
   }
 
   .field-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 6px;
     display: block;
   }
+  .field-label .req {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--danger);
+    background: var(--danger-dim);
+    padding: 1px 6px;
+    border-radius: 4px;
+    vertical-align: 1px;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.6;
+  }
 
-  .field-group { margin-bottom: 20px; }
+  .field-group { margin-bottom: 18px; }
 
-  input[type="text"], input[type="password"], input[type="date"],
+  input[type="text"], input[type="password"], input[type="date"], input[type="email"],
   input[type="month"], textarea, select {
     width: 100%;
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
     color: var(--text);
     font-family: var(--font);
-    font-size: 13px;
-    padding: 10px 14px;
+    font-size: 14px;
+    padding: 10px 12px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
+  input[readonly] { background: var(--surface2); color: var(--text-dim); }
+  input::placeholder, textarea::placeholder { color: #aaaab0; }
 
   input:focus, textarea:focus, select:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(232,130,10,0.15);
   }
 
-  textarea { resize: vertical; min-height: 80px; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.7; }
 
   .btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 6px;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: 8px;
     font-family: var(--font);
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    border: none;
-    transition: opacity 0.2s, transform 0.1s;
+    border: 1px solid transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
   }
 
-  .btn:active { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .btn-primary {
     background: var(--accent);
     color: #fff;
     width: 100%;
-    justify-content: center;
     padding: 12px;
+    font-size: 15px;
   }
-
-  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:hover:not(:disabled) { background: #d97700; }
 
   .btn-ghost {
-    background: transparent;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-light);
+    border-color: var(--border-strong);
   }
+  .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); background: var(--surface2); }
 
-  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+  .btn-outline-accent {
+    background: var(--surface);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+  }
+  .btn-outline-accent:hover:not(:disabled) { background: var(--accent-dim); }
 
   .btn-danger {
     background: transparent;
     color: var(--danger);
-    border: 1px solid transparent;
-    padding: 6px 12px;
-    font-size: 12px;
+    border-color: transparent;
+    padding: 6px 10px;
+    font-size: 13px;
   }
+  .btn-danger:hover { background: var(--danger-dim); }
 
-  .btn-danger:hover { border-color: var(--danger); }
+  .btn-sm { padding: 6px 12px; font-size: 13px; }
 
-  .btn-sm {
-    padding: 6px 14px;
-    font-size: 12px;
-  }
-
-  .btn-accent {
-    background: var(--accent);
-    color: #fff;
-  }
-
-  .btn-accent:hover:not(:disabled) { opacity: 0.88; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover:not(:disabled) { background: #d97700; }
 
   /* ── APP SHELL ── */
   #app { display: none; }
@@ -162,88 +206,103 @@
   .topbar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 52px;
+    height: 56px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 20px 0 24px;
     z-index: 100;
   }
 
   .topbar-logo {
-    font-size: 14px;
+    font-family: var(--font-logo);
+    font-size: 15px;
     font-weight: 600;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     color: var(--text);
   }
-
   .topbar-logo span { color: var(--accent); }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  .topbar-logo small {
+    margin-left: 10px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
   }
 
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+
   .status-dot {
-    width: 6px; height: 6px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--text-muted);
     display: inline-block;
   }
-
   .status-dot.ok { background: var(--success); }
 
   .sidebar {
     position: fixed;
-    top: 52px; left: 0; bottom: 0;
-    width: 200px;
+    top: 56px; left: 0; bottom: 0;
+    width: 216px;
     background: var(--surface);
     border-right: 1px solid var(--border);
-    padding: 16px 0;
+    padding: 18px 12px;
     overflow-y: auto;
   }
 
   .nav-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     color: var(--text-muted);
-    text-transform: uppercase;
-    padding: 8px 20px 6px;
+    padding: 10px 12px 6px;
   }
 
   .nav-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 20px;
+    padding: 9px 12px;
+    margin-bottom: 2px;
+    border-radius: 8px;
     color: var(--text-dim);
     cursor: pointer;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     transition: color 0.15s, background 0.15s;
-    border-left: 2px solid transparent;
     user-select: none;
   }
-
   .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent-ink); background: var(--accent-dim); font-weight: 600; }
 
-  .nav-item.active {
-    color: var(--accent);
-    border-left-color: var(--accent);
-    background: var(--accent-dim);
+  .nav-icon { width: 18px; height: 18px; flex-shrink: 0; display: inline-flex; }
+  .nav-icon svg { width: 18px; height: 18px; }
+  .nav-count {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
   }
 
-  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
-
   .main {
-    margin-left: 200px;
-    margin-top: 52px;
-    padding: 32px;
-    min-height: calc(100vh - 52px);
+    margin-left: 216px;
+    margin-top: 56px;
+    padding: 32px 36px 64px;
+    min-height: calc(100vh - 56px);
+    max-width: 1280px;
   }
 
   /* ── SECTION ── */
@@ -252,155 +311,210 @@
 
   .section-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 28px;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
   }
 
   .section-title {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
   }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .section-actions { display: flex; gap: 8px; }
 
   /* ── CARDS ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px;
+    border-radius: var(--radius);
+    padding: 22px 24px;
     margin-bottom: 16px;
+    box-shadow: var(--shadow);
   }
 
   .card-title {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 20px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
   }
+  .card-title code { font-weight: 400; margin-left: 6px; }
 
-  /* ── WORKS LIST ── */
-  .works-list { display: flex; flex-direction: column; gap: 10px; }
+  /* ── WORKS（カード型グリッド） ── */
+  .works-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 18px;
+  }
 
   .work-item {
-    background: var(--surface2);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 18px;
+    border-radius: var(--radius);
+    overflow: hidden;
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+    position: relative;
   }
+  .work-item:hover { border-color: var(--border-strong); box-shadow: 0 6px 20px rgba(20,20,20,0.08); transform: translateY(-2px); }
+  .work-item.is-draft .work-thumb { opacity: 0.55; }
 
+  .work-thumb-wrap { position: relative; background: #ececE8; aspect-ratio: 4 / 5; overflow: hidden; }
   .work-thumb {
-    width: 64px; height: 40px;
-    border-radius: 4px;
+    width: 100%; height: 100%;
     object-fit: cover;
-    background: var(--border);
-    flex-shrink: 0;
+    display: block;
+  }
+  .work-thumb-wrap .badge.draft {
+    position: absolute; top: 10px; left: 10px;
+    background: #fff; box-shadow: var(--shadow);
   }
 
-  .work-info { flex: 1; min-width: 0; }
+  .work-info { padding: 12px 14px 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 
   .work-title {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 3px;
-    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
   }
 
   .work-meta {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-muted);
     display: flex;
-    gap: 10px;
+    gap: 6px 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: auto;
   }
+
+  .work-edit-hint {
+    position: absolute; right: 10px; top: 10px;
+    background: rgba(255,255,255,0.95);
+    color: var(--text);
+    font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 6px;
+    box-shadow: var(--shadow);
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .work-item:hover .work-edit-hint { opacity: 1; }
 
   .badge {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
+    padding: 3px 9px;
     border-radius: 100px;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    line-height: 1;
-    background: var(--surface);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: var(--surface2);
     border: 1px solid var(--border);
     color: var(--text-dim);
+    white-space: nowrap;
   }
+  .badge.video { background: #eaf1fd; border-color: #d3e1fa; color: #2559b0; }
+  .badge.photo { background: #f3ecfd; border-color: #e3d4fa; color: #6b33b5; }
+  .badge.draft { background: #fff4e3; border-color: #f6d9a8; color: #a35a00; }
 
-  .badge.video { border-color: #4a7ee8; color: #4a7ee8; }
-  .badge.photo { border-color: #9a4ae8; color: #9a4ae8; }
-  .badge.draft { border-color: #e8a00a; color: #e8a00a; }
-
-  .work-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .work-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
 
   /* ── WORKS SORT ── */
   .drag-handle {
-    cursor: grab;
-    color: var(--text-muted);
-    font-size: 16px;
-    padding: 0 4px;
-    flex-shrink: 0;
     display: none;
-    user-select: none;
-    line-height: 1;
+    position: absolute; inset: 0;
+    align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.0);
+    cursor: grab;
+    z-index: 2;
+  }
+  .drag-handle span {
+    background: rgba(31,31,34,0.78); color: #fff;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px;
   }
   .drag-handle:active { cursor: grabbing; }
-  .sort-mode .drag-handle { display: flex; align-items: center; }
-  .sort-mode .work-actions { display: none; }
-  .work-item.drag-over { border-color: var(--accent); background: var(--accent-dim); }
+  .sort-mode .work-item { cursor: grab; }
+  .sort-mode .drag-handle { display: flex; }
+  .sort-mode .work-edit-hint { display: none; }
+  .work-item.drag-over { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,130,10,0.25); }
   .work-item.dragging { opacity: 0.4; }
   .sort-save-bar {
     display: none;
     align-items: center;
     justify-content: space-between;
-    background: var(--accent-dim);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    padding: 12px 18px;
-    margin-bottom: 12px;
-    font-size: 13px;
-    color: var(--accent);
+    gap: 12px;
+    background: #fff8ee;
+    border: 1px solid #f6d9a8;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #7a4500;
+    flex-wrap: wrap;
   }
   .sort-save-bar.visible { display: flex; }
 
   /* ── NEWS LIST ── */
-  .news-list { display: flex; flex-direction: column; gap: 10px; }
+  .news-list {
+    display: flex; flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
 
   .news-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 18px;
+    padding: 16px 20px;
     display: flex;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: center;
+    gap: 18px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
   }
+  .news-item:last-child { border-bottom: none; }
+  .news-item:hover { background: var(--surface2); }
 
   .news-date {
-    font-size: 11px;
-    color: var(--text-muted);
+    font-size: 13px;
+    color: var(--text-dim);
     white-space: nowrap;
     flex-shrink: 0;
-    padding-top: 2px;
+    font-variant-numeric: tabular-nums;
+    width: 92px;
   }
+  .news-cat { flex-shrink: 0; width: 88px; }
 
   .news-info { flex: 1; min-width: 0; }
 
   .news-title {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
   .news-body {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
@@ -411,10 +525,45 @@
   .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 0 16px;
   }
-
   .form-grid .span2 { grid-column: span 2; }
+
+  /* 編集画面のまとまり */
+  .form-section {
+    padding: 22px 0 6px;
+    border-top: 1px solid var(--border);
+  }
+  .form-section:first-of-type { border-top: none; padding-top: 4px; }
+  .form-section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 700; color: var(--text);
+    margin-bottom: 14px;
+  }
+  .form-section-title .step {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-dim); color: var(--accent-ink);
+    font-size: 12px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .form-section-title small { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+
+  details.help {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    line-height: 1.8;
+  }
+  details.help summary { cursor: pointer; font-weight: 600; color: var(--text-light); }
+  details.help[open] summary { margin-bottom: 6px; }
+
+  .editor-toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .editor-toolbar .btn { font-weight: 500; }
 
   /* ── HERO ── */
   .hero-preview {
@@ -427,85 +576,102 @@
     border: 1px solid var(--border);
   }
 
+  .hero-mode-option {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; font-size: 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px; flex: 1;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .hero-mode-option:has(input:checked) { border-color: var(--accent); background: var(--accent-dim); }
+
   .upload-zone {
-    border: 2px dashed var(--border);
-    border-radius: 8px;
-    padding: 40px;
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius);
+    padding: 28px 20px;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
+    background: var(--surface2);
+    transition: border-color 0.15s, background 0.15s;
   }
-
   .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-dim); }
-  .upload-zone-icon { font-size: 32px; margin-bottom: 12px; }
-  .upload-zone-text { color: var(--text-dim); font-size: 13px; }
-  .upload-zone-sub { color: var(--text-muted); font-size: 11px; margin-top: 4px; }
+  .upload-zone-icon { margin-bottom: 8px; color: var(--text-muted); display: flex; justify-content: center; }
+  .upload-zone-icon svg { width: 28px; height: 28px; }
+  .upload-zone-text { color: var(--text-light); font-size: 14px; font-weight: 600; }
+  .upload-zone-sub { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
 
   /* ── MODAL ── */
   .modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(25,25,28,0.45);
     z-index: 200;
     align-items: center;
     justify-content: center;
     padding: 24px;
   }
-
   .modal-overlay.open { display: flex; }
 
   .modal {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
+    border-radius: 14px;
     width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-width: 720px;
+    max-height: calc(100vh - 48px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
   }
+  .modal-body { padding: 20px 28px 8px; overflow-y: auto; flex: 1; }
 
   .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
   }
-
-  .modal-title { font-size: 16px; font-weight: 600; }
+  .modal-title { font-size: 18px; font-weight: 700; }
 
   .modal-close {
     background: none;
     border: none;
     color: var(--text-muted);
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     line-height: 1;
-    padding: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
   }
-
-  .modal-close:hover { color: var(--text); }
+  .modal-close:hover { color: var(--text); background: var(--surface2); }
 
   .modal-footer {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 10px;
-    margin-top: 24px;
-    padding-top: 20px;
+    padding: 14px 28px;
     border-top: 1px solid var(--border);
+    background: var(--surface2);
+    flex-shrink: 0;
   }
+  .modal-footer .footer-left { margin-right: auto; }
 
   /* ── TOAST ── */
   #toast {
     position: fixed;
     bottom: 24px;
     right: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 10px;
     padding: 12px 18px;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
     z-index: 999;
     transform: translateY(80px);
     opacity: 0;
@@ -513,33 +679,35 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    max-width: 320px;
+    max-width: 380px;
+    box-shadow: var(--shadow-lg);
+    border-left: 4px solid var(--text-muted);
   }
-
   #toast.show { transform: translateY(0); opacity: 1; }
-  #toast.success { border-color: var(--success); }
-  #toast.error { border-color: var(--danger); }
+  #toast.success { border-left-color: #3ccf7e; }
+  #toast.error { border-left-color: #ff6b6b; background: #3a1d1d; }
 
   /* ── MISC ── */
   .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
   .empty-state {
+    grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
     color: var(--text-muted);
   }
-
-  .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state-text { font-size: 13px; }
+  .empty-state-icon { font-size: 36px; margin-bottom: 10px; }
+  .empty-state-text { font-size: 14px; }
 
   .spinner {
     display: inline-block;
     width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.35);
     border-top-color: #fff;
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
   }
+  .btn-ghost .spinner, .img-uploading .spinner { border-color: rgba(0,0,0,0.12); border-top-color: var(--accent); }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -553,22 +721,20 @@
     padding: 10px 12px;
     margin-bottom: 8px;
   }
-
   .media-item-row select, .media-item-row input { margin: 0; }
-
   .media-item-row .btn-danger { margin-left: auto; flex-shrink: 0; }
-
   #media-rows .media-row-type { width: 110px; flex-shrink: 0; }
   #media-rows .media-row-src { flex: 1; }
 
   /* ── 統一メディアマネージャ ── */
+  .mm-type { margin-bottom: 10px; }
   .mm-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .mm-empty { font-size: 12px; color: var(--text-muted); padding: 8px 2px; }
-  .mm-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .mm-empty { font-size: 13px; color: var(--text-muted); padding: 8px 2px; }
+  .mm-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
   @media (max-width: 560px) { .mm-settings { grid-template-columns: 1fr; } }
   .mm-row {
     display: flex; align-items: center; gap: 12px;
-    background: var(--surface2); border: 1px solid var(--border);
+    background: var(--surface); border: 1px solid var(--border);
     border-radius: 8px; padding: 8px 10px;
   }
   .mm-row.mm-drag-over { border-color: var(--accent); background: var(--accent-dim); }
@@ -580,43 +746,42 @@
   }
   .mm-handle:active { cursor: grabbing; }
   .mm-thumb {
-    width: 64px; height: 44px; object-fit: cover; border-radius: 4px;
-    background: #111; flex-shrink: 0; display: flex; align-items: center;
+    width: 64px; height: 44px; object-fit: cover; border-radius: 6px;
+    background: var(--surface2); flex-shrink: 0; display: flex; align-items: center;
     justify-content: center; font-size: 18px; color: var(--text-muted);
   }
-  .mm-thumb-yt { background: rgba(232,130,10,0.15); color: var(--accent); }
-  .mm-thumb-vid { background: rgba(255,255,255,0.06); }
-  .mm-label { flex: 1; font-size: 12px; color: var(--text-light); word-break: break-all; line-height: 1.5; }
+  .mm-thumb-yt { background: #fdecea; color: #d33a3a; }
+  .mm-thumb-vid { background: var(--surface2); }
+  .mm-label { flex: 1; font-size: 13px; color: var(--text-light); word-break: break-all; line-height: 1.5; }
   .mm-actions { display: flex; gap: 4px; flex-shrink: 0; }
   .mm-actions .btn { padding: 5px 9px; }
-  .upload-zone.drag { border-color: var(--accent); background: rgba(232,130,10,0.06); }
 
   /* ── IMAGE UPLOAD ── */
   .img-upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 6px;
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius);
     padding: 16px;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    margin-top: 8px;
+    background: var(--surface2);
+    transition: border-color 0.15s, background 0.15s;
   }
   .img-upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
-  .img-upload-area.has-image { border-style: solid; border-color: var(--accent); }
+  .img-upload-area.has-image { border-style: solid; border-color: var(--accent); background: var(--surface); }
   .img-upload-preview {
-    width: 100%; max-height: 120px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 8px;
+    width: auto; max-width: 100%; max-height: 220px;
+    object-fit: contain;
+    border-radius: 6px;
+    margin: 0 auto 10px;
     display: none;
   }
-  .img-upload-label { font-size: 12px; color: var(--text-muted); }
-  .img-upload-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .img-upload-label { font-size: 14px; font-weight: 600; color: var(--text-light); }
+  .img-upload-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
   .img-uploading {
     display: none;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-muted);
     margin-top: 8px;
   }
@@ -629,21 +794,47 @@
     flex-shrink: 0;
   }
 
-
   /* ── INQUIRIES ── */
   .inq-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
-  .inq-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
-  .inq-stat .num { font-size: 24px; font-weight: 700; margin-bottom: 2px; }
-  .inq-stat .lbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .inq-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: var(--shadow); }
+  .inq-stat .num { font-size: 26px; font-weight: 700; margin-bottom: 2px; }
+  .inq-stat .lbl { font-size: 12px; font-weight: 600; color: var(--text-dim); }
   .inq-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-  .inq-tab { padding: 9px 18px; font-size: 11px; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+  .inq-tab { padding: 9px 16px; font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
   .inq-tab:hover { color: var(--text); }
-  .inq-tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .inq-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.15s; }
-  .inq-card:hover { border-color: #3a3a3a; }
+  .inq-tab.active { color: var(--text); font-weight: 700; border-bottom-color: var(--accent); }
+  .inq-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; box-shadow: var(--shadow); transition: border-color 0.15s; }
+  .inq-card:hover { border-color: var(--border-strong); }
   .inq-card-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; cursor: pointer; }
   .inq-card-detail { display: none; padding: 0 18px 16px; border-top: 1px solid var(--border); padding-top: 14px; }
 
+  /* ── スマホ・狭い画面 ── */
+  @media (max-width: 760px) {
+    .topbar { padding: 0 12px; }
+    .topbar-logo small, .topbar-status { display: none; }
+    .sidebar {
+      top: auto; bottom: 0; width: auto; right: 0;
+      height: 62px; padding: 6px 4px;
+      display: flex; justify-content: space-around;
+      border-right: none; border-top: 1px solid var(--border);
+      z-index: 100;
+    }
+    .nav-label { display: none; }
+    .nav-item { flex-direction: column; gap: 2px; font-size: 11px; padding: 6px 8px; margin: 0; }
+    .nav-count { display: none; }
+    .nav-badge { position: absolute; margin: 0 0 0 18px; font-size: 10px; }
+    .main { margin-left: 0; padding: 20px 16px 96px; }
+    .works-list { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .span2 { grid-column: auto; }
+    .modal-overlay { padding: 0; align-items: stretch; }
+    .modal { max-height: none; border-radius: 0; }
+    .modal-body, .modal-header, .modal-footer { padding-left: 16px; padding-right: 16px; }
+    .modal-footer { flex-wrap: wrap; }
+    .news-item { flex-wrap: wrap; gap: 4px 12px; }
+    .news-date, .news-cat { width: auto; }
+    .news-info { flex-basis: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -651,12 +842,12 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="login-logo">De<span>F</span>ilMe</div>
     <div class="login-sub">Content Management System</div>
 
     <div class="field-group">
       <label class="field-label">GitHub Personal Access Token</label>
-      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      <input type="password" id="token-input" placeholder="ghp_ または github_pat_ で始まる文字列" autocomplete="off">
     </div>
     <div class="field-group">
       <label class="field-label">GitHub ユーザー名</label>
@@ -678,33 +869,32 @@
 
 <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-logo">De<span>F</span>ilMe <span style="color:var(--text-muted);font-weight:300">CMS</span></div>
+    <div class="topbar-logo">De<span>F</span>ilMe <small>CMS</small></div>
     <div class="topbar-right">
-      <span class="status-dot ok" id="status-dot"></span>
-      <span style="font-size:12px;color:var(--text-muted)" id="status-text">接続済み</span>
+      <span class="topbar-status"><span class="status-dot ok" id="status-dot"></span><span id="status-text">接続済み</span></span>
+      <a class="btn btn-ghost btn-sm" href="./" target="_blank" rel="noopener">サイトを見る ↗</a>
       <button class="btn btn-ghost btn-sm" onclick="doLogout()">ログアウト</button>
     </div>
   </div>
-
-  
 
 <div class="layout">
 
   <div class="sidebar">
     <div class="nav-label">コンテンツ</div>
-    <div class="nav-item active" onclick="showSection('works')">
-      <span class="nav-icon">🎬</span> Works
+    <div class="nav-item active" data-section="works" onclick="showSection('works')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span> Works
+      <span class="nav-count" id="works-count"></span>
     </div>
-    <div class="nav-item" onclick="showSection('news')">
-      <span class="nav-icon">📰</span> News
+    <div class="nav-item" data-section="news" onclick="showSection('news')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 9h3v8a2 2 0 0 1-2 2"/><path d="M8 9h5M8 13h5"/></svg></span> News
+      <span class="nav-count" id="news-count"></span>
     </div>
-    <div class="nav-label" style="margin-top:8px">設定</div>
-    <div class="nav-item" onclick="showSection('hero')">
-      <span class="nav-icon">🖼️</span> Hero 画像
+    <div class="nav-item" data-section="hero" onclick="showSection('hero')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg></span> Hero 画像
     </div>
-    <div class="nav-label" style="margin-top:8px">管理</div>
-    <div class="nav-item" onclick="showSection('inquiries')">
-      <span class="nav-icon">💬</span> 問い合わせ <span id="inq-badge" style="display:none;margin-left:auto;background:var(--accent);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;"></span>
+    <div class="nav-label" style="margin-top:10px">管理</div>
+    <div class="nav-item" data-section="inquiries" onclick="showSection('inquiries')">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span> 問い合わせ <span id="inq-badge" class="nav-badge" style="display:none;"></span>
     </div>
   </div>
 
@@ -712,14 +902,17 @@
 <!-- WORKS -->
     <div class="section active" id="section-works">
       <div class="section-header">
-        <div class="section-title">Works</div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" id="sort-toggle-btn" onclick="toggleSortMode()">並べ替え</button>
+        <div>
+          <div class="section-title">Works</div>
+          <div class="section-desc">カードを押すと編集できます。</div>
+        </div>
+        <div class="section-actions">
+          <button class="btn btn-ghost" id="sort-toggle-btn" onclick="toggleSortMode()">順番を変える</button>
           <button class="btn btn-accent" onclick="openWorkModal()">＋ 作品を追加</button>
         </div>
       </div>
       <div class="sort-save-bar" id="sort-save-bar">
-        <span>☰ ドラッグして順番を変更できます</span>
+        <span>カードをドラッグして、サイトに並ぶ順番を変えられます（左上が先頭）</span>
         <div style="display:flex;gap:8px;">
           <button class="btn btn-ghost btn-sm" onclick="cancelSortMode()">キャンセル</button>
           <button class="btn btn-accent btn-sm" onclick="saveSortOrder()">順番を保存</button>
@@ -737,8 +930,13 @@
 <!-- NEWS -->
     <div class="section" id="section-news">
       <div class="section-header">
-        <div class="section-title">News</div>
-        <button class="btn btn-accent" onclick="openNewsModal()">＋ 記事を追加</button>
+        <div>
+          <div class="section-title">News</div>
+          <div class="section-desc">新しい日付から順に並びます。行を押すと編集できます。</div>
+        </div>
+        <div class="section-actions">
+          <button class="btn btn-accent" onclick="openNewsModal()">＋ 記事を追加</button>
+        </div>
       </div>
       <div class="news-list" id="news-list">
         <div class="empty-state">
@@ -752,25 +950,28 @@
 <!-- HERO -->
     <div class="section" id="section-hero">
       <div class="section-header">
-        <div class="section-title">Hero 画像</div>
+        <div>
+          <div class="section-title">Hero 画像</div>
+          <div class="section-desc">トップページの一番上の大きな画像などを入れ替えます。画像を選んで「アップロード」を押すと、1〜2分でサイトに反映されます。</div>
+        </div>
       </div>
 
       <!-- 表示モード選択 -->
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">表示モード</div>
+        <div class="card-title">トップ画像の見せ方</div>
         <div style="display:flex;gap:12px;margin-top:4px;">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-split">
+          <label class="hero-mode-option" id="mode-label-split">
             <input type="radio" name="hero-mode" value="split" checked onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
             <div>
               <div style="font-weight:500;">左右2枚分割</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">現在の表示形式</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">左右に2枚並べる</div>
             </div>
           </label>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;flex:1;transition:border-color 0.2s;" id="mode-label-single">
+          <label class="hero-mode-option" id="mode-label-single">
             <input type="radio" name="hero-mode" value="single" onchange="heroModeChange(this.value)" style="accent-color:var(--accent);">
             <div>
               <div style="font-weight:500;">1枚全幅</div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">1枚の画像を全幅表示</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">1枚を横いっぱいに</div>
             </div>
           </label>
         </div>
@@ -778,18 +979,18 @@
 
       <!-- 現在の表示 -->
       <div class="card" style="margin-bottom:16px;">
-        <div class="card-title">現在の Hero 画像</div>
+        <div class="card-title">いまサイトに出ている画像</div>
 
         <!-- 2枚分割プレビュー -->
         <div id="hero-preview-split" style="display:flex;gap:4px;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;">
-          <div style="flex:1;position:relative;background:#111;">
+          <div style="flex:1;position:relative;background:var(--surface2);">
             <img id="hero-preview-left" src=""
               style="width:100%;height:100%;object-fit:cover;display:block;"
               onerror="this.style.opacity='0.2'"
               alt="左パネル">
             <div style="position:absolute;bottom:8px;left:8px;font-size:10px;letter-spacing:0.15em;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px;color:#ccc;">LEFT</div>
           </div>
-          <div style="flex:1;position:relative;background:#111;">
+          <div style="flex:1;position:relative;background:var(--surface2);">
             <img id="hero-preview-right" src=""
               style="width:100%;height:100%;object-fit:cover;display:block;"
               onerror="this.style.opacity='0.2'"
@@ -799,7 +1000,7 @@
         </div>
 
         <!-- 1枚プレビュー -->
-        <div id="hero-preview-single" style="display:none;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;background:#111;">
+        <div id="hero-preview-single" style="display:none;margin-bottom:16px;border-radius:6px;overflow:hidden;aspect-ratio:16/5;background:var(--surface2);">
           <img id="hero-preview-one" src=""
             style="width:100%;height:100%;object-fit:cover;display:block;"
             onerror="this.style.opacity='0.2'"
@@ -809,13 +1010,13 @@
 
       <!-- 左パネルアップロード -->
       <div id="hero-panel-left-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">左パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero2.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ画像（左） <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero2.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('left')"
           ondragover="event.preventDefault();this.classList.add('drag')"
           ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'left')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 960×800px 以上</div>
         </div>
         <input type="file" id="hero-file-left" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'left')">
@@ -833,13 +1034,13 @@
 
       <!-- 右パネルアップロード -->
       <div id="hero-panel-right-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">右パネル画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">bg.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ画像（右） <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">bg.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('right')"
           ondragover="event.preventDefault();this.classList.add('drag')"
           ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'right')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 960×800px 以上</div>
         </div>
         <input type="file" id="hero-file-right" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'right')">
@@ -857,13 +1058,13 @@
 
       <!-- 1枚モード用アップロード -->
       <div id="hero-panel-single-card" class="card" style="display:none;margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">全幅画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ画像（1枚表示） <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">hero.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('single')"
           ondragover="event.preventDefault();this.classList.add('drag')"
           ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'single')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 1920×800px 以上</div>
         </div>
         <input type="file" id="hero-file-single" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'single')">
@@ -879,26 +1080,18 @@
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">保存先</div>
-        <p style="font-size:13px;color:var(--text-muted);line-height:1.8;">
-          左パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero2.jpg</code><br>
-          右パネル → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">bg.jpg</code><br>
-          1枚全幅 → <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">hero.jpg</code>
-        </p>
-      </div>
 
       <div class="divider" style="margin:28px 0;"></div>
-      <div class="card-title" style="margin-bottom:4px;">その他のページ画像</div>
-      <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">SERVICESページのヒーロー画像と、TOPページ下部の3つのボックス（WORKS / SERVICES / CONTACT）のサムネイルを更新できます。</p>
+      <div class="card-title" style="margin-bottom:4px;">ほかのページの画像</div>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">SERVICESページのヒーロー画像と、TOPページ下部の3つのボックス（WORKS / SERVICES / CONTACT）のサムネイルを更新できます。</p>
 
       <div id="hero-panel-services-hero-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">SERVICES ヒーロー画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">services-hero.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >SERVICESページの上部画像 <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">services-hero.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('services-hero')"
           ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'services-hero')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 横長 1600px 以上</div>
         </div>
         <input type="file" id="hero-file-services-hero" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'services-hero')">
@@ -912,12 +1105,12 @@
       </div>
 
       <div id="hero-panel-nav-works-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: WORKS <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-works.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ下部の案内：WORKS <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-works.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('nav-works')"
           ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'nav-works')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
         </div>
         <input type="file" id="hero-file-nav-works" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-works')">
@@ -931,12 +1124,12 @@
       </div>
 
       <div id="hero-panel-nav-services-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: SERVICES <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-services.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ下部の案内：SERVICES <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-services.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('nav-services')"
           ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'nav-services')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
         </div>
         <input type="file" id="hero-file-nav-services" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-services')">
@@ -950,12 +1143,12 @@
       </div>
 
       <div id="hero-panel-nav-contact-card" class="card" style="margin-bottom:16px;">
-        <div class="card-title" style="margin-bottom:12px;">TOP下部ボックス: CONTACT <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-contact.jpg</code></div>
+        <div class="card-title" style="margin-bottom:12px;" >トップ下部の案内：CONTACT <code style="font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:3px;margin-left:6px;">navbox-contact.jpg</code></div>
         <div class="upload-zone" onclick="triggerHeroUpload('nav-contact')"
           ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
           ondrop="handleHeroPanelDrop(event, 'nav-contact')">
-          <div class="upload-zone-icon">📁</div>
-          <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
+          <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+          <div class="upload-zone-text">ここに画像をドラッグ、またはクリックして選ぶ</div>
           <div class="upload-zone-sub">推奨: 横長 800px 以上</div>
         </div>
         <input type="file" id="hero-file-nav-contact" accept="image/*" style="display:none" onchange="handleHeroPanelFile(this.files[0], 'nav-contact')">
@@ -972,12 +1165,17 @@
     <!-- INQUIRIES -->
     <div class="section" id="section-inquiries">
       <div class="section-header">
-        <div class="section-title">問い合わせ管理</div>
-        <button class="btn btn-accent btn-sm" onclick="openNewInqModal()">＋ 手動追加</button>
+        <div>
+          <div class="section-title">問い合わせ管理</div>
+          <div class="section-desc">お問い合わせはメールに届きます。対応の状況をここで記録しておけます。</div>
+        </div>
+        <div class="section-actions">
+          <button class="btn btn-accent" onclick="openNewInqModal()">＋ 手動追加</button>
+        </div>
       </div>
       <div class="inq-stats">
-        <div class="inq-stat"><div class="num" id="inq-stat-pending" style="color:var(--accent);">-</div><div class="lbl">未対応</div></div>
-        <div class="inq-stat"><div class="num" id="inq-stat-wip" style="color:#4a9eff;">-</div><div class="lbl">対応中</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-pending" style="color:var(--accent-ink);">-</div><div class="lbl">未対応</div></div>
+        <div class="inq-stat"><div class="num" id="inq-stat-wip" style="color:var(--info);">-</div><div class="lbl">対応中</div></div>
         <div class="inq-stat"><div class="num" id="inq-stat-done" style="color:var(--success);">-</div><div class="lbl">対応済み</div></div>
       </div>
       <div class="inq-tabs">
@@ -997,136 +1195,156 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="work-modal-title">作品を追加</div>
-      <button class="modal-close" onclick="closeWorkModal()">×</button>
+      <button class="modal-close" onclick="closeWorkModal()" aria-label="閉じる">×</button>
     </div>
 
+    <div class="modal-body">
     <input type="hidden" id="work-edit-index">
 
-    <div class="form-grid">
-      <div class="field-group span2">
-        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
-        <textarea id="work-title" rows="2" placeholder="感情ワンダーランド（改行で複数行にできます）" style="min-height:44px;resize:vertical;line-height:1.5;"></textarea>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">タイトル内で <b>Enter（改行）</b> を押すと、その位置でタイトルが折り返されます。</div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">ID（URL用）<span style="color:var(--danger)">*</span></label>
-        <input type="text" id="work-id" placeholder="kanjo-wonderland">
-      </div>
-      <div class="field-group">
-        <label class="field-label">表示タイトル</label>
-        <input type="text" id="work-displayTitle" placeholder='UIMUI - MV "感情ワンダーランド"'>
-      </div>
-      <div class="field-group">
-        <label class="field-label">カテゴリ <span style="color:var(--danger)">*</span></label>
-        <select id="work-category" onchange="updateSubOptions()">
-          <option value="videography">Videography</option>
-          <option value="photography">Photography</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label class="field-label">サブカテゴリ <span style="color:var(--danger)">*</span></label>
-        <select id="work-sub">
-          <option value="music-video">Music Video</option>
-          <option value="live-shoot">Live Shoot</option>
-          <option value="documentary">Documentary</option>
-          <option value="snap">Snap</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label class="field-label">年月</label>
-        <input type="month" id="work-date" placeholder="2025-12">
-      </div>
-      <div class="field-group">
-        <label class="field-label">クライアント</label>
-        <input type="text" id="work-client" placeholder="UIMUI">
-      </div>
-      <div class="field-group">
-        <label class="field-label">サムネイル向き</label>
-        <select id="work-orientation">
-          <option value="landscape">横（標準）</option>
-          <option value="portrait">縦</option>
-        </select>
-      </div>
-      <div class="field-group span2">
-        <label class="field-label">説明文</label>
-        <div class="editor-toolbar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',1)" title="大見出し">見出し大 (H1)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',2)" title="中見出し">見出し中 (H2)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',3)" title="小見出し">見出し小 (H3)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',0)" title="本文に戻す">本文</button>
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">1</span>基本情報</div>
+      <div class="form-grid">
+        <div class="field-group span2">
+          <label class="field-label">タイトル<span class="req">必須</span></label>
+          <textarea id="work-title" rows="2" placeholder="感情ワンダーランド" style="min-height:48px;resize:vertical;"></textarea>
+          <div class="field-hint">作品ページの見出しになります。Enter（改行）を押した位置で、サイト上でも改行されます。</div>
         </div>
-        <textarea id="work-description" style="min-height:140px" placeholder="作品の説明文。&#10;見出しにしたい行にカーソルを置き、上のボタンを押すと見出しになります。&#10;（行頭に # / ## / ### が付きます）"></textarea>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.7;">行頭の <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">#</code>=大見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">##</code>=中見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">###</code>=小見出し。改行はそのまま反映され、空行を入れるほど余白が広がります。<br>📷 <b>画像を説明文の途中に入れたい場合：</b>下の「メディア」で追加したあと、各メディアの「<b>本文に挿入</b>」ボタンを押すと、カーソル位置に <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[1]</code> のような番号が入ります。その位置にその番号の画像が表示されます（手入力で <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[2]</code> のように書いてもOK）。説明文に挿入しなかったメディアは、これまで通り最後にまとめて表示されます。</div>
-      </div>
-      <div class="field-group span2">
-        <label class="field-label">サムネイル画像 <span style="color:var(--danger)">*</span></label>
-        <div class="img-upload-area" id="thumb-upload-area" onclick="document.getElementById('thumb-file-input').click()"
-          ondragover="event.preventDefault();this.classList.add('has-image')"
-          ondragleave="this.classList.remove('has-image')"
-          ondrop="handleThumbDrop(event)">
-          <img id="thumb-preview-img" class="img-upload-preview" alt="">
-          <div class="img-upload-label" id="thumb-upload-label">📁 クリックまたはドラッグ＆ドロップ</div>
-          <div class="img-upload-sub">JPG / PNG / WebP</div>
+        <div class="field-group span2">
+          <label class="field-label">一覧に出す名前</label>
+          <input type="text" id="work-displayTitle" placeholder='UIMUI - MV "感情ワンダーランド"'>
+          <div class="field-hint">Worksページのカードの下に出る名前です。空欄ならタイトルがそのまま出ます。</div>
         </div>
-        <input type="file" id="thumb-file-input" accept="image/*" style="display:none" onchange="handleThumbFile(this.files[0])">
-        <div class="img-uploading" id="thumb-uploading"><span class="spinner"></span> アップロード中...</div>
-        <input type="text" id="work-thumb" placeholder="kanjo-wonderland.png" style="margin-top:8px" readonly>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">または上のエリアから画像をアップロード（保存時に自動アップロード）</div>
+        <div class="field-group">
+          <label class="field-label">カテゴリ<span class="req">必須</span></label>
+          <select id="work-category" onchange="updateSubOptions()">
+            <option value="videography">Videography</option>
+            <option value="photography">Photography</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">サブカテゴリ<span class="req">必須</span></label>
+          <select id="work-sub">
+            <option value="music-video">Music Video</option>
+            <option value="live-shoot">Live Shoot</option>
+            <option value="documentary">Documentary</option>
+            <option value="snap">Snap</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">公開した年月</label>
+          <input type="month" id="work-date" placeholder="2025-12">
+        </div>
+        <div class="field-group">
+          <label class="field-label">クライアント名</label>
+          <input type="text" id="work-client" placeholder="UIMUI">
+        </div>
+        <div class="field-group span2">
+          <label class="field-label">ID（URL用）<span class="req">必須</span></label>
+          <input type="text" id="work-id" placeholder="kanjo-wonderland">
+          <div class="field-hint">作品ページのURLになります（英数字とハイフン）。タイトルから自動で入ります。公開後は変えないのがおすすめです。</div>
+        </div>
       </div>
     </div>
 
-    <div class="divider"></div>
-
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">メディア（複数可：画像 / 動画 / YouTube）</div>
-    </div>
-    <div class="mm" id="mm-work">
-      <div class="mm-controls">
-        <select class="mm-type" id="work-mm-type" onchange="mmTypeChange('work')">
-          <option value="image">画像をアップロード</option>
-          <option value="video">動画をアップロード</option>
-          <option value="youtube">YouTube</option>
-        </select>
-        <div class="mm-upload-block" id="work-mm-upload-block">
-          <div class="upload-zone" onclick="document.getElementById('work-mm-file').click()"
-            ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
-            ondrop="mmDrop(event,'work')">
-            <div class="upload-zone-icon">📁</div>
-            <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
-            <div class="upload-zone-sub" id="work-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">2</span>サムネイル<small>一覧に出る画像</small></div>
+      <div class="form-grid">
+        <div class="field-group span2">
+          <div class="img-upload-area" id="thumb-upload-area" onclick="document.getElementById('thumb-file-input').click()"
+            ondragover="event.preventDefault();this.classList.add('has-image')"
+            ondragleave="this.classList.remove('has-image')"
+            ondrop="handleThumbDrop(event)">
+            <img id="thumb-preview-img" class="img-upload-preview" alt="">
+            <div class="img-upload-label" id="thumb-upload-label">ここに画像をドラッグ、またはクリックして選ぶ</div>
+            <div class="img-upload-sub">JPG / PNG / WebP ・ 保存したときにアップロードされます</div>
           </div>
-          <input type="file" id="work-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('work', this.files)">
-          <div class="img-uploading" id="work-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+          <input type="file" id="thumb-file-input" accept="image/*" style="display:none" onchange="handleThumbFile(this.files[0])">
+          <div class="img-uploading" id="thumb-uploading"><span class="spinner"></span> アップロード中...</div>
+          <input type="text" id="work-thumb" placeholder="まだ選ばれていません" style="margin-top:8px;font-size:12px;" readonly>
+          <div class="field-hint" style="margin-top:4px;">↑ いま設定されている画像のファイル名<span class="req" style="margin-left:6px;">必須</span></div>
         </div>
-        <div class="mm-youtube-block" id="work-mm-youtube-block" style="display:none;">
-          <input type="text" id="work-mm-youtube" placeholder="YouTubeのURL または 動画ID">
-          <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="mmAddYoutube('work')">＋ 追加</button>
-        </div>
-      </div>
-      <div class="mm-list" id="work-mm-list"></div>
-      <div class="mm-settings">
-        <div>
-          <label class="field-label">レイアウト（複数画像の並べ方）</label>
-          <select id="work-mm-cols">
-            <option value="1">1枚ずつ大きく（縦に並べる）</option>
-            <option value="2">2枚ずつ横に並べる</option>
-            <option value="3">3枚ずつ横に並べる</option>
-            <option value="4">4枚ずつ横に並べる</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">メディアの向き</label>
-          <select id="work-mm-shape">
-            <option value="landscape">横（標準）</option>
-            <option value="portrait">縦</option>
+        <div class="field-group">
+          <label class="field-label">画像の向き</label>
+          <select id="work-orientation">
+            <option value="landscape">横長（標準）</option>
+            <option value="portrait">縦長</option>
           </select>
         </div>
       </div>
     </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">3</span>説明文<small>作品ページに出る文章（なくてもOK）</small></div>
+      <div class="field-group">
+        <div class="editor-toolbar">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',1)" title="カーソルのある行を大見出しに">大見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',2)" title="カーソルのある行を中見出しに">中見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',3)" title="カーソルのある行を小見出しに">小見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertHeading('work-description',0)" title="見出しをやめてふつうの文に">ふつうの文に戻す</button>
+        </div>
+        <textarea id="work-description" style="min-height:150px" placeholder="作品の説明を書きます。"></textarea>
+        <details class="help">
+          <summary>見出しや画像の入れ方</summary>
+          見出しにしたい行にカーソルを置いて、上のボタンを押します（行の先頭に <code>#</code> <code>##</code> <code>###</code> が付きます）。改行はそのまま反映され、空行を入れるほど余白が広がります。<br>
+          <b>文章の途中に画像を入れたいとき：</b>下の「4 写真・動画」で追加したあと、その画像の「本文に挿入」を押すと、カーソルの位置に <code>[1]</code> のような番号が入ります。サイトではその位置に画像が出ます。挿入しなかった画像は、文章の最後にまとめて出ます。
+        </details>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">4</span>写真・動画<small>作品ページに載せるもの（複数OK）</small></div>
+      <div class="mm" id="mm-work">
+        <div class="mm-controls">
+          <select class="mm-type" id="work-mm-type" onchange="mmTypeChange('work')">
+            <option value="image">写真をアップロード</option>
+            <option value="video">動画ファイルをアップロード</option>
+            <option value="youtube">YouTubeの動画を貼る</option>
+          </select>
+          <div class="mm-upload-block" id="work-mm-upload-block">
+            <div class="upload-zone" onclick="document.getElementById('work-mm-file').click()"
+              ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+              ondrop="mmDrop(event,'work')">
+              <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+              <div class="upload-zone-text">ここにファイルをドラッグ、またはクリックして選ぶ</div>
+              <div class="upload-zone-sub" id="work-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
+            </div>
+            <input type="file" id="work-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('work', this.files)">
+            <div class="img-uploading" id="work-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+          </div>
+          <div class="mm-youtube-block" id="work-mm-youtube-block" style="display:none;">
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="work-mm-youtube" placeholder="YouTubeのURLを貼り付け（例：https://youtu.be/xxxx）">
+              <button type="button" class="btn btn-ghost" onclick="mmAddYoutube('work')">＋ 追加</button>
+            </div>
+          </div>
+        </div>
+        <div class="mm-list" id="work-mm-list"></div>
+        <div class="mm-settings">
+          <div>
+            <label class="field-label">並べ方</label>
+            <select id="work-mm-cols">
+              <option value="1">1枚ずつ大きく（縦に並べる）</option>
+              <option value="2">2枚ずつ横に並べる</option>
+              <option value="3">3枚ずつ横に並べる</option>
+              <option value="4">4枚ずつ横に並べる</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">写真・動画の向き</label>
+            <select id="work-mm-shape">
+              <option value="landscape">横長（標準）</option>
+              <option value="portrait">縦長</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /.modal-body -->
 
     <div class="modal-footer">
+      <button class="btn btn-danger footer-left" id="work-delete-btn" onclick="deleteWorkFromModal()" style="display:none;">この作品を削除</button>
       <button class="btn btn-ghost" onclick="closeWorkModal()">キャンセル</button>
-      <button class="btn btn-ghost" id="work-draft-btn" onclick="saveWork(true)" style="border-color:var(--accent);color:var(--accent)">
+      <button class="btn btn-outline-accent" id="work-draft-btn" onclick="saveWork(true)">
         <span id="work-draft-label">下書き保存</span>
       </button>
       <button class="btn btn-accent" id="work-save-btn" onclick="saveWork(false)">
@@ -1142,92 +1360,107 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title" id="news-modal-title">記事を追加</div>
-      <button class="modal-close" onclick="closeNewsModal()">×</button>
+      <button class="modal-close" onclick="closeNewsModal()" aria-label="閉じる">×</button>
     </div>
 
+    <div class="modal-body">
     <input type="hidden" id="news-edit-index">
 
-    <div class="form-grid">
-      <div class="field-group">
-        <label class="field-label">日付 <span style="color:var(--danger)">*</span></label>
-        <input type="date" id="news-date">
-      </div>
-      <div class="field-group">
-        <label class="field-label">カテゴリ</label>
-        <select id="news-category">
-          <option value="Info">Info</option>
-              <option value="Works">Works</option>
-              <option value="Event">Event</option>
-        </select>
-      </div>
-      <div class="field-group span2">
-        <label class="field-label">タイトル <span style="color:var(--danger)">*</span></label>
-        <textarea id="news-title" rows="2" placeholder="記事タイトル（改行で複数行にできます）" style="min-height:44px;resize:vertical;line-height:1.5;"></textarea>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">タイトル内で <b>Enter（改行）</b> を押すと、その位置でタイトルが折り返されます。</div>
-      </div>
-      <div class="field-group span2">
-        <label class="field-label">本文</label>
-        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(1)" title="大見出し">見出し大 (H1)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(2)" title="中見出し">見出し中 (H2)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(3)" title="小見出し">見出し小 (H3)</button>
-          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(0)" title="本文に戻す">本文</button>
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">1</span>基本情報</div>
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label">日付<span class="req">必須</span></label>
+          <input type="date" id="news-date">
         </div>
-        <textarea id="news-body" style="min-height:140px" placeholder="記事の本文。&#10;見出しにしたい行にカーソルを置き、上のボタンを押すと見出しになります。&#10;（行頭に # / ## / ### が付きます）"></textarea>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.7;">行頭の <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">#</code>=大見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">##</code>=中見出し / <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">###</code>=小見出し。空行を入れるほど余白が広がります。<br>📷 <b>画像を本文の途中に入れたい場合：</b>下の「メディア」で追加したあと、各メディアの「<b>本文に挿入</b>」ボタンを押すと、カーソル位置に <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[1]</code> のような番号が入ります。その位置にその番号の画像が表示されます（手入力で <code style="background:var(--surface2);padding:1px 5px;border-radius:3px;">[2]</code> のように書いてもOK）。本文に挿入しなかったメディアは、これまで通り記事の最後にまとめて表示されます。</div>
-      </div>
-
-      <div class="field-group span2" style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px;">
-        <label class="field-label">メディア（複数可：画像 / 動画 / YouTube）</label>
-        <div class="mm" id="mm-news">
-          <div class="mm-controls">
-            <select class="mm-type" id="news-mm-type" onchange="mmTypeChange('news')" style="margin-bottom:10px;">
-              <option value="image">画像をアップロード</option>
-              <option value="video">動画をアップロード</option>
-              <option value="youtube">YouTube</option>
-            </select>
-            <div class="mm-upload-block" id="news-mm-upload-block">
-              <div class="upload-zone" onclick="document.getElementById('news-mm-file').click()"
-                ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
-                ondrop="mmDrop(event,'news')">
-                <div class="upload-zone-icon">📁</div>
-                <div class="upload-zone-text">クリックまたはドラッグ＆ドロップ</div>
-                <div class="upload-zone-sub" id="news-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
-              </div>
-              <input type="file" id="news-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('news', this.files)">
-              <div class="img-uploading" id="news-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
-            </div>
-            <div class="mm-youtube-block" id="news-mm-youtube-block" style="display:none;">
-              <input type="text" id="news-mm-youtube" placeholder="YouTubeのURL または 動画ID">
-              <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="mmAddYoutube('news')">＋ 追加</button>
-            </div>
-          </div>
-          <div class="mm-list" id="news-mm-list"></div>
-          <div class="mm-settings">
-            <div>
-              <label class="field-label">レイアウト（複数画像の並べ方）</label>
-              <select id="news-mm-cols">
-                <option value="1">1枚ずつ大きく（縦に並べる）</option>
-                <option value="2">2枚ずつ横に並べる</option>
-                <option value="3">3枚ずつ横に並べる</option>
-                <option value="4">4枚ずつ横に並べる</option>
-              </select>
-            </div>
-            <div>
-              <label class="field-label">メディアの向き</label>
-              <select id="news-mm-shape">
-                <option value="landscape">横（標準）</option>
-                <option value="portrait">縦</option>
-              </select>
-            </div>
-          </div>
+        <div class="field-group">
+          <label class="field-label">カテゴリ</label>
+          <select id="news-category">
+            <option value="Info">Info</option>
+            <option value="Works">Works</option>
+            <option value="Event">Event</option>
+          </select>
+        </div>
+        <div class="field-group span2">
+          <label class="field-label">タイトル<span class="req">必須</span></label>
+          <textarea id="news-title" rows="2" placeholder="記事のタイトル" style="min-height:48px;resize:vertical;"></textarea>
+          <div class="field-hint">Enter（改行）を押した位置で、サイト上でも改行されます。</div>
         </div>
       </div>
     </div>
 
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">2</span>本文</div>
+      <div class="field-group">
+        <div class="editor-toolbar">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(1)" title="カーソルのある行を大見出しに">大見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(2)" title="カーソルのある行を中見出しに">中見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(3)" title="カーソルのある行を小見出しに">小見出し</button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="insertNewsHeading(0)" title="見出しをやめてふつうの文に">ふつうの文に戻す</button>
+        </div>
+        <textarea id="news-body" style="min-height:170px" placeholder="記事の本文を書きます。"></textarea>
+        <details class="help">
+          <summary>見出しや画像の入れ方</summary>
+          見出しにしたい行にカーソルを置いて、上のボタンを押します（行の先頭に <code>#</code> <code>##</code> <code>###</code> が付きます）。空行を入れるほど余白が広がります。<br>
+          <b>本文の途中に画像を入れたいとき：</b>下の「3 写真・動画」で追加したあと、その画像の「本文に挿入」を押すと、カーソルの位置に <code>[1]</code> のような番号が入ります。サイトではその位置に画像が出ます。挿入しなかった画像は、記事の最後にまとめて出ます。
+        </details>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title"><span class="step">3</span>写真・動画<small>なくてもOK・複数OK</small></div>
+      <div class="mm" id="mm-news">
+        <div class="mm-controls">
+          <select class="mm-type" id="news-mm-type" onchange="mmTypeChange('news')">
+            <option value="image">写真をアップロード</option>
+            <option value="video">動画ファイルをアップロード</option>
+            <option value="youtube">YouTubeの動画を貼る</option>
+          </select>
+          <div class="mm-upload-block" id="news-mm-upload-block">
+            <div class="upload-zone" onclick="document.getElementById('news-mm-file').click()"
+              ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')"
+              ondrop="mmDrop(event,'news')">
+              <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></div>
+              <div class="upload-zone-text">ここにファイルをドラッグ、またはクリックして選ぶ</div>
+              <div class="upload-zone-sub" id="news-mm-hint">JPG / PNG / WebP（複数選択できます）</div>
+            </div>
+            <input type="file" id="news-mm-file" accept="image/*" multiple style="display:none" onchange="mmUpload('news', this.files)">
+            <div class="img-uploading" id="news-mm-uploading" style="display:none;"><span class="spinner"></span> アップロード中...</div>
+          </div>
+          <div class="mm-youtube-block" id="news-mm-youtube-block" style="display:none;">
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="news-mm-youtube" placeholder="YouTubeのURLを貼り付け（例：https://youtu.be/xxxx）">
+              <button type="button" class="btn btn-ghost" onclick="mmAddYoutube('news')">＋ 追加</button>
+            </div>
+          </div>
+        </div>
+        <div class="mm-list" id="news-mm-list"></div>
+        <div class="mm-settings">
+          <div>
+            <label class="field-label">並べ方</label>
+            <select id="news-mm-cols">
+              <option value="1">1枚ずつ大きく（縦に並べる）</option>
+              <option value="2">2枚ずつ横に並べる</option>
+              <option value="3">3枚ずつ横に並べる</option>
+              <option value="4">4枚ずつ横に並べる</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">写真・動画の向き</label>
+            <select id="news-mm-shape">
+              <option value="landscape">横長（標準）</option>
+              <option value="portrait">縦長</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /.modal-body -->
+
     <div class="modal-footer">
+      <button class="btn btn-danger footer-left" id="news-delete-btn" onclick="deleteNewsFromModal()" style="display:none;">この記事を削除</button>
       <button class="btn btn-ghost" onclick="closeNewsModal()">キャンセル</button>
-      <button class="btn btn-ghost" id="news-draft-btn" onclick="saveNews(true)" style="color:var(--text-dim);">下書き保存</button>
+      <button class="btn btn-outline-accent" id="news-draft-btn" onclick="saveNews(true)">下書き保存</button>
       <button class="btn btn-accent" id="news-save-btn" onclick="saveNews(false)">
         <span id="news-save-label">保存して公開</span>
       </button>
@@ -1241,11 +1474,12 @@
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">問い合わせを手動追加</div>
-      <button class="modal-close" onclick="closeInqModal()">×</button>
+      <button class="modal-close" onclick="closeInqModal()" aria-label="閉じる">×</button>
     </div>
+    <div class="modal-body">
     <div class="form-grid">
       <div class="field-group span2" style="background:rgba(232,130,10,0.06);border:1px dashed rgba(232,130,10,0.4);border-radius:8px;padding:12px 14px;">
-        <label class="field-label" style="color:var(--accent);">FormSubmitメールから自動入力（任意）</label>
+        <label class="field-label" style="color:var(--accent-ink);">届いたメールから自動入力（任意）</label>
         <textarea id="inq-form-paste" class="field-input" style="min-height:90px;font-size:12px;" placeholder="届いたメール本文をそのまま貼り付けて「解析して入力」を押すと、下のお名前・メール・メッセージが自動で埋まります。"></textarea>
         <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="parseInqEmail()">解析して入力</button>
       </div>
@@ -1261,6 +1495,7 @@
         </select>
       </div>
     </div>
+    </div><!-- /.modal-body -->
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeInqModal()">キャンセル</button>
       <button class="btn btn-accent" onclick="saveNewInq()">追加</button>
@@ -1411,37 +1646,81 @@ async function loadWorks() {
   renderWorks(STATE.worksData);
 }
 
+const CAT_LABEL = { videography: 'Videography', photography: 'Photography' };
+const SUB_LABEL = {
+  'music-video': 'Music Video', 'live-shoot': 'Live Shoot', 'documentary': 'Documentary',
+  'portrait': 'Portrait', 'snap': 'Snap',
+};
+const NEWS_CAT_LABEL = { Info: 'Info', Works: 'Works', Event: 'Event' };
+
+function setCount(id, n) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = n ? n : '';
+}
+
 function renderWorks(data) {
   const el = document.getElementById('works-list');
+  setCount('works-count', data.length);
   if (!data.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎬</div><div class="empty-state-text">作品がまだありません</div></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎬</div><div class="empty-state-text">作品がまだありません。「＋ 作品を追加」から登録できます。</div></div>`;
     return;
   }
   el.innerHTML = data.map((w, i) => `
-    <div class="work-item" data-index="${i}" draggable="false" style="${w.draft ? 'opacity:0.6' : ''}">
-      <div class="drag-handle" title="ドラッグして並べ替え">⠿</div>
-      <img class="work-thumb" src="${w.thumb || ''}" onerror="this.style.background='var(--border)'" alt="">
-      <div class="work-info">
-        <div class="work-title">${(w.title || w.id).replace(/\n/g, ' ')} ${w.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
-        <div class="work-meta">
-          <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${w.category}</span>
-          <span>${w.sub || ''}</span>
-          <span>${w.date || ''}</span>
-        </div>
+    <div class="work-item${w.draft ? ' is-draft' : ''}" data-index="${i}" draggable="false" onclick="onWorkCardClick(${i})">
+      <div class="work-thumb-wrap">
+        <img class="work-thumb" src="${esc(w.thumb || '')}" onerror="this.style.visibility='hidden'" alt="" loading="lazy">
+        ${w.draft ? '<span class="badge draft">下書き</span>' : ''}
+        <span class="work-edit-hint">編集する</span>
+        <div class="drag-handle" title="ドラッグして並べ替え"><span>⠿ ドラッグで移動</span></div>
       </div>
-      <div class="work-actions">
-        <button class="btn btn-ghost btn-sm" onclick="editWork(${i})">編集</button>
-        <button class="btn btn-danger" onclick="deleteWork(${i})">削除</button>
+      <div class="work-info">
+        <div class="work-title">${esc((w.displayTitle || w.title || w.id).replace(/\n/g, ' '))}</div>
+        <div class="work-meta">
+          <span class="badge ${w.category === 'videography' ? 'video' : 'photo'}">${CAT_LABEL[w.category] || esc(w.category)}</span>
+          <span>${SUB_LABEL[w.sub] || esc(w.sub || '')}</span>
+          ${w.date ? `<span>${esc(w.date.replace('-', '.'))}</span>` : ''}
+        </div>
       </div>
     </div>
   `).join('');
   initDragSort();
 }
 
+function onWorkCardClick(i) {
+  if (document.getElementById('works-list').classList.contains('sort-mode')) return;
+  editWork(i);
+}
+
+function deleteWorkFromModal() {
+  const idx = document.getElementById('work-edit-index').value;
+  if (idx === '') return;
+  closeWorkModal();
+  deleteWork(parseInt(idx));
+}
+
+function showThumbPreview(src) {
+  const preview = document.getElementById('thumb-preview-img');
+  const label = document.getElementById('thumb-upload-label');
+  const area = document.getElementById('thumb-upload-area');
+  if (src) {
+    preview.src = src;
+    preview.style.display = 'block';
+    label.textContent = '画像を変えるときは、ここに新しい画像をドラッグ（またはクリック）';
+    area.classList.add('has-image');
+  } else {
+    preview.src = '';
+    preview.style.display = 'none';
+    label.textContent = 'ここに画像をドラッグ、またはクリックして選ぶ';
+    area.classList.remove('has-image');
+  }
+}
+
 function openWorkModal(editIndex) {
   document.getElementById('work-edit-index').value = '';
   resetWorkIdAuto();
   document.getElementById('work-modal-title').textContent = '作品を追加';
+  document.getElementById('work-delete-btn').style.display = 'none';
+  showThumbPreview('');
   document.getElementById('work-title').value = '';
   document.getElementById('work-id').value = '';
   document.getElementById('work-displayTitle').value = '';
@@ -1462,6 +1741,7 @@ function editWork(i) {
   const w = STATE.worksData[i];
   document.getElementById('work-edit-index').value = i;
   document.getElementById('work-modal-title').textContent = '作品を編集';
+  document.getElementById('work-delete-btn').style.display = '';
   document.getElementById('work-title').value = w.title || '';
   document.getElementById('work-id').value = w.id || '';
   document.getElementById('work-displayTitle').value = w.displayTitle || '';
@@ -1473,6 +1753,7 @@ function editWork(i) {
   document.getElementById('work-orientation').value = w.orientation || 'landscape';
   document.getElementById('work-description').value = w.description || '';
   document.getElementById('work-thumb').value = w.thumb || '';
+  showThumbPreview(w.thumb || '');
 
   // Media（統一マネージャ）
   mmInit('work', w.media || []);
@@ -1488,12 +1769,7 @@ function closeWorkModal() {
   thumbFileBase64 = null;
   thumbFileToUpload = null;
   thumbFileName = null;
-  const preview = document.getElementById('thumb-preview-img');
-  if (preview) { preview.src = ''; preview.style.display = 'none'; }
-  const label = document.getElementById('thumb-upload-label');
-  if (label) label.textContent = '📁 クリックまたはドラッグ＆ドロップ';
-  const area = document.getElementById('thumb-upload-area');
-  if (area) area.classList.remove('has-image');
+  showThumbPreview('');
 }
 
 function updateSubOptions() {
@@ -1555,7 +1831,7 @@ function handleThumbFile(file) {
     const preview = document.getElementById('thumb-preview-img');
     preview.src = e.target.result;
     preview.style.display = 'block';
-    document.getElementById('thumb-upload-label').textContent = '✓ ' + file.name;
+    document.getElementById('thumb-upload-label').textContent = '✓ ' + file.name + '（保存したときにアップロードされます）';
     document.getElementById('thumb-upload-area').classList.add('has-image');
     document.getElementById('work-thumb').value = file.name;
   };
@@ -1718,7 +1994,7 @@ function mmRender(prefix) {
   const wrap = document.getElementById(prefix + '-mm-list');
   if (!wrap) return;
   const items = mmData[prefix] || [];
-  if (!items.length) { wrap.innerHTML = '<div class="mm-empty">まだメディアがありません。上から追加してください。</div>'; return; }
+  if (!items.length) { wrap.innerHTML = '<div class="mm-empty">まだありません。上から追加できます。</div>'; return; }
   wrap.innerHTML = items.map((m, i) => {
     let thumb, label;
     if (m.type === 'youtube') { thumb = '<div class="mm-thumb mm-thumb-yt">▶</div>'; label = 'YouTube: ' + (m.id || ''); }
@@ -1730,7 +2006,7 @@ function mmRender(prefix) {
       <div class="mm-label">${i + 1}. ${label}</div>
       <div class="mm-actions">
         ${(prefix === 'news' || prefix === 'work') ? `<button type="button" class="btn btn-ghost btn-sm" onclick="insertMediaToken('${prefix}',${i + 1})" title="本文のカーソル位置にこのメディアを挿入">本文に挿入</button>` : ''}
-        <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})">✕</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="mmRemove('${prefix}',${i})" title="この写真・動画を外す">外す</button>
       </div>
     </div>`;
   }).join('');
@@ -1869,7 +2145,7 @@ async function saveWork(isDraft = false) {
 }
 
 async function deleteWork(i) {
-  if (!confirm(`「${STATE.worksData[i].title}」を削除しますか？`)) return;
+  if (!confirm(`「${(STATE.worksData[i].title || '').replace(/\n/g, ' ')}」を削除しますか？\nサイトからも消えます。`)) return;
   STATE.worksData.splice(i, 1);
   try {
     await commitWorks();
@@ -2015,30 +2291,36 @@ async function loadNews() {
 
 function renderNews(data) {
   const el = document.getElementById('news-list');
+  setCount('news-count', data.length);
   if (!data.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📰</div><div class="empty-state-text">記事がまだありません</div></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📰</div><div class="empty-state-text">記事がまだありません。「＋ 記事を追加」から書けます。</div></div>`;
     return;
   }
   const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
-  el.innerHTML = sorted.map((n, i) => `
-    <div class="news-item" style="${n.draft ? 'opacity:0.6' : ''}">
-      <div class="news-date">${n.date}</div>
+  el.innerHTML = sorted.map(n => `
+    <div class="news-item${n.draft ? ' is-draft' : ''}" onclick="editNews(${data.indexOf(n)})" style="${n.draft ? 'opacity:0.6' : ''}">
+      <div class="news-date">${esc((n.date || '').replace(/-/g, '.'))}</div>
+      <div class="news-cat"><span class="badge">${NEWS_CAT_LABEL[n.category] || esc(n.category || '')}</span></div>
       <div class="news-info">
-        <div class="news-title">${(n.title || '').replace(/\n/g, ' ')} ${n.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
-        <div class="news-body">${(n.body || '').replace(/\n/g, ' ')}</div>
+        <div class="news-title">${esc((n.title || '').replace(/\n/g, ' '))} ${n.draft ? '<span class="badge draft">下書き</span>' : ''}</div>
+        <div class="news-body">${esc((n.body || '').replace(/\n/g, ' ').replace(/#{1,3}\s|\[\d+\]/g, ''))}</div>
       </div>
-      <div class="work-actions">
-        <span class="badge">${n.category || ''}</span>
-        <button class="btn btn-ghost btn-sm" onclick="editNews(${data.indexOf(n)})">編集</button>
-        <button class="btn btn-danger" onclick="deleteNews(${data.indexOf(n)})">削除</button>
-      </div>
+      <div class="work-actions"><span class="btn btn-ghost btn-sm">編集</span></div>
     </div>
   `).join('');
+}
+
+function deleteNewsFromModal() {
+  const idx = document.getElementById('news-edit-index').value;
+  if (idx === '') return;
+  closeNewsModal();
+  deleteNews(parseInt(idx));
 }
 
 function openNewsModal() {
   document.getElementById('news-edit-index').value = '';
   document.getElementById('news-modal-title').textContent = '記事を追加';
+  document.getElementById('news-delete-btn').style.display = 'none';
   document.getElementById('news-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('news-category').value = 'Info';
   document.getElementById('news-title').value = '';
@@ -2053,6 +2335,7 @@ function editNews(i) {
   const n = STATE.newsData[i];
   document.getElementById('news-edit-index').value = i;
   document.getElementById('news-modal-title').textContent = '記事を編集';
+  document.getElementById('news-delete-btn').style.display = '';
   document.getElementById('news-date').value = n.date || '';
   document.getElementById('news-category').value = n.category || 'Info';
   document.getElementById('news-title').value = n.title || '';
@@ -2257,7 +2540,7 @@ async function saveNews(isDraft = false) {
 }
 
 async function deleteNews(i) {
-  if (!confirm(`この記事を削除しますか？`)) return;
+  if (!confirm(`「${(STATE.newsData[i].title || '').replace(/\n/g, ' ')}」を削除しますか？\nサイトからも消えます。`)) return;
   STATE.newsData.splice(i, 1);
   try {
     await commitNews();
@@ -2303,9 +2586,6 @@ function heroModeChange(mode) {
   document.getElementById('hero-panel-left-card').style.display = isSplit ? '' : 'none';
   document.getElementById('hero-panel-right-card').style.display = isSplit ? '' : 'none';
   document.getElementById('hero-panel-single-card').style.display = isSplit ? 'none' : '';
-  // ラジオラベルのボーダー色
-  document.getElementById('mode-label-split').style.borderColor = isSplit ? 'var(--accent)' : 'var(--border)';
-  document.getElementById('mode-label-single').style.borderColor = isSplit ? 'var(--border)' : 'var(--accent)';
 }
 
 function triggerHeroUpload(panel) {
@@ -2430,10 +2710,9 @@ async function uploadHeroImage() {
 
 // ── UI ──
 function showSection(name) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById(`section-${name}`).classList.add('active');
-  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === `section-${name}`));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.section === name));
+  window.scrollTo(0, 0);
 }
 
 function setSaving(type, saving) {
@@ -2584,7 +2863,8 @@ function renderInquiries() {
     return;
   }
   const sLabel = {pending:'未対応', wip:'対応中', done:'対応済み'};
-  const sColor = {pending:'var(--accent)', wip:'#4a9eff', done:'var(--success)'};
+  const sColor = {pending:'#a35a00', wip:'#2559b0', done:'#17804a'};
+  const sBg    = {pending:'#fff4e3', wip:'#eaf1fd', done:'#e7f6ee'};
   el.innerHTML = data.map(item => {
     const d = new Date(item.date);
     const ds = d.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'})+' '+d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
@@ -2592,14 +2872,14 @@ function renderInquiries() {
       <div class="inq-card-header" onclick="toggleInqCard('${item.id}')">
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
-            <span style="font-weight:500;font-size:14px;">${esc(item.name)}</span>
+            <span style="font-weight:700;font-size:14px;">${esc(item.name)}</span>
             <span style="font-size:11px;color:var(--text-muted);">${esc(item.email)}</span>
             <span style="font-size:10px;color:var(--text-muted);">${ds}</span>
           </div>
           ${item.subject ? `<div style="font-size:12px;color:var(--text-dim);margin-bottom:2px;">${esc(item.subject)}</div>` : ''}
           <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;">${esc(item.message)}</div>
         </div>
-        <span style="flex-shrink:0;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:500;background:${sColor[item.status]}22;color:${sColor[item.status]};">${sLabel[item.status]}</span>
+        <span style="flex-shrink:0;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:500;background:${sBg[item.status]};color:${sColor[item.status]};">${sLabel[item.status]}</span>
       </div>
       <div class="inq-card-detail" id="inqdetail-${item.id}">
         <div style="font-size:13px;color:var(--text-muted);line-height:1.8;white-space:pre-wrap;background:var(--surface2);border:1px solid var(--border);padding:14px;border-radius:6px;margin-bottom:14px;">${esc(item.message)}</div>
@@ -2732,25 +3012,11 @@ async function saveNewInq() {
 }
 
 
-// showSection 拡張: inquiries対応
+// showSection 拡張: 問い合わせを開いたときに読み込む
 (function() {
   const _orig = showSection;
   window.showSection = function(name) {
     _orig(name);
-    // インラインdisplayを全てクリアし、表示は .active クラスに一任する
-    // （以前は inquiries 表示時に他セクションへ display:none を残し、
-    //   Works等へ戻れなくなる不具合があったため）
-    document.querySelectorAll('.section').forEach(s => s.style.display = '');
-    // nav-item active 状態更新
-    document.querySelectorAll('.nav-item').forEach(el => {
-      const txt = el.textContent.trim().toLowerCase();
-      const match =
-        (name === 'works'       && txt.startsWith('works')) ||
-        (name === 'news'        && txt.startsWith('news')) ||
-        (name === 'hero'        && txt.includes('hero')) ||
-        (name === 'inquiries'   && txt.includes('問い合わせ'));
-      el.classList.toggle('active', match);
-    });
     if (name === 'inquiries' && (!STATE.inqData || STATE.inqData.length === 0)) {
       loadInquiries();
     }
