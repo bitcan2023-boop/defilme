@@ -210,7 +210,7 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02356-2.jpg"
+            "src": "DSC02354.jpg"
         },
         {
             "type": "image",
@@ -218,7 +218,7 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02354.jpg"
+            "src": "DSC02356-2.jpg"
         }
     ],
   },
