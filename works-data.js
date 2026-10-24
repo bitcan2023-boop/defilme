@@ -224,44 +224,6 @@ const WORKS_DATA = [
   },
 
   {
-    id: "portrait-natsumi-mm-gallery-4",
-    category: "photography",
-    sub: "portrait",
-    title: "Portrait / NATSUMI @ MM Gallery #4",
-    date: "2026-04",
-    client: "NATSUMI",
-    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
-    thumb: "DSC02368_thumb.jpg",
-    displayTitle: "Portrait / NATSUMI @ MM Gallery #4",
-    orientation: "portrait",
-    mediaCols: 2,
-    mediaShape: "landscape",
-    media: [
-        {
-            "type": "image",
-            "src": "DSC02368.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02365.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02367-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02370.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02371-2.jpg"
-        }
-    ],
-    draft: true,
-  },
-
-  {
     id: "portrait--mari-shimizu--mm-gallery-2",
     category: "photography",
     sub: "portrait",
@@ -306,6 +268,44 @@ const WORKS_DATA = [
             "src": "DSC02310-2.jpg"
         }
     ],
+  },
+
+  {
+    id: "portrait-natsumi-mm-gallery-4",
+    category: "photography",
+    sub: "portrait",
+    title: "Portrait / NATSUMI @ MM Gallery #4",
+    date: "2026-04",
+    client: "NATSUMI",
+    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
+    thumb: "DSC02368_thumb.jpg",
+    displayTitle: "Portrait / NATSUMI @ MM Gallery #4",
+    orientation: "portrait",
+    mediaCols: 2,
+    mediaShape: "landscape",
+    media: [
+        {
+            "type": "image",
+            "src": "DSC02368.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02365.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02367-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02370.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02371-2.jpg"
+        }
+    ],
+    draft: true,
   },
 
   {
