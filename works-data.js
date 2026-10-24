@@ -178,15 +178,7 @@ const WORKS_DATA = [
     media: [
         {
             "type": "image",
-            "src": "DSC02354.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02355.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02356-2.jpg"
+            "src": "DSC02362.jpg"
         },
         {
             "type": "image",
@@ -194,11 +186,7 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02358.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02359.jpg"
+            "src": "DSC02379.jpg"
         },
         {
             "type": "image",
@@ -206,19 +194,7 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02362.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02375.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02377.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02379.jpg"
+            "src": "DSC02359.jpg"
         },
         {
             "type": "image",
@@ -226,11 +202,23 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
+            "src": "DSC02358.jpg"
+        },
+        {
+            "type": "image",
             "src": "DSC02382.jpg"
         },
         {
             "type": "image",
+            "src": "DSC02356-2.jpg"
+        },
+        {
+            "type": "image",
             "src": "DSC02390-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02354.jpg"
         }
     ],
   },
