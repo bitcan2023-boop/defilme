@@ -88,6 +88,23 @@ const WORKS_DATA = [
   },
 
   {
+    id: "minato-mirai-twilight",
+    category: "photography",
+    sub: "snap",
+    title: "minato mirai twilight",
+    date: "2026-04",
+    client: "DeFilMe",
+    description: "夕暮れから夜へ移りゆく、みなとみらいの街\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2",
+    thumb: "DSC02284_thumb.jpg",
+    displayTitle: "minato mirai twilight",
+    orientation: "portrait",
+    mediaCols: 3,
+    mediaShape: "portrait",
+    media: [],
+    draft: true,
+  },
+
+  {
     id: "uimui-1st-single--music-video",
     category: "videography",
     sub: "music-video",
