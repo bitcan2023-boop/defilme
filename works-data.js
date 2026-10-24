@@ -88,6 +88,25 @@ const WORKS_DATA = [
   },
 
   {
+    id: "uimui-1st-single--music-video",
+    category: "videography",
+    sub: "music-video",
+    title: "UIMUI 1st Single\n\"しがらみしがらむ\" Music Video",
+    date: "2025-09",
+    client: "UIMUI",
+    description: "[1]\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\n\n## Apple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\n## UIMUI YouTube Official CH\nhttps://www.youtube.com/@uimui_official",
+    thumb: "しがらみMVサムネ2_2.jpg",
+    displayTitle: "UIMUI - MV \"しがらみしがらむ\"",
+    orientation: "portrait",
+    media: [
+        {
+            "type": "youtube",
+            "id": "dxA3pSiT5II"
+        }
+    ],
+  },
+
+  {
     id: "minato-mirai-twilight",
     category: "photography",
     sub: "snap",
@@ -147,25 +166,6 @@ const WORKS_DATA = [
         {
             "type": "image",
             "src": "DSC02540-2.jpg"
-        }
-    ],
-  },
-
-  {
-    id: "uimui-1st-single--music-video",
-    category: "videography",
-    sub: "music-video",
-    title: "UIMUI 1st Single\n\"しがらみしがらむ\" Music Video",
-    date: "2025-09",
-    client: "UIMUI",
-    description: "[1]\n\ncast：UIMUI\ndirection：HIBIKI\nedit：HIBIKI\nshoot：KURO\n\nRecording&Mixing：So Shibata(Shibata Sound Works)\n\n\n## Apple Music,Spotify,etc. 各Streamingサービスにて配信中\n→https://www.tunecore.co.jp/artists?id=1029918\n\n## UIMUI YouTube Official CH\nhttps://www.youtube.com/@uimui_official",
-    thumb: "しがらみMVサムネ2_2.jpg",
-    displayTitle: "UIMUI - MV \"しがらみしがらむ\"",
-    orientation: "portrait",
-    media: [
-        {
-            "type": "youtube",
-            "id": "dxA3pSiT5II"
         }
     ],
   },
