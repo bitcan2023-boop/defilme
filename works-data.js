@@ -102,14 +102,6 @@ const WORKS_DATA = [
     media: [
         {
             "type": "image",
-            "src": "DSC02278.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02284.jpg"
-        },
-        {
-            "type": "image",
             "src": "DSC02402-2.jpg"
         },
         {
@@ -118,11 +110,11 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02419.jpg"
+            "src": "DSC02463.jpg"
         },
         {
             "type": "image",
-            "src": "DSC02463.jpg"
+            "src": "DSC02477-2.jpg"
         },
         {
             "type": "image",
@@ -134,7 +126,19 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02477-2.jpg"
+            "src": "DSC02419.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02284.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02278.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02561.jpg"
         },
         {
             "type": "image",
@@ -143,10 +147,6 @@ const WORKS_DATA = [
         {
             "type": "image",
             "src": "DSC02540-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02561.jpg"
         }
     ],
     draft: true,
