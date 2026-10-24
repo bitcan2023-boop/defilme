@@ -288,5 +288,22 @@ const WORKS_DATA = [
             "id": "rAOcpwDWRU4"
         }
     ],
+  },
+
+  {
+    id: "portrait-natsumi-mm-gallery-3",
+    category: "photography",
+    sub: "portrait",
+    title: "Portrait / NATSUMI @ MM Gallery #3",
+    date: "2026-04",
+    client: "NATSUMI",
+    description: "MMギャラリーにて、モデルNATSUMIさんを撮らせていただきました。",
+    thumb: "DSC02362_thumb.jpg",
+    displayTitle: "Portrait / NATSUMI @ MM Gallery #3",
+    orientation: "portrait",
+    mediaCols: 4,
+    mediaShape: "portrait",
+    media: [],
+    draft: true,
   }
 ];
