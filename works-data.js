@@ -93,14 +93,62 @@ const WORKS_DATA = [
     sub: "snap",
     title: "minato mirai twilight",
     date: "2026-04",
-    client: "",
-    description: "夕暮れから夜へ移りゆく、みなとみらいの街\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2",
+    description: "shoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2",
     thumb: "DSC02284_thumb.jpg",
     displayTitle: "minato mirai twilight",
     orientation: "portrait",
     mediaCols: 3,
     mediaShape: "portrait",
-    media: [],
+    media: [
+        {
+            "type": "image",
+            "src": "DSC02278.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02284.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02402-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02403.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02419.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02463.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02466-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02469.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02477-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02493.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02540-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02561.jpg"
+        }
+    ],
     draft: true,
   },
 
