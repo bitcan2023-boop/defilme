@@ -222,6 +222,8 @@
     font-weight: 600;
     letter-spacing: 0.12em;
     color: var(--text);
+    /* サイト名が長くてもボタンを押し出さない（はみ出す分は … にする） */
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .topbar-logo span { color: var(--accent); }
   .topbar-logo small {
@@ -233,7 +235,8 @@
     color: var(--text-muted);
   }
 
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 12px; }
+  .reload-short { display: none; }
   .topbar-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
 
   .status-dot {
@@ -812,6 +815,10 @@
   @media (max-width: 760px) {
     .topbar { padding: 0 12px; }
     .topbar-logo small, .topbar-status { display: none; }
+    .topbar-right { gap: 6px; }
+    .topbar-right .btn-sm { padding: 6px 9px; font-size: 12px; }
+    .reload-long { display: none; }
+    .reload-short { display: inline; }
     .sidebar {
       top: auto; bottom: 0; width: auto; right: 0;
       height: 62px; padding: 6px 4px;
@@ -873,6 +880,7 @@
     <div class="topbar-right">
       <span class="topbar-status"><span class="status-dot ok" id="status-dot"></span><span id="status-text">接続済み</span></span>
       <a class="btn btn-ghost btn-sm" href="./" target="_blank" rel="noopener">サイトを見る ↗</a>
+      <button class="btn btn-ghost btn-sm" id="reload-btn" onclick="reloadLatest()" title="ログインしたまま、サイトの最新の内容を読み直します"><span class="reload-long">最新を読み込む</span><span class="reload-short">↻ 最新</span></button>
       <button class="btn btn-ghost btn-sm" onclick="doLogout()">ログアウト</button>
     </div>
   </div>
@@ -1586,7 +1594,7 @@ function ghHeaders() {
 }
 
 async function ghGet(path) {
-  return fetch(`https://api.github.com/${path}`, { headers: ghHeaders() });
+  return fetch(`https://api.github.com/${path}`, { headers: ghHeaders(), cache: 'no-store' });
 }
 
 async function ghGetFile(filePath) {
@@ -1624,6 +1632,32 @@ async function ghPutImage(filePath, base64Data, sha, message) {
 // ── LOAD ALL ──
 async function loadAll() {
   await Promise.all([loadWorks(), loadNews(), loadHeroPreview(), loadInquiries()]);
+}
+
+// ── 最新を読み込む ──
+// ログインしたまま、サイトの最新の内容を読み直す。
+// 保存は手元の一覧をまるごと書き込むので、ほかの場所で変更があったら先にこれを押す。
+async function reloadLatest() {
+  const editing = ['work-modal', 'news-modal', 'faq-modal']
+    .some(id => document.getElementById(id)?.classList.contains('open'));
+  if (editing && !confirm('編集中の内容は保存されずに閉じます。\n最新の内容を読み込みますか？')) return;
+  if (document.getElementById('work-modal')?.classList.contains('open')) closeWorkModal();
+  if (document.getElementById('news-modal')?.classList.contains('open')) closeNewsModal();
+  if (document.getElementById('faq-modal')?.classList.contains('open')) closeFaqModal();
+  if (document.getElementById('works-list').classList.contains('sort-mode')) cancelSortMode();
+
+  const btn = document.getElementById('reload-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 読み込み中...';
+  try {
+    await loadAll();
+    toast('最新の内容を読み込みました ✓', 'success');
+  } catch (e) {
+    toast('読み込みに失敗しました。もう一度お試しください', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="reload-long">最新を読み込む</span><span class="reload-short">↻ 最新</span>';
+  }
 }
 
 // ── WORKS ──
