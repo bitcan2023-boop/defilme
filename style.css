@@ -185,6 +185,9 @@ header .hamburger {
   margin: -4px 0 0 2px;
 }
 
+/* ヘッダーの i のオレンジの点：フッターのエンブレム（opacity 0.88）と同じ見え方にそろえる */
+.header-logo svg [fill="#e8820a"] { fill-opacity: 0.88; }
+
 /* 左ナビ */
 .nav-left {
   display: flex;
