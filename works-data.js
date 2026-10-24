@@ -163,6 +163,79 @@ const WORKS_DATA = [
   },
 
   {
+    id: "portrait-natsumi-mm-gallery-3",
+    category: "photography",
+    sub: "portrait",
+    title: "Portrait / NATSUMI @ MM Gallery #3",
+    date: "2026-04",
+    client: "NATSUMI",
+    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
+    thumb: "DSC02362_thumb.jpg",
+    displayTitle: "Portrait / NATSUMI @ MM Gallery #3",
+    orientation: "portrait",
+    mediaCols: 4,
+    mediaShape: "portrait",
+    media: [
+        {
+            "type": "image",
+            "src": "DSC02354.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02355.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02356-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02357-2.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02358.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02359.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02361.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02362.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02375.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02377.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02379.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02381.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02382.jpg"
+        },
+        {
+            "type": "image",
+            "src": "DSC02390-2.jpg"
+        }
+    ],
+  },
+
+  {
     id: "portrait--mari-shimizu--mm-gallery-2",
     category: "photography",
     sub: "portrait",
@@ -286,79 +359,6 @@ const WORKS_DATA = [
         {
             "type": "youtube",
             "id": "rAOcpwDWRU4"
-        }
-    ],
-  },
-
-  {
-    id: "portrait-natsumi-mm-gallery-3",
-    category: "photography",
-    sub: "portrait",
-    title: "Portrait / NATSUMI @ MM Gallery #3",
-    date: "2026-04",
-    client: "NATSUMI",
-    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
-    thumb: "DSC02362_thumb.jpg",
-    displayTitle: "Portrait / NATSUMI @ MM Gallery #3",
-    orientation: "portrait",
-    mediaCols: 4,
-    mediaShape: "portrait",
-    media: [
-        {
-            "type": "image",
-            "src": "DSC02354.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02355.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02356-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02357-2.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02358.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02359.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02361.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02362.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02375.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02377.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02379.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02381.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02382.jpg"
-        },
-        {
-            "type": "image",
-            "src": "DSC02390-2.jpg"
         }
     ],
   }
