@@ -97,7 +97,7 @@ const WORKS_DATA = [
     thumb: "DSC02284_thumb.jpg",
     displayTitle: "minato mirai twilight",
     orientation: "portrait",
-    mediaCols: 3,
+    mediaCols: 4,
     mediaShape: "portrait",
     media: [
         {
@@ -149,7 +149,6 @@ const WORKS_DATA = [
             "src": "DSC02540-2.jpg"
         }
     ],
-    draft: true,
   },
 
   {
