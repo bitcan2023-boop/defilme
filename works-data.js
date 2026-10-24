@@ -169,7 +169,7 @@ const WORKS_DATA = [
     title: "Portrait / NATSUMI @ MM Gallery #3",
     date: "2026-04",
     client: "NATSUMI",
-    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
+    description: "### The World in Yokohama 2026 @みなとみらい MMギャラリー\nモデルのNATSUMIさんを撮影させていただきました\n\nshoot & retouch：HIBIKI TAKAI (DeFilMe)\n\ncamera：Sony α7Siii\nlens：Sony FE 24-70mm F2.8 GM2\n\n\n## モデル情報はこちら\nNATSUMI：https://www.instagram.com/natt.tttsu\n\n## PHOTOGRAPHY→PORTRAITカテゴリから他の作品もご覧いただけます\nhttps://defilme.com/works",
     thumb: "DSC02362_thumb.jpg",
     displayTitle: "Portrait / NATSUMI @ MM Gallery #3",
     orientation: "portrait",
