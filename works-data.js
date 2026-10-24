@@ -282,7 +282,6 @@ const WORKS_DATA = [
     displayTitle: "Portrait / NATSUMI @ MM Gallery #4",
     orientation: "portrait",
     mediaCols: 2,
-    mediaShape: "landscape",
     media: [
         {
             "type": "image",
@@ -290,7 +289,7 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02365.jpg"
+            "src": "DSC02370.jpg"
         },
         {
             "type": "image",
@@ -298,14 +297,13 @@ const WORKS_DATA = [
         },
         {
             "type": "image",
-            "src": "DSC02370.jpg"
+            "src": "DSC02371-2.jpg"
         },
         {
             "type": "image",
-            "src": "DSC02371-2.jpg"
+            "src": "DSC02365.jpg"
         }
     ],
-    draft: true,
   },
 
   {
